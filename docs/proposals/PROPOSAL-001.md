@@ -89,9 +89,11 @@ whatsapp-bot/
 | Tests | 0 | >80% coverage |
 | Módulos | 1 | 15+ módulos |
 | TypeScript | 0% | 100% |
-| Dependencies en .env | 0 | Todas en .env |
+| Dependencies en .env | 0 | loadEnvFile nativo |
 | Docker | No | Sí |
 | Gestor de paquetes | npm | pnpm |
+| HTTP client | axios | fetch nativo |
+| Env variables | dotenv | Node loadEnvFile |
 
 ---
 
@@ -101,28 +103,31 @@ whatsapp-bot/
 
 | Librería | Propósito | Gestor |
 |----------|-----------|--------|
+| `baileys` | WhatsApp Web | pnpm |
 | `pino` | Logging estructurado | pnpm |
 | `zod` | Validación de esquemas | pnpm |
-| `vitest` | Testing framework | pnpm |
-| `typescript` | Tipado estático | pnpm |
-| `baileys` | WhatsApp Web | pnpm |
-| `axios` | HTTP client | pnpm |
-| `dotenv` | Environment variables | pnpm |
 | `tsx` | Ejecutar TypeScript | pnpm |
+| `node` | LTS (Node.js 20+) | sistema |
 
-### 3.2 Nuevos Scripts de package.json
+### 3.2 Notas sobre decisiones
+
+- **dotenv**: No necesario - Node.js tiene `loadEnvFile()` nativo desde v20.11
+- **axios**: No necesario - Node.js tiene `fetch` nativo desde v18
+- **Node LTS**: Usar versión LTS más reciente (20.x aktual al momento)
+
+### 3.3 Scripts de package.json
 
 ```bash
 # Desarrollo
-pnpm dev          # Ejecutar con tsx
-pnpm build         # Compilar TypeScript
-pnpm test          # Ejecutar Vitest
-pnpm test:watch    # Modo watch
+pnpm dev          # Ejecutar con tsx (sin compilar)
+pnpm build        # Compilar TypeScript
+pnpm test        # Ejecutar Vitest
+pnpm test:watch  # Modo watch
 
 # Producción
-pnpm start        # Ejecutar compilado
+pnpm start       # Ejecutar compilado
 pnpm docker:build # Build Docker
-pnpm docker:run    # Ejecutar contenedor
+pnpm docker:run   # Ejecutar contenedor
 ```
 
 ---
@@ -195,7 +200,7 @@ const ConfigSchema = z.object({
   NAUFRA_KEY: z.string(),
   BOT_NAME: z.string().default('WhatsAppBot'),
   PREFIX: z.array(z.string()).default(['#', '/']),
-  TIMEZONE: z.string().default('America/Lima'),
+  TIMEZONE: z.string().default('Europe/Madrid'),
   API_URL: z.string().url(),
 });
 
@@ -454,10 +459,11 @@ gantt
 |---------|---------------|
 | **pnpm** | Gestor moderno, lock preciso, faster |
 | **TypeScript obligatorio** | Prevenir errores de tipado en runtime |
-| **Pinojs** | Logging estructurado, recomendado en AGENTS |
-| **Zod** | Validación de esquemas, tipadoinferido |
+| **Pinojs** | Logging estructurado, estándar en producción |
+| **Zod** | Validación de esquemas, tipado inferido |
 | **Vitest** | Más rápido que Jest, API compatible |
 | **Docker** | Despliegue reproducible |
+| **Node.js nativo** | No hay axios ni dotenv (usar fetch y loadEnvFile) |
 | **JSON como BD temporal** | Simple, no requiere infra |
 | **Estructura src/** | Separación clara de código |
 
@@ -469,8 +475,8 @@ gantt
 # Inicializar proyecto
 pnpm init
 
-# Instalar dependencias principales
-pnpm add baileys pino zod axios dotenv awesome-phonenumber
+# Instalar dependencias principales (solo baileys, pino, zod)
+pnpm add baileys pino zod
 
 # Instalar devDependencies
 pnpm add -D typescript vitest @types/node tsx pino-pretty
@@ -478,6 +484,12 @@ pnpm add -D typescript vitest @types/node tsx pino-pretty
 # Instalar globales (opcional)
 pnpm add -g tsx
 ```
+
+### 10.1 Notas Importantes
+
+- **No dotenv**: Usar `import.meta.env` de Node.js (v20.11+)
+- **No axios**: Usar `fetch` nativo de Node.js (v18+)
+- **Node LTS**:Versión 20.x o superior
 
 ---
 
