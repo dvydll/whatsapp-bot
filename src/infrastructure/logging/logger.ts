@@ -5,8 +5,8 @@
 
 import pino from 'pino';
 import pretty from 'pino-pretty';
-import { getConfig } from '../../config/env.js';
 import { Defaults } from '../../config/defaults.js';
+import { getConfig } from '../../config/env.js';
 
 /**
  * Tipo para niveles de log suportados
@@ -29,7 +29,7 @@ export interface Logger {
 function createPrettyStream() {
   return pretty({
     colorize: true,
-    translateTime: 'HH:MM:ss',
+    translateTime: 'SYS:standard',
     ignore: 'pid,hostname',
     singleLine: true,
   });
