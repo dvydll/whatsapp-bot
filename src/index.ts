@@ -21,8 +21,8 @@ const BOT_VERSION = getPackageVersion();
  */
 const printBanner = (): string => `
  ╔═══════════════════════════════════════════════════════════╗
- ║  ${config.BOT_NAME} v${BOT_VERSION}                    ║
- ║  WhatsApp Bot con arquitectura moderna                 ║
+ ║  ${config.BOT_NAME} v${BOT_VERSION}                                       ║
+ ║  WhatsApp Bot con arquitectura moderna                    ║
  ╚═══════════════════════════════════════════════════════════╝
 `;
 
@@ -67,17 +67,17 @@ export function createBot(): {
    */
   const setupWAEvents = (mh: MessageHandler): void => {
     // Evento: mensaje entrante
-    waClient!.onMessage(async (wamessage) => {
+    waClient?.onMessage(async (wamessage) => {
       await mh.handle(wamessage);
     });
 
     // Evento: cambio de conexión
-    waClient!.onConnection((state) => {
+    waClient?.onConnection((state) => {
       logger.info(connectionStateMessages[state] || `Estado: ${state}`);
     });
 
     // Evento: error
-    waClient!.onError((error) => {
+    waClient?.onError((error) => {
       logger.error(`Error de WhatsApp: ${error.message}`);
     });
   };
@@ -160,12 +160,12 @@ export const setupSignalHandlers = (botInstance: ReturnType<typeof createBot>): 
  * Inicialización automática cuando se ejecuta directamente
  */
 const main = async (): Promise<void> => {
-  console.log(printBanner());
-  logger.info(formatInitMessage());
-  
+  console.info(printBanner());
+  console.info(formatInitMessage());
+
   const bot = createBot();
   setupSignalHandlers(bot);
-  
+
   await bot.start();
 };
 
