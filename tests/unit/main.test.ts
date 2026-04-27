@@ -55,6 +55,19 @@ vi.mock('../../src/infrastructure/logging/logger.js', () => ({
   resetLogger: vi.fn(),
 }));
 
+// Mock WhatsApp client
+vi.mock('../../src/infrastructure/external/whatsapp-client.js', () => ({
+  getWhatsAppClient: () => ({
+    connect: vi.fn().mockResolvedValue(undefined),
+    disconnect: vi.fn().mockResolvedValue(undefined),
+    sendMessage: vi.fn().mockResolvedValue({ key: { id: 'test' } }),
+    getMe: () => ({ id: '123456789@s.whatsapp.net', name: 'TestBot' }),
+    onMessage: vi.fn(),
+    onConnection: vi.fn(),
+    onError: vi.fn(),
+  }),
+}));
+
 describe('main', () => {
   describe('exports', () => {
     it('debe exportar la función start', async () => {

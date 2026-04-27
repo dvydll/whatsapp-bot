@@ -5,6 +5,7 @@
 
 import { logger } from '../infrastructure/logging/index.js';
 import { config } from '../config/index.js';
+import { getWhatsAppClient, type WhatsAppClient } from '../infrastructure/external/whatsapp-client.js';
 
 /**
  * Nombre del bot
@@ -15,6 +16,11 @@ const BOT_NAME = 'whatsappbot';
  * Versión del bot
  */
 const BOT_VERSION = '1.0.0';
+
+/**
+ * Instancia del cliente WhatsApp
+ */
+let waClient: WhatsAppClient | null = null;
 
 /**
  * Bandera para controlar el estado del bot
@@ -47,8 +53,42 @@ function printInitialization(): void {
 }
 
 /**
+ * Configura los eventos del cliente WhatsApp
+ */
+function setupWAEvents(): void {
+  if (!waClient) return;
+
+  // Evento: mensaje entrante
+  waClient.onMessage(async (message) => {
+    const jid = message.key.remoteJid;
+    const pushName = message.pushName || 'Desconocido';
+
+    logger.debug(`Mensaje de ${pushName} (${jid})`);
+
+    // TODO: Implementar handlers de comandos aquí
+    // Por ahora solo logueamos el mensaje
+  });
+
+  // Evento: cambio de conexión
+  waClient.onConnection((state) => {
+    const stateMessages: Record<string, string> = {
+      connecting: 'Conectando a WhatsApp...',
+      connected: 'Conectado a WhatsApp',
+      disconnecting: 'Desconectando de WhatsApp...',
+      disconnected: 'Desconectado de WhatsApp',
+    };
+
+    logger.info(stateMessages[state] || `Estado: ${state}`);
+  });
+
+  // Evento: error
+  waClient.onError((error) => {
+    logger.error(`Error de WhatsApp: ${error.message}`);
+  });
+}
+
+/**
  * Inicia el bot conectándose a WhatsApp
- * @description Placeholder - la conexión real con Baileys se implementará después
  */
 async function start(): Promise<void> {
   if (isRunning) {
@@ -57,17 +97,33 @@ async function start(): Promise<void> {
   }
 
   logger.info('Iniciando conexión con WhatsApp...');
-  
-  // Placeholder: aquí se implementará la conexión real con Baileys
-  console.log('[WAIT] Conectando a WhatsApp (placeholder)...');
-  
-  isRunning = true;
-  logger.info('Bot conectado y en ejecución');
+
+  try {
+    // Obtener instancia del cliente
+    waClient = getWhatsAppClient();
+
+    // Configurar eventos
+    setupWAEvents();
+
+    // Conectar a WhatsApp
+    await waClient.connect();
+
+    // Obtener info del bot
+    const botInfo = waClient.getMe();
+    logger.info(`Bot conectado como: ${botInfo.name} (${botInfo.jid})`);
+
+    isRunning = true;
+    logger.info('Bot conectado y en ejecución');
+  } catch (error) {
+    const err = error as Error;
+    logger.error(`Error al iniciar bot: ${err.message}`);
+    throw error;
+  }
 }
 
 /**
  * Detiene el bot de manera graceful
- * @description Cierra conexiones y limpia recursos
+ * @description Cierra conexiones y limpa recursos
  */
 async function stop(): Promise<void> {
   if (!isRunning) {
@@ -76,12 +132,21 @@ async function stop(): Promise<void> {
   }
 
   logger.info('Deteniendo bot...');
-  
-  // Limpieza de recursos
-  isRunning = false;
-  
-  logger.info('Bot detenido correctamente');
-  logger.info('¡Hasta luego!');
+
+  try {
+    if (waClient) {
+      await waClient.disconnect();
+      waClient = null;
+    }
+
+    isRunning = false;
+    logger.info('Bot detenido correctamente');
+    logger.info('¡Hasta luego!');
+  } catch (error) {
+    const err = error as Error;
+    logger.error(`Error al detener bot: ${err.message}`);
+    throw error;
+  }
 }
 
 /**
