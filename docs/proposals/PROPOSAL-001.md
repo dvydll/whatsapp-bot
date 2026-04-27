@@ -1,9 +1,9 @@
-# PROPOSAL-001: Plan de Refactorización de WhatsAppBot
+# PROPOSAL-001: Plan de Refactorización de WhatsAppBot (Scream + Clean Architecture)
 
-> Plan de refactorización completo para profesionalizar el código  
+> Plan de refactorización completo con arquitectura escalable  
 > Fecha: 2026-04-27  
-> Versión: 1.1.0  
-> Estado: Aprobado con puntualizaciones  
+> Versión: 1.2.0  
+> Estado: Aprobado con puntualizaciones + nueva arquitectura  
 > Autor: dvyd
 
 ---
@@ -115,20 +115,179 @@ whatsapp-bot/
 - **axios**: No necesario - Node.js tiene `fetch` nativo desde v18
 - **Node LTS**: Usar versión LTS más reciente (20.x aktual al momento)
 
-### 3.3 Scripts de package.json
+### 3.3 Arquitectura: Scream + Clean Architecture
 
-```bash
-# Desarrollo
-pnpm dev          # Ejecutar con tsx (sin compilar)
-pnpm build        # Compilar TypeScript
-pnpm test        # Ejecutar Vitest
-pnpm test:watch  # Modo watch
-
-# Producción
-pnpm start       # Ejecutar compilado
-pnpm docker:build # Build Docker
-pnpm docker:run   # Ejecutar contenedor
 ```
+src/
+├── main/                          # Entry point
+│   └── index.ts                  # Composition root
+│
+├── domain/                       # Domain Layer (innermost)
+│   ├── entities/                # Entidades del negocio
+│   │   ├── User.ts
+│   │   ├── Game.ts
+│   │   └── Group.ts
+│   ├── repositories/             # Interfaces de repositorio
+│   │   ├── IUserRepository.ts
+│   │   ├── IGameRepository.ts
+│   │   └── IGroupRepository.ts
+│   └── value-objects/             # Value objects
+│       ├── JID.ts
+│       └── Money.ts
+│
+├── application/                   # Application Layer
+│   ├── use-cases/               # Casos de uso
+│   │   ├── user/
+│   │   │   ├── RegisterUser.ts
+│   │   │   └── AddCoins.ts
+│   │   ├── game/
+│   │   │   ├── PlayMining.ts
+│   │   │   └── PlayRoulette.ts
+│   │   ├── economy/
+│   │   │   └── TransferCoins.ts
+│   │   └── downloads/
+│   │       └── DownloadYouTube.ts
+│   └── services/                # Servicios de aplicación
+│       ├── CommandService.ts
+│       └── MessageHandlerService.ts
+│
+├── infrastructure/               # Infrastructure Layer
+│   ├── persistence/
+│   │   ├── JsonUserRepository.ts
+│   │   ├── JsonGameRepository.ts
+│   │   └── JsonGroupRepository.ts
+│   ├── external/
+│   │   ├── BaileysConnection.ts
+│   │   ├── NaufrabotAPI.ts
+│   │   └── WhatsAppAPI.ts
+│   └── logging/
+│       └── PinoLogger.ts
+│
+├── presentation/                  # Presentation Layer
+│   ├── handlers/
+│   │   ├── message.handler.ts
+│   │   └── group.handler.ts
+│   └── commands/
+│       ├── owner/
+│       ├── admin/
+│       ├── user/
+│       └── public/
+│
+├── plugins/                       # Plugin System
+│   ├── core/                    # Features core (always loaded)
+│   │   ├── economy/
+│   │   ├── games/
+│   │   ├── downloads/
+│   │   └── sticker/
+│   └── external/                 # Plugins externos (load on demand)
+│       ├── ai-chat/
+│       ├── music-player/
+│       └── custom-commands/
+│
+├── shared/                       # Código compartido
+│   ├── utils/
+│   │   ├── logger.ts
+│   │   ├── validators.ts
+│   │   └── cache.ts
+│   ├── types/
+│   │   ├── common.ts
+│   │   └── config.ts
+│   ├── errors/
+│   │   ├── AppError.ts
+│   │   └── NotFoundError.ts
+│   └── constants/
+│       └── index.ts
+│
+└── config/                       # Configuración
+    ├── env.ts                   # Zod schemas para configuración
+    └── defaults.ts
+```
+
+### 3.4 Sistema de Plugins
+
+```typescript
+// Plugin Interface
+interface WhatsAppBotPlugin {
+  name: string;
+  version: string;
+  dependencies?: string[];
+  
+  // Hooks del ciclo de vida
+  onLoad?(container: Container): Promise<void>;
+  onUnload?(): Promise<void>;
+  
+  // Registro de comandos
+  registerCommands(registry: CommandRegistry): void;
+  
+  // Handlers de eventos
+  onMessage?(context: MessageContext): Promise<void>;
+}
+
+// Ejemplo: Plugin económico
+const economyPlugin: WhatsAppBotPlugin = {
+  name: 'economy',
+  version: '1.0.0',
+  
+  registerCommands(registry) {
+    registry.register('.minar', MiningHandler);
+    registry.register('.daily', DailyHandler);
+  },
+  
+  onMessage(context) {
+    // Logic when message arrives
+  }
+};
+```
+
+### 3.5 Capas y Flujo de Datos
+
+```mermaid
+flowchart LR
+    subgraph Presentation["Presentation Layer"]
+        MSG[Handlers]
+        CMD[Commands]
+    end
+    
+    subgraph Application["Application Layer"]
+        UC[Use Cases]
+        AS[Services]
+    end
+    
+    subgraph Domain["Domain Layer"]
+        ENT[Entities]
+        VO[Value Objects]
+        REP[Repositories Interface]
+    end
+    
+    subgraph Infrastructure["Infrastructure Layer"]
+        PERS[Persistence]
+        EXT[External APIs]
+    end
+    
+    subgraph Shared["Shared"]
+        LOG[Logger]
+        VAL[Validators]
+    end
+    
+    MSG --> UC
+    CMD --> UC
+    UC --> AS
+    AS --> REP
+    REP --> PERS
+    ENT <--> REP
+    UC --> LOG
+    AS --> VAL
+```
+
+### 3.6 Principios de Arquitectura
+
+| Principio | Aplicación |
+|----------|------------|
+| **Dependency Inversion** | Domain no conoce Infrastructure |
+| **Single Responsibility** | Cada clase una responsabilidad |
+| **Plugin Isolation** | Plugins no se conocen entre sí |
+| **Shared Common** | Código reutilizable en src/shared |
+| **Feature Independence** | Cada feature en su propio módulo |
 
 ---
 
