@@ -1,6 +1,6 @@
 # 🏗️ ARCHITECTURE.md - Arquitectura del Sistema
 
-> Arquitectura técnica y diagramas del sistema NaufraBot V3  
+> Arquitectura técnica y diagramas del sistema WhatsAppBot  
 > Fecha: 2026-04-27
 
 ---
@@ -16,7 +16,7 @@ flowchart TB
         Group["Grupo"]
     end
 
-    subgraph Bot["NaufraBot V3"]
+    subgraph Bot["WhatsAppBot"]
         subgraph Core["Core"]
             WS["WebSocket"]
             Handler["Message Handler"]

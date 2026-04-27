@@ -1,6 +1,6 @@
-# 📋 SPEC.md - Especificaciones Técnicas de NaufraBot V3
+# 📋 SPEC.md - Especificaciones Técnicas de WhatsAppBot
 
-> Especificaciones técnicas detalladas del sistema de NaufraBot V3  
+> Especificaciones técnicas detalladas del sistema de WhatsAppBot  
 > Fecha de documentación: 2026-04-27  
 > Versión: 1.0.0
 
@@ -10,7 +10,7 @@
 
 ### 1.1 Propósito
 
-NaufraBot V3 es un bot de WhatsApp basado en la librería Baileys que proporciona funcionalidades de gestión de grupos, juegos RPG, descargas multimedia y herramientas interactivas para comunidades de WhatsApp.
+WhatsAppBot es un bot de WhatsApp basado en la librería Baileys que proporciona funcionalidades de gestión de grupos, juegos RPG, descargas multimedia y herramientas interactivas para comunidades de WhatsApp.
 
 ### 1.2 Tecnología Principal
 
@@ -28,7 +28,7 @@ NaufraBot V3 es un bot de WhatsApp basado en la librería Baileys que proporcion
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    NAUFRABOT V3                     │
+│                    WhatsAppBot                     │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                         │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
@@ -361,4 +361,4 @@ El bot muestra logs estructurados para:
 
 ---
 
-*Documentación generada para NaufraBot V3 - 2026*
+*Documentación generada para WhatsAppBot - 2026*

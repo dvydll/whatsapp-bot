@@ -1,6 +1,6 @@
 # SPECS Index - Índice de Especificaciones
 
-> Documentación técnica granular de NaufraBot V3  
+> Documentación técnica granular de WhatsAppBot  
 > Fecha: 2026-04-27
 
 ---

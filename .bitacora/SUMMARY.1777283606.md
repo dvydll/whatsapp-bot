@@ -1,8 +1,8 @@
 ---
-title: Análisis y Documentación de NaufraBot V3
+title: Análisis y Documentación de WhatsAppBot
 description: Análisis completo del codebase de WhatsApp bot y creación de documentación técnica estructurada
 summary: |
-  Se realizó un análisis exhaustivo del repositorio whatsapp-bot (NaufraBot V3), identificando su arquitectura basada en Baileys 6.7.21,
+  Se realizó un análisis exhaustivo del repositorio whatsapp-bot (WhatsAppBot), identificando su arquitectura basada en Baileys 6.7.21,
   sistema de economía/RPG, gestión de grupos y descargas multimedia. Se documentó el sistema de registro de usuarios, juegos (minería, casino, ruleta, pesca),
   comandos de grupo (bienvenidas, antilink, modo admin), y integrations externe (api.naufrabot.com). Se crearon 6 documentos técnicos:
   SPEC.md (especificaciones), ARCHITECTURE.md (diagramas Mermaid), COMMANDS.md, CONFIG.md y TROUBLESHOOTING.md. El código presenta issues de arquitectura
@@ -23,7 +23,7 @@ metadata:
 
 ## Contexto
 
-El usuario adquirió el repositorio NaufraBot V3 (bot de WhatsApp) y necesita entender las features, arquitectura y funcionamiento
+El usuario adquirió el repositorio WhatsAppBot (bot de WhatsApp) y necesita entender las features, arquitectura y funcionamiento
 para poder trabajar profesionalmente sobre el código. El proyecto Carece de documentación y el código está poco estructurado
 (archivo monolithico index.js con 2700+ líneas).
 

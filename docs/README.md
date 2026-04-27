@@ -1,6 +1,6 @@
-# 📚 Documentación de NaufraBot V3
+# 📚 Documentación de WhatsAppBot
 
-Bienvenido a la documentación técnica de NaufraBot V3. Este documento sirve como índice y punto de entrada para toda la documentación del proyecto.
+Bienvenido a la documentación técnica de WhatsAppBot. Este documento sirve como índice y punto de entrada para toda la documentación del proyecto.
 
 ## 📋 Índice de Documentación
 
@@ -14,7 +14,7 @@ Bienvenido a la documentación técnica de NaufraBot V3. Este documento sirve co
 
 ## 🎯 Propósito del Proyecto
 
-NaufraBot V3 es un bot de WhatsApp basado en Baileys que proporciona las siguientes funcionalidades principales:
+WhatsAppBot es un bot de WhatsApp basado en Baileys que proporciona las siguientes funcionalidades principales:
 
 - Gestión de grupos con система de bienvenidas y AntiLink
 - Juegos RPG con sistema de economía (monedas, XP, niveles)
@@ -84,4 +84,4 @@ whatsapp-bot/
 
 ---
 
-*Documentación generada para NaufraBot V3*
+*Documentación generada para WhatsAppBot*

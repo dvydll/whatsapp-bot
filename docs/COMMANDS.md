@@ -1,6 +1,6 @@
 # 📜 COMMANDS.md - Listado de Comandos
 
-> Listado completo de comandos disponibles en NaufraBot V3  
+> Listado completo de comandos disponibles en WhatsAppBot  
 > Fecha: 2026-04-27
 
 ---
@@ -391,4 +391,4 @@
 
 ---
 
-*Listado generado para NaufraBot V3 - 2026*
+*Listado generado para WhatsAppBot - 2026*

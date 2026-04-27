@@ -1,6 +1,6 @@
 # 🔧 TROUBLESHOOTING.md - Solución de Problemas
 
-> Guía de soluciones para problemas comunes en NaufraBot V3  
+> Guía de soluciones para problemas comunes en WhatsAppBot  
 > Fecha: 2026-04-27
 
 ---
@@ -395,4 +395,4 @@ Para mejor diagnóstico, ver los logs:
 
 ---
 
-*Guía de troubleshooting generada para NaufraBot V3 - 2026*
+*Guía de troubleshooting generada para WhatsAppBot - 2026*

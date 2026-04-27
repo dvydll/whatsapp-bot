@@ -823,4 +823,4 @@ if (!botActivo && !isOwner) return
 
 ---
 
-*Especificaciones granulares generadas para NaufraBot V3 - 2026*
+*Especificaciones granulares generadas para WhatsAppBot - 2026*

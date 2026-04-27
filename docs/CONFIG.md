@@ -1,6 +1,6 @@
 # ⚙️ CONFIG.md - Guía de Configuración
 
-> Guía completa de configuración de NaufraBot V3  
+> Guía completa de configuración de WhatsAppBot  
 > Fecha: 2026-04-27
 
 ---
@@ -349,4 +349,4 @@ image: { url: "URL_DE_TU_IMAGEN" }
 
 ---
 
-*Guía de configuración generada para NaufraBot V3 - 2026*
+*Guía de configuración generada para WhatsAppBot - 2026*
