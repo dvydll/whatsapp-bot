@@ -28,7 +28,7 @@ export const envSchema = z.object({
   /** Clave API de Naufrabot */
   NAUFRA_KEY: z.string().min(1, 'NAUFRA_KEY es requerida'),
 
-  /** Zona horaria IANA (ej: America/Lima, UTC) */
+  /** Zona horaria IANA (ej: Europe/Madrid, UTC) */
   TIMEZONE: z.string().min(1, 'TIMEZONE es requerida'),
 
   /** Nivel de logging */
@@ -66,6 +66,7 @@ let _cachedConfig: EnvConfig | null = null;
  * @returns Objeto con configuración validada
  */
 function parseEnv(): EnvConfig {
+  process.loadEnvFile()
   const result = envSchema.safeParse(process.env);
 
   if (!result.success) {
