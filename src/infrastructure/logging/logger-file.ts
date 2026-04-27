@@ -3,12 +3,12 @@
  * @module infrastructure/logging/logger-file
  */
 
-import pino from 'pino';
-import { getConfig } from '../../config/env.js';
-import { Defaults } from '../../config/defaults.js';
-import { fileURLToPath } from 'node:url';
+import { appendFileSync, existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { existsSync, mkdirSync, appendFileSync, readdirSync, unlinkSync, statSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import pino from 'pino';
+import { Defaults } from '../../config/defaults.js';
+import { getConfig } from '../../config/env.js';
 import { getLogger } from './logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -108,19 +108,19 @@ export function createFileLogger(options: FileTransportOptions = {}): pino.Logge
       bindings: () => ({}),
     },
   },
-  {
-    write(msg) {
-      const line = msg + '\n';
+    {
+      write(msg) {
+        const line = `${msg}\n`;
 
-      // Check rotation size
-      const size = getFileSize(logPath);
-      if (size > opts.maxSize && size > 0) {
-        rotateLogFile(logPath, opts.maxFiles);
-      }
+        // Check rotation size
+        const size = getFileSize(logPath);
+        if (size > opts.maxSize && size > 0) {
+          rotateLogFile(logPath, opts.maxFiles);
+        }
 
-      writeToFile(logPath, line);
-    },
-  });
+        writeToFile(logPath, line);
+      },
+    });
 }
 
 /**
@@ -138,11 +138,11 @@ export function createErrorFileLogger(options: FileTransportOptions = {}): pino.
       bindings: () => ({}),
     },
   },
-  {
-    write(msg) {
-      writeToFile(errorPath, msg + '\n');
-    },
-  });
+    {
+      write(msg) {
+        writeToFile(errorPath, `${msg}\n`);
+      },
+    });
 }
 
 /**
