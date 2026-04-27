@@ -32,13 +32,17 @@ export const envSchema = z.object({
   TIMEZONE: z.string().min(1, 'TIMEZONE es requerida'),
 
   /** Nivel de logging */
-  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error'], {
-    errorMap: () => ({ message: 'LOG_LEVEL debe ser: debug, info, warn o error' }),
+  LOG_LEVEL: z.enum({
+    debug: 'debug',
+    info: 'info',
+    warn: 'warn',
+    error: 'error',
   }),
 
   /** Entorno de ejecución */
-  NODE_ENV: z.enum(['development', 'production'], {
-    errorMap: () => ({ message: 'NODE_ENV debe ser: development o production' }),
+  NODE_ENV: z.enum({
+    development: 'development',
+    production: 'production',
   }),
 });
 
@@ -65,7 +69,7 @@ function parseEnv(): EnvConfig {
   const result = envSchema.safeParse(process.env);
 
   if (!result.success) {
-    const errors = result.error.errors.map(
+    const errors = result.error.issues.map(
       (e) => `  - ${e.path.join('.')}: ${e.message}`
     );
     throw new Error(
