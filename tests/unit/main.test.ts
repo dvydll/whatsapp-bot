@@ -3,7 +3,7 @@
  * @module tests/unit/main.test
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock getConfig antes de importar el módulo main
 vi.mock('../../src/config/env.js', () => ({
@@ -71,13 +71,13 @@ vi.mock('../../src/infrastructure/external/whatsapp-client.js', () => ({
 describe('main', () => {
   describe('exports', () => {
     it('debe exportar la función start', async () => {
-      const { start } = await import('../../src/main/index.js');
+      const { start } = await import('../../src/index.js');
       expect(start).toBeDefined();
       expect(typeof start).toBe('function');
     });
 
     it('debe exportar la función stop', async () => {
-      const { stop } = await import('../../src/main/index.js');
+      const { stop } = await import('../../src/index.js');
       expect(stop).toBeDefined();
       expect(typeof stop).toBe('function');
     });
@@ -85,7 +85,7 @@ describe('main', () => {
 
   describe('start', () => {
     it('debe ser una función async', async () => {
-      const { start } = await import('../../src/main/index.js');
+      const { start } = await import('../../src/index.js');
       const result = start();
       expect(result).toBeInstanceOf(Promise);
       await result;
@@ -94,7 +94,7 @@ describe('main', () => {
 
   describe('stop', () => {
     it('debe ser una función async', async () => {
-      const { stop } = await import('../../src/main/index.js');
+      const { stop } = await import('../../src/index.js');
       const result = stop();
       expect(result).toBeInstanceOf(Promise);
       await result;

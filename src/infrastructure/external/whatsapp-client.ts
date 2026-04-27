@@ -6,18 +6,20 @@
 import {
   makeWASocket,
   useMultiFileAuthState,
-  type WASocket,
   type WAMessage,
+  type WASocket,
 } from 'baileys';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-import { existsSync, mkdirSync } from 'fs';
-import { getLogger, type Logger } from '../logging/logger.js';
+import { existsSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { getConfig } from '../../config/env.js';
 import { AppError } from '../../shared/errors/app-error.js';
+import { getESMDirname } from '../../shared/utils/esm.js';
+import { getLogger, type Logger } from '../logging/logger.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+/**
+ * Directorio actual (para session storage)
+ */
+const __dirname = getESMDirname(import.meta.url);
 
 /**
  * Tipo de mensaje entrante
@@ -28,7 +30,7 @@ export interface IncomingMessage {
     fromMe: boolean;
     id: string;
   };
-  message: any;
+  message?: WAMessage['message'] | null;
   pushName?: string;
   timestamp: number;
 }

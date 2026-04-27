@@ -1,21 +1,12 @@
-/**
- * Main entry point del WhatsApp Bot
- * @module main
- */
-
-import { logger } from '../infrastructure/logging/index.js';
-import { config } from '../config/index.js';
-import { getWhatsAppClient, type WhatsAppClient } from '../infrastructure/external/whatsapp-client.js';
+import { config } from './config/index.js';
+import { getWhatsAppClient, type WhatsAppClient } from './infrastructure/external/whatsapp-client.js';
+import { logger } from './infrastructure/logging/index.js';
+import { getPackageVersion } from './shared/utils/esm.js';
 
 /**
- * Nombre del bot
+ * Versión del bot (obtenida dinámicamente desde package.json)
  */
-const BOT_NAME = 'whatsappbot';
-
-/**
- * Versión del bot
- */
-const BOT_VERSION = '1.0.0';
+const BOT_VERSION = getPackageVersion();
 
 /**
  * Instancia del cliente WhatsApp
@@ -33,8 +24,8 @@ let isRunning = false;
 function printBanner(): void {
   const banner = `
 ╔═══════════════════════════════════════════════════════════╗
-║  ${BOT_NAME} v${BOT_VERSION}                                        ║
-║  WhatsApp Bot con arquitectura moderna                   ║
+║  ${config.BOT_NAME} v${BOT_VERSION}                           ║
+║  WhatsApp Bot con arquitectura moderna                 ║
 ╚═══════════════════════════════════════════════════════════╝
   `;
   console.log(banner);
@@ -45,10 +36,10 @@ function printBanner(): void {
  */
 function printInitialization(): void {
   logger.info('─'.repeat(53));
-  logger.info(`Inicializando ${BOT_NAME} v${BOT_VERSION}...`);
-  logger.info(`Entorno: ${(config as any).NODE_ENV}`);
-  logger.info(`Log Level: ${(config as any).LOG_LEVEL}`);
-  logger.info(`Prefijo de comandos: ${(config as any).BOT_PREFIX}`);
+  logger.info(`Inicializando ${config.BOT_NAME} v${BOT_VERSION}...`);
+  logger.info(`Entorno: ${config.NODE_ENV}`);
+  logger.info(`Log Level: ${config.LOG_LEVEL}`);
+  logger.info(`Prefijo de comandos: ${config.BOT_PREFIX}`);
   logger.info('─'.repeat(53));
 }
 
