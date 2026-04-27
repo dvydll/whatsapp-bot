@@ -56,7 +56,7 @@ export function readJSONFile<T>(filePath: string): T | null {
  * @returns Versión del paquete o '0.0.0' si no se encuentra
  */
 export function getPackageVersion(projectDir?: string): string {
-  const rootDir = projectDir || join(dirname(fileURLToPath(import.meta.url)), '..');
+  const rootDir = projectDir || join(dirname(fileURLToPath(import.meta.url)), '../..');
   const packagePath = join(rootDir, 'package.json');
   
   const pkg = readJSONFile<{ version?: string }>(packagePath);
@@ -69,7 +69,7 @@ export function getPackageVersion(projectDir?: string): string {
  * @returns Nombre del paquete o 'unknown' si no se encuentra
  */
 export function getPackageName(projectDir?: string): string {
-  const rootDir = projectDir || join(dirname(fileURLToPath(import.meta.url)), '..');
+  const rootDir = projectDir || join(dirname(fileURLToPath(import.meta.url)), '../..');
   const packagePath = join(rootDir, 'package.json');
   
   const pkg = readJSONFile<{ name?: string }>(packagePath);
