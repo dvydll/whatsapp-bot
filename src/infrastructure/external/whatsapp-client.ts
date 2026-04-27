@@ -80,6 +80,7 @@ export class WhatsAppClientImpl implements WhatsAppClient {
   private connectionCallbacks: ConnectionCallback[] = [];
   private errorCallbacks: ErrorCallback[] = [];
   private sessionPath: string;
+  private connectionResolver: (() => void) | null = null;
 
   /**
    * Constructor
@@ -116,6 +117,19 @@ export class WhatsAppClientImpl implements WhatsAppClient {
     this.logger.info('Iniciando conexión con WhatsApp...');
     this.emitConnection('connecting');
 
+    // Promise que se resuelve cuando la conexión está establecida
+    // cuando connection === 'open' o se rechaza por timeout/error
+    const connectionPromise = new Promise<void>((resolve, reject) => {
+      this.connectionResolver = resolve;
+
+      // Timeout de 30 segundos
+      setTimeout(() => {
+        if (!this.connected) {
+          reject(new Error('Timeout: conexión no establecida en 30 segundos'));
+        }
+      }, 30000);
+    });
+
     try {
       // Cargar estado de autenticación
       const authState = await useMultiFileAuthState(this.sessionPath);
@@ -144,6 +158,12 @@ export class WhatsAppClientImpl implements WhatsAppClient {
           this.emitConnection('disconnected');
           this.connected = false;
 
+          // Rechazar la promise pendiente si no se estableció
+          if (this.connectionResolver) {
+            this.connectionResolver();
+            this.connectionResolver = null;
+          }
+
           // Reconectar automáticamente si no es cierre intencional
           if (!reason.includes('logged out')) {
             this.logger.info('Reconectando en 5 segundos...');
@@ -156,6 +176,12 @@ export class WhatsAppClientImpl implements WhatsAppClient {
           this.logger.info('Conexión establecida con WhatsApp');
           this.connected = true;
           this.emitConnection('connected');
+
+          // Resolver la waiting Promise
+          if (this.connectionResolver) {
+            this.connectionResolver();
+            this.connectionResolver = null;
+          }
         }
       });
 
@@ -189,6 +215,9 @@ export class WhatsAppClientImpl implements WhatsAppClient {
         }
       });
 
+      // Esperar a que la conexión se establezca (o timeout)
+      await connectionPromise;
+
     } catch (error) {
       const err = error as Error;
       this.logger.error(`Error al conectar: ${err.message}`);
@@ -214,6 +243,10 @@ export class WhatsAppClientImpl implements WhatsAppClient {
       this.socket = null;
       this.connected = false;
       this.botInfo = null;
+
+      // Limpiar resolver pendiente
+      this.connectionResolver = null;
+
       this.emitConnection('disconnected');
       this.logger.info('Desconectado correctamente');
     } catch (error) {
