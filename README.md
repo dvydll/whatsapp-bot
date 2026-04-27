@@ -1,5 +1,5 @@
 <h1 align="center">
-✨🚀 <span style="color:#00FFAA;">NaufraBot V3</span> 🤖💚
+✨🚀 <span style="color:#00FFAA;">WhatsAppBot</span> 🤖💚
 </h1>
 
 <p align="center">
@@ -9,9 +9,9 @@
 
 ---
 
-## 🧠 **¿Qué es NaufraBot V3?**
+## 🧠 **¿Qué es WhatsAppBot?**
 
-🔥 **NaufraBot V3** es una versión mejorada del clásico bot de WhatsApp, totalmente optimizado para funcionar 24/7 en cualquier servidor y completamente gratuito en termux, con **más comandos, rendimiento y estabilidad**.
+🔥 **WhatsAppBot** es una versión mejorada del clásico bot de WhatsApp, totalmente optimizado para funcionar 24/7 en cualquier servidor y completamente gratuito en termux, con **más comandos, rendimiento y estabilidad**.
 
 - 🚀 Compatible con la última versión de **Baileys**
 - 💬 Juegos RPG integrados
