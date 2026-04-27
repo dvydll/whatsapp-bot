@@ -29,8 +29,8 @@ export interface Logger {
 function createPrettyStream() {
   return pretty({
     colorize: true,
-    translateTime: 'SYS:standard',
-    ignore: 'pid,hostname',
+    translateTime: 'HH:MM:ss',
+    ignore: 'pid,hostname,env',
     singleLine: true,
   });
 }
@@ -51,27 +51,21 @@ export function getLogger(): Logger {
     const logLevel = config.LOG_LEVEL || Defaults.LOG_LEVEL;
     const nodeEnv = config.NODE_ENV || Defaults.NODE_ENV;
 
-    const baseOptions: pino.LoggerOptions = {
-      level: logLevel,
-      formatters: {
-        bindings: (bindings) => ({
-          ...bindings,
-          env: nodeEnv,
-        }),
-      },
-      timestamp: pino.stdTimeFunctions.isoTime,
-    };
-
     if (nodeEnv === 'development') {
-      // Desarrollo: salida legible con pino-pretty
       const prettyStream = createPrettyStream();
-      _loggerInstance = pino(baseOptions, prettyStream) as Logger;
+      _loggerInstance = pino(prettyStream) as Logger;
     } else {
-      // Producción: salida JSON estándar
-      _loggerInstance = pino(baseOptions);
+      _loggerInstance = pino({
+        level: logLevel,
+        formatters: {
+          bindings: (bindings) => ({
+            ...bindings,
+            env: nodeEnv,
+          }),
+        },
+      }) as Logger;
     }
 
-    // Mensaje de inicialización
     const logger = _loggerInstance as pino.Logger;
     logger.info('Logger inicializado');
   }
