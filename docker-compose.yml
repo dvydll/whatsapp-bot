@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  whatsappbot:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: whatsappbot
+    restart: unless-stopped
+    volumes:
+      # Persist session data (WhatsApp authentication)
+      - ./session:/app/session
+      # Persist application data
+      - ./data:/app/data
+      # Persist settings
+      - ./settings:/app/settings
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    # Optional: Add health check
+    healthcheck:
+      test: ["CMD", "pnpm", "run", "test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    # Optional: Add logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
