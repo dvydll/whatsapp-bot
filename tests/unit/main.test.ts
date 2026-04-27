@@ -1,11 +1,11 @@
 /**
- * Tests para el módulo main
+ * Tests para el módulo index (enfoque funcional)
  * @module tests/unit/main.test
  */
 
 import { describe, expect, it, vi } from 'vitest';
 
-// Mock getConfig antes de importar el módulo main
+// Mock getConfig
 vi.mock('../../src/config/env.js', () => ({
   getConfig: () => ({
     BOT_NAME: 'TestBot',
@@ -68,36 +68,71 @@ vi.mock('../../src/infrastructure/external/whatsapp-client.js', () => ({
   }),
 }));
 
-describe('main', () => {
-  describe('exports', () => {
-    it('debe exportar la función start', async () => {
-      const { start } = await import('../../src/index.js');
-      expect(start).toBeDefined();
-      expect(typeof start).toBe('function');
+// Mock MessageHandler
+vi.mock('../../src/presentation/handlers/index.js', () => ({
+  createMessageHandler: vi.fn(() => ({
+    handle: vi.fn().mockResolvedValue(undefined),
+    registerCommand: vi.fn(),
+  })),
+}));
+
+describe('index (functional)', () => {
+  describe('createBot factory', () => {
+    it('debe exportar createBot como función', async () => {
+      const { createBot } = await import('../../src/index.js');
+      expect(createBot).toBeDefined();
+      expect(typeof createBot).toBe('function');
     });
 
-    it('debe exportar la función stop', async () => {
-      const { stop } = await import('../../src/index.js');
-      expect(stop).toBeDefined();
-      expect(typeof stop).toBe('function');
+    it('debe crear una instancia con start y stop', async () => {
+      const { createBot } = await import('../../src/index.js');
+      const bot = createBot();
+      
+      expect(bot.start).toBeDefined();
+      expect(bot.stop).toBeDefined();
+      expect(typeof bot.start).toBe('function');
+      expect(typeof bot.stop).toBe('function');
+      expect(bot.isRunning).toBeDefined();
+      expect(bot.getClient).toBeDefined();
+    });
+
+    it('debe crear múltiples instancias independientes', async () => {
+      const { createBot } = await import('../../src/index.js');
+      const bot1 = createBot();
+      const bot2 = createBot();
+      
+      // Cada instancia tiene su propio estado
+      expect(bot1).not.toBe(bot2);
     });
   });
 
-  describe('start', () => {
-    it('debe ser una función async', async () => {
-      const { start } = await import('../../src/index.js');
+  describe('start/stop', () => {
+    it('start debe ser una función async', async () => {
+      const { createBot } = await import('../../src/index.js');
+      const { start } = createBot();
+      
+      expect(start).toBeDefined();
       const result = start();
       expect(result).toBeInstanceOf(Promise);
       await result;
     });
-  });
 
-  describe('stop', () => {
-    it('debe ser una función async', async () => {
-      const { stop } = await import('../../src/index.js');
+    it('stop debe ser una función async', async () => {
+      const { createBot } = await import('../../src/index.js');
+      const { start, stop } = createBot();
+      
+      await start();
       const result = stop();
       expect(result).toBeInstanceOf(Promise);
       await result;
+    });
+  });
+
+  describe('setupSignalHandlers', () => {
+    it('debe exportar setupSignalHandlers', async () => {
+      const { setupSignalHandlers } = await import('../../src/index.js');
+      expect(setupSignalHandlers).toBeDefined();
+      expect(typeof setupSignalHandlers).toBe('function');
     });
   });
 });

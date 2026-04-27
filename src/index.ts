@@ -1,100 +1,106 @@
+/**
+ * WhatsApp Bot - Entry Point
+ * @module index
+ * 
+ * Enfoque funcional: closures, inmutabilidad, sin estado global mutable
+ */
+
 import { config } from './config/index.js';
 import { getWhatsAppClient, type WhatsAppClient } from './infrastructure/external/whatsapp-client.js';
 import { logger } from './infrastructure/logging/index.js';
+import { createMessageHandler, type MessageHandler } from './presentation/handlers/index.js';
 import { getPackageVersion } from './shared/utils/esm.js';
 
 /**
- * Versión del bot (obtenida dinámicamente desde package.json)
+ * Versión del bot (inmutable, obtenida dinámicamente)
  */
 const BOT_VERSION = getPackageVersion();
 
 /**
- * Instancia del cliente WhatsApp
+ * Banner de inicio (función pura)
  */
-let waClient: WhatsAppClient | null = null;
+const printBanner = (): string => `
+ ╔═══════════════════════════════════════════════════════════╗
+ ║  ${config.BOT_NAME} v${BOT_VERSION}                    ║
+ ║  WhatsApp Bot con arquitectura moderna                 ║
+ ╚═══════════════════════════════════════════════════════════╝
+`;
 
 /**
- * Bandera para controlar el estado del bot
+ * Mensaje de inicialización (función pura)
  */
-let isRunning = false;
+const formatInitMessage = (): string => [
+  '─'.repeat(53),
+  `Inicializando ${config.BOT_NAME} v${BOT_VERSION}...`,
+  `Entorno: ${config.NODE_ENV}`,
+  `Log Level: ${config.LOG_LEVEL}`,
+  `Prefijo de comandos: ${config.BOT_PREFIX}`,
+  '─'.repeat(53),
+].join('\n');
 
 /**
- * Mensaje de banner inicial
+ * Mensajes de estado de conexión (función pura)
  */
-function printBanner(): void {
-  const banner = `
-╔═══════════════════════════════════════════════════════════╗
-║  ${config.BOT_NAME} v${BOT_VERSION}                           ║
-║  WhatsApp Bot con arquitectura moderna                 ║
-╚═══════════════════════════════════════════════════════════╝
-  `;
-  console.log(banner);
-}
+const connectionStateMessages: Record<string, string> = {
+  connecting: 'Conectando a WhatsApp...',
+  connected: 'Conectado a WhatsApp',
+  disconnecting: 'Desconectando de WhatsApp...',
+  disconnected: 'Desconectado de WhatsApp',
+};
 
 /**
- * Mensaje de inicialización
+ * Factory: crea las funciones start/stop con estado encapsulado
+ * @returns Objeto con funciones start, stop y referencia al estado (solo lectura)
  */
-function printInitialization(): void {
-  logger.info('─'.repeat(53));
-  logger.info(`Inicializando ${config.BOT_NAME} v${BOT_VERSION}...`);
-  logger.info(`Entorno: ${config.NODE_ENV}`);
-  logger.info(`Log Level: ${config.LOG_LEVEL}`);
-  logger.info(`Prefijo de comandos: ${config.BOT_PREFIX}`);
-  logger.info('─'.repeat(53));
-}
+export function createBot(): {
+  start: () => Promise<void>;
+  stop: () => Promise<void>;
+  isRunning: () => boolean;
+  getClient: () => WhatsAppClient | null;
+} {
+  // Estado encapsulado en closure (no accesible desde fuera)
+  let waClient: WhatsAppClient | null = null;
+  let isRunning = false;
 
-/**
- * Configura los eventos del cliente WhatsApp
- */
-function setupWAEvents(): void {
-  if (!waClient) return;
+  /**
+   * Configura los eventos del cliente WhatsApp
+   */
+  const setupWAEvents = (mh: MessageHandler): void => {
+    // Evento: mensaje entrante
+    waClient!.onMessage(async (wamessage) => {
+      await mh.handle(wamessage);
+    });
 
-  // Evento: mensaje entrante
-  waClient.onMessage(async (message) => {
-    const jid = message.key.remoteJid;
-    const pushName = message.pushName || 'Desconocido';
+    // Evento: cambio de conexión
+    waClient!.onConnection((state) => {
+      logger.info(connectionStateMessages[state] || `Estado: ${state}`);
+    });
 
-    logger.debug(`Mensaje de ${pushName} (${jid})`);
+    // Evento: error
+    waClient!.onError((error) => {
+      logger.error(`Error de WhatsApp: ${error.message}`);
+    });
+  };
 
-    // TODO: Implementar handlers de comandos aquí
-    // Por ahora solo logueamos el mensaje
-  });
+  /**
+   * Inicia el bot conectándose a WhatsApp
+   */
+  const start = async (): Promise<void> => {
+    if (isRunning) {
+      logger.warn('El bot ya está en ejecución');
+      return;
+    }
 
-  // Evento: cambio de conexión
-  waClient.onConnection((state) => {
-    const stateMessages: Record<string, string> = {
-      connecting: 'Conectando a WhatsApp...',
-      connected: 'Conectado a WhatsApp',
-      disconnecting: 'Desconectando de WhatsApp...',
-      disconnected: 'Desconectado de WhatsApp',
-    };
+    logger.info('Iniciando conexión con WhatsApp...');
 
-    logger.info(stateMessages[state] || `Estado: ${state}`);
-  });
-
-  // Evento: error
-  waClient.onError((error) => {
-    logger.error(`Error de WhatsApp: ${error.message}`);
-  });
-}
-
-/**
- * Inicia el bot conectándose a WhatsApp
- */
-async function start(): Promise<void> {
-  if (isRunning) {
-    logger.warn('El bot ya está en ejecución');
-    return;
-  }
-
-  logger.info('Iniciando conexión con WhatsApp...');
-
-  try {
     // Obtener instancia del cliente
     waClient = getWhatsAppClient();
 
+    // Crear manejador de mensajes
+    const messageHandler = createMessageHandler(waClient);
+
     // Configurar eventos
-    setupWAEvents();
+    setupWAEvents(messageHandler);
 
     // Conectar a WhatsApp
     await waClient.connect();
@@ -105,65 +111,63 @@ async function start(): Promise<void> {
 
     isRunning = true;
     logger.info('Bot conectado y en ejecución');
-  } catch (error) {
-    const err = error as Error;
-    logger.error(`Error al iniciar bot: ${err.message}`);
-    throw error;
-  }
-}
+  };
 
-/**
- * Detiene el bot de manera graceful
- * @description Cierra conexiones y limpa recursos
- */
-async function stop(): Promise<void> {
-  if (!isRunning) {
-    logger.warn('El bot no está en ejecución');
-    return;
-  }
+  /**
+   * Detiene el bot de manera graceful
+   */
+  const stop = async (): Promise<void> => {
+    if (!isRunning) {
+      logger.warn('El bot no está en ejecución');
+      return;
+    }
 
-  logger.info('Deteniendo bot...');
+    logger.info('Deteniendo bot...');
 
-  try {
     if (waClient) {
       await waClient.disconnect();
-      waClient = null;
     }
 
     isRunning = false;
     logger.info('Bot detenido correctamente');
     logger.info('¡Hasta luego!');
-  } catch (error) {
-    const err = error as Error;
-    logger.error(`Error al detener bot: ${err.message}`);
-    throw error;
-  }
+  };
+
+  return {
+    start,
+    stop,
+    isRunning: () => isRunning,
+    getClient: () => waClient,
+  };
 }
 
 /**
- * Manejador de señales del sistema
- * @description Maneja SIGINT (Ctrl+C) y SIGTERM (kill)
+ * Configura manejador de señales del sistema
+ * @param botInstance - Instancia del bot devuelta por createBot()
  */
-function setupSignalHandlers(): void {
+export const setupSignalHandlers = (botInstance: ReturnType<typeof createBot>): void => {
   const handleSignal = async (signal: string): Promise<void> => {
     logger.warn(`Señal ${signal} recibida, cerrando...`);
-    await stop();
+    await botInstance.stop();
     process.exit(0);
   };
 
   process.on('SIGINT', () => handleSignal('SIGINT'));
   process.on('SIGTERM', () => handleSignal('SIGTERM'));
-}
+};
 
 /**
  * Inicialización automática cuando se ejecuta directamente
  */
-async function main(): Promise<void> {
-  printBanner();
-  printInitialization();
-  setupSignalHandlers();
-  await start();
-}
+const main = async (): Promise<void> => {
+  console.log(printBanner());
+  logger.info(formatInitMessage());
+  
+  const bot = createBot();
+  setupSignalHandlers(bot);
+  
+  await bot.start();
+};
 
 // Ejecutar si es el entry point principal
 main().catch((error) => {
@@ -171,4 +175,5 @@ main().catch((error) => {
   process.exit(1);
 });
 
-export { start, stop };
+// Export factory como default export
+export default createBot;
