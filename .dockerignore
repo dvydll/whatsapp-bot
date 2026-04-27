@@ -19,6 +19,8 @@ pnpm-debug.log*
 
 # Environment files (use env_file in compose instead)
 .env
+.env.dev
+.env.prod
 .env.local
 .env.*.local
 
