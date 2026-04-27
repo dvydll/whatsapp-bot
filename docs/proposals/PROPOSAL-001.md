@@ -89,11 +89,13 @@ whatsapp-bot/
 | Tests | 0 | >80% coverage |
 | Módulos | 1 | 15+ módulos |
 | TypeScript | 0% | 100% |
+| ES Modules | 0% | 100% (type: module) |
 | Dependencies en .env | 0 | loadEnvFile nativo |
 | Docker | No | Sí |
 | Gestor de paquetes | npm | pnpm |
 | HTTP client | axios | fetch nativo |
 | Env variables | dotenv | Node loadEnvFile |
+| Require | 100% | 0% (usar import) |
 
 ---
 
