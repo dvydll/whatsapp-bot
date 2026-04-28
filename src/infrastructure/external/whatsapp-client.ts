@@ -187,6 +187,13 @@ export class WhatsAppClientImpl implements WhatsAppClient {
         printQRInTerminal: false,
       });
 
+      // ⭐ IMPORTANTE: Verificar registro ANTES de esperar eventos
+      // Esto solo se ejecuta una vez al inicio
+      if (!this.socket.authState.creds.registered) {
+        const phoneNumber = await this.askForPhoneNumber();
+        await this.requestPairingCode(phoneNumber);
+      }
+
       // Evento: conexión actualizada
       this.socket.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update;
@@ -195,12 +202,6 @@ export class WhatsAppClientImpl implements WhatsAppClient {
         if (update.qr) {
           this.logger.info('QR Code recibido, escanea con WhatsApp:');
           console.log(update.qr);
-        }
-
-        // Si no está registrado, solicitar código de vinculación
-        if (!this.socket?.authState.creds.registered) {
-          const phoneNumber = await this.askForPhoneNumber();
-          await this.requestPairingCode(phoneNumber);
         }
 
         // Conexión cerrada
