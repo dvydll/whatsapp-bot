@@ -9,8 +9,9 @@ import {
   type WAMessage,
   type WASocket,
 } from 'baileys';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { createInterface } from 'node:readline';
 import { getConfig } from '../../config/env.js';
 import { AppError } from '../../shared/errors/app-error.js';
 import { getESMDirname } from '../../shared/utils/esm.js';
@@ -89,10 +90,54 @@ export class WhatsAppClientImpl implements WhatsAppClient {
     this.logger = getLogger();
     const config = getConfig();
 
-    // Directorio para sesión (default: ./session-data)
+    // Directorio para sesión (usa ./session como el original)
     const projectRoot = join(__dirname, '../../../..');
-    this.sessionPath = process.env.SESSION_PATH || join(projectRoot, 'session-data');
+    this.sessionPath = process.env.SESSION_PATH || join(projectRoot, 'session');
     this.ensureSessionDirectory();
+  }
+
+  /**
+   * Pregunta al usuario por su número de teléfono
+   */
+  private async askForPhoneNumber(): Promise<string> {
+    return new Promise((resolve) => {
+      const rl = createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+
+      rl.question(
+        '\n📱 Escribe tu número de WhatsApp con código de país (solo números): ',
+        (answer) => {
+          rl.close();
+          const number = answer.replace(/[^0-9]/g, '');
+          if (!number) {
+            console.log('❌ Número inválido.');
+            process.exit(1);
+          }
+          resolve(number);
+        }
+      );
+    });
+  }
+
+  /**
+   * Solicita el código de vinculación
+   */
+  private async requestPairingCode(phoneNumber: string): Promise<void> {
+    console.log('\n⌛ Solicitando código de vinculación...');
+
+    try {
+      const code = await this.socket!.requestPairingCode(phoneNumber);
+      console.log('\n✅ CÓDIGO DE VINCULACIÓN:', code);
+      console.log('\n💡 Ingresa este código en WhatsApp para vincular el bot.');
+      console.log('   Abre WhatsApp > Ajustes > Dispositivos vinculados > Vincular dispositivo');
+      console.log('   E ingresa el código mostrado arriba.\n');
+    } catch (error) {
+      const err = error as Error;
+      console.log('\n❌ Error al generar código de vinculación:', err.message);
+      process.exit(1);
+    }
   }
 
   /**
@@ -138,7 +183,8 @@ export class WhatsAppClientImpl implements WhatsAppClient {
       this.socket = makeWASocket({
         auth: authState.state,
         logger: this.logger as any,
-        browser: ['WhatsApp Bot', 'Chrome', '120.0.0'],
+        browser: ['Ubuntu', 'Chrome', '20.0.04'],
+        printQRInTerminal: false,
       });
 
       // Evento: conexión actualizada
@@ -149,6 +195,12 @@ export class WhatsAppClientImpl implements WhatsAppClient {
         if (update.qr) {
           this.logger.info('QR Code recibido, escanea con WhatsApp:');
           console.log(update.qr);
+        }
+
+        // Si no está registrado, solicitar código de vinculación
+        if (!this.socket?.authState.creds.registered) {
+          const phoneNumber = await this.askForPhoneNumber();
+          await this.requestPairingCode(phoneNumber);
         }
 
         // Conexión cerrada
