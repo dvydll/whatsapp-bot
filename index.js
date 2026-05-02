@@ -74,19 +74,9 @@ const Exportion1 = JSON.parse(fs.readFileSync('./Games/Json/exportion1.json'))
 const Cuestions = JSON.parse(fs.readFileSync('./Games/Json/cuestions.json'))
               
    // 𝚃𝙸𝙼𝙴
-const moment = require("moment-timezone") 
-const time = moment.tz('America/Lima').format('DD/MM HH:mm:ss')
-const horap = moment().format('HH')
-var timeFt ='𝘽𝙪𝙚𝙣𝙖𝙨 🙋'
-if (horap >= '01' && horap <= '05') {
-  timeFt = '𝘽𝙪𝙚𝙣𝙤𝙨 𝙙𝙞𝙖𝙨 ✨'
-} else if (horap >= '05' && horap <= '12') {
-  timeFt = '𝘽𝙪𝙚𝙣𝙤𝙨 𝙙𝙞𝙖𝙨 ☀️'
-} else if (horap >= '12' && horap <= '18') {
-  timeFt = '𝘽𝙪𝙚𝙣𝙖𝙨 𝙩𝙖𝙧𝙙𝙚𝙨 ⛅'
-} else if (horap >= '18' && horap <= '23') {
-  timeFt = '𝙗𝙪𝙚𝙣𝙖𝙨 𝙣𝙤𝙘𝙝𝙚𝙨 🌑'
-} 
+const { getTime, getGreeting, runtime } = require('./lib/time.js')
+const time = getTime()
+const timeFt = getGreeting() 
 
 
 
@@ -480,28 +470,7 @@ const obtenerMencionado = (info) => {
     return null;
 };
 
-     //  Time
-const runtime = function(seconds) {
-    seconds = Number(seconds);
-    const days = Math.floor(seconds / (3600 * 24));
-    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = Math.floor(seconds % 60); // Utilizando Math.floor() para asegurar que los segundos sean enteros
-    const parts = [];    
-    if (days > 0) {
-        parts.push(days + (days === 1 ? " 𝙳𝙸𝙰" : " 𝙳𝙸𝙰𝚂"));
-    }
-    if (hours > 0) {
-        parts.push(hours + (hours === 1 ? " 𝙷𝙾𝚁𝙰" : " 𝙷𝙾𝚁𝙰𝚂"));
-    }
-    if (minutes > 0) {
-        parts.push(minutes + (minutes === 1 ? "  𝙼𝙸𝙽𝚄𝚃𝙾" : " 𝙼𝙸𝙽𝚄𝚃𝙾𝚂"));
-    }
-   if (remainingSeconds > 0) {
-    parts.push(remainingSeconds + (remainingSeconds === 1 ? " 𝚂𝙴𝙶𝚄𝙽𝙳𝙾" : " 𝚂𝙴𝙶𝚄𝙽𝙳𝙾𝚂"));
-    }    
-    return parts.join(', ');
-}
+     // Time: now imported from lib/time.js
 
   // Respuesta
      const respuesta = {
