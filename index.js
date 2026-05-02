@@ -61,7 +61,7 @@ const { checkCasino, checkAttp, checkEmoji, checkEve, addClaimTraga, checkClaimT
 
 
 // Menu bot js
-const Menu = require('./settings/Bot/Js/menu.js')
+const Menu = require('./lib/systems/menu.js')
 
 //configurar ggrupos
 const welkom = JSON.parse(fs.readFileSync('./settings/Grupo/Json/welkom.json'))
