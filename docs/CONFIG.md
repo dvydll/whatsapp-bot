@@ -85,7 +85,7 @@ NAUFRA_KEY=tu_api_key
 
 # Configuración adicional
 BOT_NAME=NaufraBot
-TIMEZONE=America/Lima
+TIMEZONE=Europe/Madrid
 ```
 
 ### 3.2 Cargar variables en index.js
@@ -173,14 +173,14 @@ const prefixo = ['#','/','•','.','!','?','*','$']
 En `index.js`, línea ~78:
 
 ```javascript
-const time = moment.tz('America/Lima').format('DD/MM HH:mm:ss')
+const time = moment.tz('Europe/Madrid').format('DD/MM HH:mm:ss')
 ```
 
 ### 7.2 Zonas Disponibles
 
 | Zona | Ciudad |
 |------|-------|
-| America/Lima | Lima |
+| Europe/Madrid | Lima |
 | America/Bogota | Bogotá |
 | America/Mexico_City | Ciudad de México |
 | America/Buenos_Aires | Buenos Aires |

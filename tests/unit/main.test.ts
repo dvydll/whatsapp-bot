@@ -12,7 +12,7 @@ vi.mock('../../src/config/env.js', () => ({
     OWNER_JID: '123456789@s.whatsapp.net',
     BOT_PREFIX: '.',
     NAUFRA_KEY: 'test-key',
-    TIMEZONE: 'America/Lima',
+    TIMEZONE: 'Europe/Madrid',
     LOG_LEVEL: 'info',
     NODE_ENV: 'development',
   }),
@@ -21,7 +21,7 @@ vi.mock('../../src/config/env.js', () => ({
     OWNER_JID: '123456789@s.whatsapp.net',
     BOT_PREFIX: '.',
     NAUFRA_KEY: 'test-key',
-    TIMEZONE: 'America/Lima',
+    TIMEZONE: 'Europe/Madrid',
     LOG_LEVEL: 'info',
     NODE_ENV: 'development',
   },
@@ -30,7 +30,7 @@ vi.mock('../../src/config/env.js', () => ({
 vi.mock('../../src/config/defaults.js', () => ({
   Defaults: {
     PREFIX: '.',
-    TIMEZONE: 'America/Lima',
+    TIMEZONE: 'Europe/Madrid',
     COOLDOWN_MS: 3000,
     MAX_COINS: 1000000,
     WELCOME_DELAY_MS: 5000,
@@ -87,7 +87,7 @@ describe('index (functional)', () => {
     it('debe crear una instancia con start y stop', async () => {
       const { createBot } = await import('../../src/index.js');
       const bot = createBot();
-      
+
       expect(bot.start).toBeDefined();
       expect(bot.stop).toBeDefined();
       expect(typeof bot.start).toBe('function');
@@ -100,7 +100,7 @@ describe('index (functional)', () => {
       const { createBot } = await import('../../src/index.js');
       const bot1 = createBot();
       const bot2 = createBot();
-      
+
       // Cada instancia tiene su propio estado
       expect(bot1).not.toBe(bot2);
     });
@@ -110,7 +110,7 @@ describe('index (functional)', () => {
     it('start debe ser una función async', async () => {
       const { createBot } = await import('../../src/index.js');
       const { start } = createBot();
-      
+
       expect(start).toBeDefined();
       const result = start();
       expect(result).toBeInstanceOf(Promise);
@@ -120,7 +120,7 @@ describe('index (functional)', () => {
     it('stop debe ser una función async', async () => {
       const { createBot } = await import('../../src/index.js');
       const { start, stop } = createBot();
-      
+
       await start();
       const result = stop();
       expect(result).toBeInstanceOf(Promise);

@@ -2,8 +2,8 @@
  * Tests para el sistema de logging con Pino
  */
 
-import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
-import { getLogger, resetLogger, logger, LogLevel } from '../../src/infrastructure/logging/logger.js';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { getLogger, logger, LogLevel, resetLogger } from '../../src/infrastructure/logging/logger.js';
 
 // Mock getConfig para testing
 vi.mock('../../src/config/env.js', () => ({
@@ -14,14 +14,14 @@ vi.mock('../../src/config/env.js', () => ({
     OWNER_JID: '123456789@s.whatsapp.net',
     BOT_PREFIX: '.',
     NAUFRA_KEY: 'test-key',
-    TIMEZONE: 'America/Lima',
+    TIMEZONE: 'Europe/Madrid',
   }),
 }));
 
 vi.mock('../../src/config/defaults.js', () => ({
   Defaults: {
     PREFIX: '.',
-    TIMEZONE: 'America/Lima',
+    TIMEZONE: 'Europe/Madrid',
     COOLDOWN_MS: 3000,
     MAX_COINS: 1000000,
     WELCOME_DELAY_MS: 5000,

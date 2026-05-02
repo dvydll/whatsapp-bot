@@ -2,7 +2,7 @@
  * Tests para validación de esquema de entorno
  */
 
-import { describe, expect, it, beforeEach, afterEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { envSchema } from '../../src/config/env.js';
 
 describe('envSchema', () => {
@@ -11,7 +11,7 @@ describe('envSchema', () => {
     OWNER_JID: '123456789@s.whatsapp.net',
     BOT_PREFIX: '#',
     NAUFRA_KEY: 'test-key-123',
-    TIMEZONE: 'America/Lima',
+    TIMEZONE: 'Europe/Madrid',
     LOG_LEVEL: 'info',
     NODE_ENV: 'development',
   };

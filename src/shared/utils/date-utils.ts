@@ -1,5 +1,5 @@
 // Date utilities
-export function formatDate(date: Date, timezone = 'America/Lima'): string {
+export function formatDate(date: Date, timezone = 'Europe/Madrid'): string {
   return date.toLocaleString('es-PE', { timeZone: timezone });
 }
 
