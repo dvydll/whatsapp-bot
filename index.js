@@ -7,14 +7,14 @@
 //Modulos
 const { default: makeWASocket,
   DisconnectReason, JulsBotIncConnect, getAggregateVotesInPollMessage, delay, makeCacheableSignalKeyStore, useMultiFileAuthState,
- fetchLatestBaileysVersion, 
- generateForwardMessageContent,
- prepareWAMessageMedia, 
- generateWAMessageFromContent, 
- generateMessageID,
-  downloadContentFromMessage, 
+  fetchLatestBaileysVersion,
+  generateForwardMessageContent,
+  prepareWAMessageMedia,
+  generateWAMessageFromContent,
+  generateMessageID,
+  downloadContentFromMessage,
   jidDecode,
-   proto } = require("baileys")
+  proto } = require("baileys")
 const fs = require('fs')
 const { Boom } = require('@hapi/boom')
 const NodeCache = require("node-cache")
@@ -29,70 +29,70 @@ const mimetype = require('mime-types')
 const { exec, spawn, execSync } = require("child_process")
 let phoneNumber = "5199999999"; // cambiar número
 const axios = require("axios")
- const ffmpeg = require('fluent-ffmpeg')
- 
- //color
+const ffmpeg = require('fluent-ffmpeg')
+
+//color
 const chalk = require('chalk')
 const color = (text, color) => { return !color ? chalk.green(text) : chalk.keyword(color)(text) };
- 
- //baner
+
+//baner
 const banner = cfonts.render("Naufra| Bot| Base", {
   font: 'pallet',
   align: 'center',
-  gradient: ["green","blue"]
+  gradient: ["green", "blue"]
 })
-      // FUNCIONES DESCARGA 
+// FUNCIONES DESCARGA 
 const { fetchJson, getBuffer, fetchBuffer } = require('./lib/http/download.js')
 
 
 const { getExtension, getRandom } = require('./lib/utils/utils-fuctions.js')
 
- //Stickers
+//Stickers
 const { sendVideoAsSticker, sendImageAsSticker } = require('./lib/whatsapp/sticker/sticker.js');
 const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./lib/whatsapp/sticker/sticker2.js');
- 
- //Grupos js
-const { MoneyOfSender, addkoin, delkoin, AddReg, checkOfReg , addLevel, addXp,levelOfsender , xpOfsender ,checkOfRegM ,addkoinM , delkoinM , MoneyOfM,Rxp, addRxp ,addRep , delRep , repUser  } = require('./settings/Grupo/Js/reg.js')
-     
-           // GAMES
-const  { addClaim , checkClaim , timeClaim ,expiredClaim } = require('./Games/Js/claim.js')
-const { checkCasino,checkAttp,checkEmoji,checkEve, addClaimTraga, checkClaimTraga, timeClaimTraga, checkRuleta,checkMinar,addCasino,addAttp,addEmoji,addEve,addRuleta ,addMinar,expiredCasino,expiredMinar,expiredAttp,expiredEmoji,expiredEve,expiredRuleta,timeAttp,timeEmoji,timeEve,timeRuleta,timeMinar,timeCasino,expiredDayli,JsonDayli,addDayli,timeDayli,checkDayli,checkPescar,timePescar,addPescar,expiredPescar}
- = require('./Games/Js/mining.js')
 
-      
-    // Menu bot js
-const Menu = require ('./settings/Bot/Js/menu.js')
+//Grupos js
+const { MoneyOfSender, addkoin, delkoin, AddReg, checkOfReg, addLevel, addXp, levelOfsender, xpOfsender, checkOfRegM, addkoinM, delkoinM, MoneyOfM, Rxp, addRxp, addRep, delRep, repUser } = require('./settings/Grupo/Js/reg.js')
 
- //configurar ggrupos
-const welkom = JSON.parse(fs.readFileSync('./settings/Grupo/Json/welkom.json')) 
+// GAMES
+const { addClaim, checkClaim, timeClaim, expiredClaim } = require('./lib/systems/games/claim.js')
+const { checkCasino, checkAttp, checkEmoji, checkEve, addClaimTraga, checkClaimTraga, timeClaimTraga, checkRuleta, checkMinar, addCasino, addAttp, addEmoji, addEve, addRuleta, addMinar, expiredCasino, expiredMinar, expiredAttp, expiredEmoji, expiredEve, expiredRuleta, timeAttp, timeEmoji, timeEve, timeRuleta, timeMinar, timeCasino, expiredDayli, JsonDayli, addDayli, timeDayli, checkDayli, checkPescar, timePescar, addPescar, expiredPescar }
+  = require('./Games/Js/mining.js')
+
+
+// Menu bot js
+const Menu = require('./settings/Bot/Js/menu.js')
+
+//configurar ggrupos
+const welkom = JSON.parse(fs.readFileSync('./settings/Grupo/Json/welkom.json'))
 const antilink = JSON.parse(fs.readFileSync('./settings/Grupo/Json/antilink.json'))
 const bngp = JSON.parse(fs.readFileSync('./settings/Grupo/Json/grupo.json'))
 const Antipv = JSON.parse(fs.readFileSync('./settings/Grupo/Json/chat.json'))
-const registro = JSON.parse(fs.readFileSync('./settings/Grupo/Json/registros.json')) 
+const registro = JSON.parse(fs.readFileSync('./settings/Grupo/Json/registros.json'))
 const Exportion = JSON.parse(fs.readFileSync('./Games/Json/exportion.json'))
 const Exportion1 = JSON.parse(fs.readFileSync('./Games/Json/exportion1.json'))
 const Cuestions = JSON.parse(fs.readFileSync('./Games/Json/cuestions.json'))
-              
-   // 𝚃𝙸𝙼𝙴
+
+// 𝚃𝙸𝙼𝙴
 const { getTime, getGreeting, runtime } = require('./lib/core/time.js')
 const time = getTime()
-const timeFt = getGreeting() 
+const timeFt = getGreeting()
 
 
 
- // Configuraciones
+// Configuraciones
 const { creador, owner, Bot, JpgBot, NAUFRA_KEY, prefixo, APINAUFRA, pairingCode, useMobile } = require('./lib/core/config.js')
 const { pickRandom, DLT_FL, sleep, isUrl, guardarEstadoBot, getEstadoBot, generarCodigo } = require('./lib/utils/helpers.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
 function getGroupAdmins(participants) {
-admins = []
-for (let i of participants) {
-if(i.admin == 'admin') admins.push(i.id)
-if(i.admin == 'superadmin') admins.push(i.id)
-}
-return admins
+  admins = []
+  for (let i of participants) {
+    if (i.admin == 'admin') admins.push(i.id)
+    if (i.admin == 'superadmin') admins.push(i.id)
+  }
+  return admins
 }
 
 async function startProo() {
@@ -167,43 +167,34 @@ async function startProo() {
 
 
 
-    
-               // 𝙲𝙾𝙽𝙴𝚇𝙸𝙾𝙽 
-        // 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙰 𝚈 𝙳𝙴𝚂𝙿𝙴𝙳𝙸𝙳𝙰 
-sock.ev.on("group-participants.update", async (anu) => {
-if(!welkom.includes(anu.id)) return
-try {
-const metadata = await sock.groupMetadata(anu.id)
-  participants = anu.participants
-  for (let num of participants){
- 
-if(anu.action == 'add') {
-const grup = metadata.subject
-const num = anu.participants[0]
-const mem = metadata.participants.length
-const descr = metadata.desc
-const sol = `
-✦━─⌬༓༒༓⌬─━✦
-*✧༺ 𝑩𝒊𝒆𝒏𝒗𝒆𝒏𝒊𝒅𝒐/𝒂 ✦༻✧*
 
-💌 「 Hola @${num.split('@')[0]} 🌟 y bienvenido/a al reino de *${grup}* 」
-🥂 Que tu estancia esté llena de risas, buena charla 🗨 y alguna que otra copa de hidromiel 🍯🍺
+  // 𝙲𝙾𝙽𝙴𝚇𝙸𝙾𝙽 
+  // 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙰 𝚈 𝙳𝙴𝚂𝙿𝙴𝙳𝙸𝙳𝙰 
+  sock.ev.on("group-participants.update", async (anu) => {
+    if (!welkom.includes(anu.id)) return
+    try {
+      const metadata = await sock.groupMetadata(anu.id)
+      participants = anu.participants
+      for (let num of participants) {
 
-📜 Recuerda echarle un ojo a nuestras reglas para no invocar a los dragones 🐉🔥
- 
-『 👥 Miembros actuales: ${mem} 』
-✦━─⌬༓༒༓⌬─━✦
-`
+        if (anu.action == 'add') {
+          const welcomeImg = "https://i.ibb.co/HDf3hw9J/20250702-214923.jpg";
+          const grup = metadata.subject
+          const num = anu.participants[0]
+          const mem = metadata.participants.length
+          const descr = metadata.desc
+          const sol = `💌 「 Bienvenid@ a *${grup}* @${num.split('@')[0]} 
+『 👥 Miembros actuales: ${mem} 』`
 
-await sock.sendMessage(anu.id, {
-  image: { url: "https://i.ibb.co/HDf3hw9J/20250702-214923.jpg" },
-  caption: sol,
-  mentions: [num]  // 👈 Aquí haces la mención real
-})
-}
-if (anu.action == 'promote') {
-    num = anu.participants[0]    
-    teks = `
+          await sock.sendMessage(anu.id, {
+            image: { url: welcomeImg },
+            caption: sol,
+            mentions: [num]  // 👈 Aquí haces la mención real
+          })
+        }
+        if (anu.action == 'promote') {
+          num = anu.participants[0]
+          teks = `
 ✦━─┈༓༒༓┈─━✦
 
      *✧༺ 𝓝𝓾𝓮𝓿𝓸 𝓐𝓭𝓶𝓲𝓷 ༻✧*
@@ -214,344 +205,347 @@ if (anu.action == 'promote') {
 
 ✦━─┈༓༒༓┈─━✦
 `
-  await sock.sendMessage(anu.id,{image : { url : "https://i.postimg.cc/0ygy14nq/20251017-152852.jpg" }, caption : teks})
+          await sock.sendMessage(anu.id, { image: { url: "https://i.postimg.cc/0ygy14nq/20251017-152852.jpg" }, caption: teks })
+        }
+
+      }
+    } catch (e) {
+      console.log('Error: %s', color(e, "red"))
     }
+  })
 
-} 
-}catch(e) {
-console.log('Error: %s', color(e, "red"))
-}
-})
+  //Bienvenida y despedidas
 
-//Bienvenida y despedidas
+  sock.ev.on('creds.update', saveCreds)
+  sock.ev.on("messages.upsert", () => { })
 
-sock.ev.on('creds.update', saveCreds)
-sock.ev.on("messages.upsert",  () => { })
+  sock.ev.on('messages.upsert', async m => {
+    try {
+      const info = m.messages[0]
+      if (!info.message) return
+      if (info.key && info.key.remoteJid == "status@broadcast") return
+      const altpdf = Object.keys(info.message)
+      const type = altpdf[0] == "senderKeyDistributionMessage" ? altpdf[1] == "messageContextInfo" ? altpdf[2] : altpdf[1] : altpdf[0]
+      const content = JSON.stringify(info.message)
+      const from = info.key.remoteJid
+      var body = (type === 'conversation') ? info.message.conversation : (type == 'imageMessage') ? info.message.imageMessage.caption : (type == 'videoMessage') ? info.message.videoMessage.caption : (type == 'extendedTextMessage') ? info.message.extendedTextMessage.text : (type == 'buttonsResponseMessage') ? info.message.buttonsResponseMessage.selectedButtonId : (type == 'listResponseMessage') ? info.message.listResponseMessage.singleSelectReply.selectedRowId : (type == 'templateButtonReplyMessage') ? info.message.templateButtonReplyMessage.selectedId : ''
 
-sock.ev.on('messages.upsert', async m => {
- try {
- const info = m.messages[0]
- if (!info.message) return 
- if (info.key && info.key.remoteJid == "status@broadcast") return
- const altpdf = Object.keys(info.message)
- const type = altpdf[0] == "senderKeyDistributionMessage" ? altpdf[1] == "messageContextInfo" ? altpdf[2] : altpdf[1] : altpdf[0]
-const content = JSON.stringify(info.message)
-const from = info.key.remoteJid
- var body = (type === 'conversation') ? info.message.conversation : (type == 'imageMessage') ? info.message.imageMessage.caption : (type == 'videoMessage') ? info.message.videoMessage.caption : (type == 'extendedTextMessage') ? info.message.extendedTextMessage.text : (type == 'buttonsResponseMessage') ? info.message.buttonsResponseMessage.selectedButtonId : (type == 'listResponseMessage') ? info.message.listResponseMessage.singleSelectReply.selectedRowId : (type == 'templateButtonReplyMessage') ? info.message.templateButtonReplyMessage.selectedId : ''
+      const budy = (type === 'conversation') ? info.message.conversation : (type === 'extendedTextMessage') ? info.message.extendedTextMessage.text : ''
 
-const budy = (type === 'conversation') ? info.message.conversation : (type === 'extendedTextMessage') ? info.message.extendedTextMessage.text : ''
+      var pes = (type === 'conversation' && info.message.conversation) ? info.message.conversation : (type == 'imageMessage') && info.message.imageMessage.caption ? info.message.imageMessage.caption : (type == 'videoMessage') && info.message.videoMessage.caption ? info.message.videoMessage.caption : (type == 'extendedTextMessage') && info.message.extendedTextMessage.text ? info.message.extendedTextMessage.text : ''
 
-var pes = (type === 'conversation' && info.message.conversation) ? info.message.conversation : (type == 'imageMessage') && info.message.imageMessage.caption ? info.message.imageMessage.caption : (type == 'videoMessage') && info.message.videoMessage.caption ? info.message.videoMessage.caption : (type == 'extendedTextMessage') && info.message.extendedTextMessage.text ? info.message.extendedTextMessage.text : ''
-
-const numerodono = [
-  `${owner}`
-];
+      const numerodono = [
+        `${owner}`
+      ];
 
 
-const verificarN = async(sla) => {
-const [result] = await sock.onWhatsApp(sla)
-if(result == undefined) {
-enviar("Este usuário no existe en WhatsApp")
-} else {
-enviar(`${sla} Número existente en WhatsApp con  id: ${result.jid}`)
-}
-}
-    
-// Constantes is
- const isGroup = info.key.remoteJid.endsWith('@g.us')
-const sender = isGroup ? info.key.participant: from
-const groupMetadata = isGroup ? await sock.groupMetadata(from) : ''
-const groupName = isGroup ? groupMetadata.subject : ''
-const groupDesc = isGroup ? groupMetadata.desc : ''
-const groupMembers = isGroup ? groupMetadata.participants || [] : [];
-const nome = info.pushName ? info.pushName : ''
-const groupAdmins = groupMembers.filter(p => p.admin);
-const Sadm = isGroup ? getGroupAdmins(groupAdmins) :''
-const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase()
-const args = body.trim().split(/ +/).slice(1)
-const q = args.join(' ')
-const text = args.join(' ')
-const isCmd = body.startsWith(prefixo)
-              
-  // MULTIPREFIJO 
-const removeAccents = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-const prefixes = prefixo ? prefixo.map(prefix => prefix.toLowerCase()) : [];
-const lowerBudy = budy.toLowerCase();
-const hasPrefix = prefixes.some(prefix => lowerBudy.startsWith(prefix));
-const commandArgs = hasPrefix ? lowerBudy.slice(prefixes.find(prefix => lowerBudy.startsWith(prefix)).length).trim().split(' ') : lowerBudy.trim().split(' ');
-const comando = removeAccents(commandArgs[0]);
-  // MULTIPREFIJO
-const mentions = (teks, memberr, id) => {
-(id == null || id == undefined || id == false) ? sock.sendMessage(from, {text: teks.trim(), mentions: memberr}) : sock.sendMessage(from, {text: teks.trim(), mentions: memberr})}
-const quoted = info.quoted ? info.quoted : info
-const mime = (quoted.info || quoted).Mimetype || ""
-// sleep ahora viene de lib/helpers.js
-const pushname = info.pushName ? info.pushName : ''
-const isBot = info.key.fromMe ? true : false
-const senderNumber = sender.split("@")[0]
-const BotNumber = sock.user.id.split(':')[0]+'@s.whatsapp.net'
-const isOwner =  numerodono.includes(sender)
+      const verificarN = async (sla) => {
+        const [result] = await sock.onWhatsApp(sla)
+        if (result == undefined) {
+          enviar("Este usuário no existe en WhatsApp")
+        } else {
+          enviar(`${sla} Número existente en WhatsApp con  id: ${result.jid}`)
+        }
+      }
+
+      // Constantes is
+      const isGroup = info.key.remoteJid.endsWith('@g.us')
+      const sender = isGroup ? info.key.participant : from
+      const groupMetadata = isGroup ? await sock.groupMetadata(from) : ''
+      const groupName = isGroup ? groupMetadata.subject : ''
+      const groupDesc = isGroup ? groupMetadata.desc : ''
+      const groupMembers = isGroup ? groupMetadata.participants || [] : [];
+      const nome = info.pushName ? info.pushName : ''
+      const groupAdmins = groupMembers.filter(p => p.admin);
+      const Sadm = isGroup ? getGroupAdmins(groupAdmins) : ''
+      const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase()
+      const args = body.trim().split(/ +/).slice(1)
+      const q = args.join(' ')
+      const text = args.join(' ')
+      const isCmd = body.startsWith(prefixo)
+
+      // MULTIPREFIJO 
+      const removeAccents = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const prefixes = prefixo ? prefixo.map(prefix => prefix.toLowerCase()) : [];
+      const lowerBudy = budy.toLowerCase();
+      const hasPrefix = prefixes.some(prefix => lowerBudy.startsWith(prefix));
+      const commandArgs = hasPrefix ? lowerBudy.slice(prefixes.find(prefix => lowerBudy.startsWith(prefix)).length).trim().split(' ') : lowerBudy.trim().split(' ');
+      const comando = removeAccents(commandArgs[0]);
+      // MULTIPREFIJO
+      const mentions = (teks, memberr, id) => {
+        (id == null || id == undefined || id == false) ? sock.sendMessage(from, { text: teks.trim(), mentions: memberr }) : sock.sendMessage(from, { text: teks.trim(), mentions: memberr })
+      }
+      const quoted = info.quoted ? info.quoted : info
+      const mime = (quoted.info || quoted).Mimetype || ""
+      // sleep ahora viene de lib/helpers.js
+      const pushname = info.pushName ? info.pushName : ''
+      const isBot = info.key.fromMe ? true : false
+      const senderNumber = sender.split("@")[0]
+      const BotNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net'
+      const isOwner = numerodono.includes(sender)
 
 
-const isGroupAdmins = groupAdmins.some(admin => admin.id?.includes(sender));
-const isBotGroupAdmins = esAdminFlexible(sock, groupAdmins.map(p => p.id));
+      const isGroupAdmins = groupAdmins.some(admin => admin.id?.includes(sender));
+      const isBotGroupAdmins = esAdminFlexible(sock, groupAdmins.map(p => p.id));
 
-function esAdminFlexible(sock, listaDeAdmins = []) {
-  if (!sock?.authState?.creds?.me) return false;
+      function esAdminFlexible(sock, listaDeAdmins = []) {
+        if (!sock?.authState?.creds?.me) return false;
 
-  const botId = sock.authState.creds.me.id;   // ej: 51916525000:26@lid
-  const botLid = sock.authState.creds.me.lid; // ej: 51916525000@lid
+        const botId = sock.authState.creds.me.id;   // ej: 51916525000:26@lid
+        const botLid = sock.authState.creds.me.lid; // ej: 51916525000@lid
 
-  const clean = (jid) => jid?.split(':')[0]; // elimina el ":26" si existe
+        const clean = (jid) => jid?.split(':')[0]; // elimina el ":26" si existe
 
-  return listaDeAdmins.some(adminJid => {
-    const adminBase = clean(adminJid);
-    return (
-      adminJid === botId ||
-      adminJid === botLid ||
-      adminJid === botId.replace(/:\d+/, '') || // compara sin ":xx"
-      adminJid === botLid.replace(/:\d+/, '') ||
-      adminBase === clean(botId) ||
-      adminBase === clean(botLid)
-    );
-  });
-}
+        return listaDeAdmins.some(adminJid => {
+          const adminBase = clean(adminJid);
+          return (
+            adminJid === botId ||
+            adminJid === botLid ||
+            adminJid === botId.replace(/:\d+/, '') || // compara sin ":xx"
+            adminJid === botLid.replace(/:\d+/, '') ||
+            adminBase === clean(botId) ||
+            adminBase === clean(botLid)
+          );
+        });
+      }
 
-// isUrl ahora viene de lib/helpers.js
-const deviceType = info.key.id.length > 21 ? 'Android' : info.key.id.substring(0, 2) == '3A' ? 'IPhone' : 'WhatsApp web'
-const options = { timeZone: 'America/Lima', hour12: false }
-const data = new Date().toLocaleDateString('PE', { ...options, day: '2-digit', month: '2-digit', year: '2-digit' })
-const hora = new Date().toLocaleTimeString('PE', options) 
+      // isUrl ahora viene de lib/helpers.js
+      const deviceType = info.key.id.length > 21 ? 'Android' : info.key.id.substring(0, 2) == '3A' ? 'IPhone' : 'WhatsApp web'
+      const options = { timeZone: 'Europe/Madrid', hour12: false }
+      const data = new Date().toLocaleDateString('PE', { ...options, day: '2-digit', month: '2-digit', year: '2-digit' })
+      const hora = new Date().toLocaleTimeString('PE', options)
 
-           // Constantes if nuevas
-  const iswelkom = isGroup ? welkom.includes(from) : false
-const isBanGp = isGroup ? bngp.includes(from) : false
-const isAntipv = Antipv.includes('activo')
-const isReg = checkOfReg(sender)
- const isAntiLink = isGroup ? antilink.includes(from) : false 
-const coins = MoneyOfSender(sender)
- 
- // 🟢 Sistema de encendido/apagado global del bot
+      // Constantes if nuevas
+      const iswelkom = isGroup ? welkom.includes(from) : false
+      const isBanGp = isGroup ? bngp.includes(from) : false
+      const isAntipv = Antipv.includes('activo')
+      const isReg = checkOfReg(sender)
+      const isAntiLink = isGroup ? antilink.includes(from) : false
+      const coins = MoneyOfSender(sender)
 
-const estadoPath = './settings/estadoBot.json'
+      // 🟢 Sistema de encendido/apagado global del bot
+
+      const estadoPath = './settings/estadoBot.json'
 
 
-if (!fs.existsSync(estadoPath)) {
-  fs.writeFileSync(estadoPath, JSON.stringify({ activo: true }, null, 2))
-}
-let botActivo = JSON.parse(fs.readFileSync(estadoPath)).activo
-function guardarEstadoBot(estado) {
-  fs.writeFileSync(estadoPath, JSON.stringify({ activo: estado }, null, 2))
-  botActivo = estado
-}
+      if (!fs.existsSync(estadoPath)) {
+        fs.writeFileSync(estadoPath, JSON.stringify({ activo: true }, null, 2))
+      }
+      let botActivo = JSON.parse(fs.readFileSync(estadoPath)).activo
+      function guardarEstadoBot(estado) {
+        fs.writeFileSync(estadoPath, JSON.stringify({ activo: estado }, null, 2))
+        botActivo = estado
+      }
 
-//
+      //
 
-//MODO ADMIN 
+      //MODO ADMIN 
 
-const modoAdminPath = './settings/Grupo/Json/modo_admin.json';
-const modoAdminList = fs.existsSync(modoAdminPath) ? JSON.parse(fs.readFileSync(modoAdminPath)) : [];
-const isModoAdmin = isGroup ? modoAdminList.includes(from) : false;
+      const modoAdminPath = './settings/Grupo/Json/modo_admin.json';
+      const modoAdminList = fs.existsSync(modoAdminPath) ? JSON.parse(fs.readFileSync(modoAdminPath)) : [];
+      const isModoAdmin = isGroup ? modoAdminList.includes(from) : false;
 
 
 
- //Funciones nuevas (pickRandom y DLT_FL ahora vienen de lib/helpers.js)
-    
- const enviar = (texto) => {
- sock.sendMessage(from,{ text : texto }, {quoted : info})
- }
- 
- //rangos
-const rangos = JSON.parse(fs.readFileSync('./settings/rangos.json'))
-const YouN = levelOfsender(sender)
-const Mlevel = rangos[YouN] || '🎖️𝐒𝐢𝐧 𝐑𝐚𝐧𝐠𝐨🎖️'
+      //Funciones nuevas (pickRandom y DLT_FL ahora vienen de lib/helpers.js)
 
- 
- 
+      const enviar = (texto) => {
+        sock.sendMessage(from, { text: texto }, { quoted: info })
+      }
 
- 
- const Rrxp = Rxp(sender)
- const Crxp = xpOfsender(sender)
- var Mrxp ;
- if(Crxp <= Rrxp + 50){
- var Mrxp = '*▒▒▒▒▒▒▒▒▒▒ 0%*'
- }else if(Crxp <= Rrxp + 100){
- var Mrxp = '*█▒▒▒▒▒▒▒▒▒ 10%*'
- }else if(Crxp <= Rrxp + 200){
- var Mrxp = '*██▒▒▒▒▒▒▒▒ 20%*'
- }else if(Crxp <= Rrxp + 300){
- var Mrxp = '*███▒▒▒▒▒▒▒ 30%*'
- } else if(Crxp <= Rrxp + 400){
- var Mrxp = '*████▒▒▒▒▒▒ 40%*'
- }else if(Crxp <= Rrxp + 500){
- var Mrxp = '*█████▒▒▒▒▒ 50%*'
- }else if(Crxp <= Rrxp + 600){
- var Mrxp = '*██████▒▒▒▒ 60%*'
- }else if(Crxp <= Rrxp + 700){
- var Mrxp = '*███████▒▒▒ 70%*'
- }else if(Crxp <= Rrxp + 800){
- var Mrxp = '*████████▒▒ 80%*'
- }else if(Crxp <= Rrxp + 999){
- var Mrxp = '*█████████▒ 90%*'
- } else if(Crxp >= Rrxp + 1000){
- var Mrxp = '*██████████ 100%*'
- }
- 
-// Constantes de tipos de mensaje
-const { getMessageTypes, getTypeMessage, getQuotedTypes } = require('./lib/core/types.js')
-
-const types = getMessageTypes(type)
-const isImage = types.isImage
-const isVideo = types.isVideo
-const isAudio = types.isAudio
-const isSticker = types.isSticker
-const isContact = types.isContact
-const isLocation = types.isLocation
-const isProduct = types.isProduct
-const isMedia = types.isMedia
-
-const typeMessage = getTypeMessage(body, types)
-
-const quotedTypes = getQuotedTypes(type, content)
-const isQuotedMsg = quotedTypes.isQuotedMsg
-const isQuotedImage = quotedTypes.isQuotedImage
-const isQuotedVideo = quotedTypes.isQuotedVideo
-const isQuotedDocument = quotedTypes.isQuotedDocument
-const isQuotedAudio = quotedTypes.isQuotedAudio
-const isQuotedSticker = quotedTypes.isQuotedSticker
-const isQuotedContact = quotedTypes.isQuotedContact
-const isQuotedLocation = quotedTypes.isQuotedLocation
-const isQuotedProduct = quotedTypes.isQuotedProduct
-
-
-const getFileBuffer = async (mediakey, MediaType) => {
-const stream = await downloadContentFromMessage(mediakey, MediaType)
-let buffer = Buffer.from([])
-for await(const chunk of stream) {
-buffer = Buffer.concat([buffer, chunk]) }
-return buffer}
+      //rangos
+      const rangos = JSON.parse(fs.readFileSync('./settings/rangos.json'))
+      const YouN = levelOfsender(sender)
+      const Mlevel = rangos[YouN] || '🎖️𝐒𝐢𝐧 𝐑𝐚𝐧𝐠𝐨🎖️'
 
 
 
-//funcion para mencionar 
-
-const obtenerMencionado = (info) => {
-    const context = info.message?.extendedTextMessage?.contextInfo
-        || info.message?.contextInfo
-        || null;
-
-    if (context?.mentionedJid && context.mentionedJid.length > 0) {
-        return context.mentionedJid[0];
-    }
-
-    if (context?.participant) {
-        return context.participant;
-    }
-
-    return null;
-};
-
-     // Time: now imported from lib/time.js
-
-// Respuestas predefinidas
-const { getRespuestas } = require('./lib/utils/responses.js')
-const respuesta = getRespuestas(sender)
-
- 
-   // Verificados
- const SvnC = {key : {participant : '0@s.whatsapp.net'},message : {contactMessage : {displayName : `${pushname}`}}};
- 
-// generarCodigo ahora viene de lib/helpers.js
 
 
- // MENSAJES EN CONSOLA
- 
-// comando pv
-if (!isGroup && isCmd) console.log( '\n  ╔─━━━━ ', color(' 𝗖𝗠𝗗 「 𝗨𝗦𝗨𝗔𝗥𝗜𝗢 」','blue'), '━━━━─╗','\n',
-color(' GRUPO :','lime'),color(groupName,'cyan'),'\n',
-color(' NOMBRE :','lime'),color(pushname,'cyan'),'\n',
-color(' COMANDO :','lime'),color(comando,'cyan'),'\n',
-color(' HORA :','lime'),color(hora,'cyan'),'\n',
-color(' DATOS :','lime'),color(data,'cyan'),'\n',color(' ╚─━━━━━━ '),color ('𝗘𝗹𝗶𝘀𝘃𝗮𝗻 | 𝗥𝘆𝘂𝗸','red'), '━━━━━─╝')
+      const Rrxp = Rxp(sender)
+      const Crxp = xpOfsender(sender)
+      var Mrxp;
+      if (Crxp <= Rrxp + 50) {
+        var Mrxp = '*▒▒▒▒▒▒▒▒▒▒ 0%*'
+      } else if (Crxp <= Rrxp + 100) {
+        var Mrxp = '*█▒▒▒▒▒▒▒▒▒ 10%*'
+      } else if (Crxp <= Rrxp + 200) {
+        var Mrxp = '*██▒▒▒▒▒▒▒▒ 20%*'
+      } else if (Crxp <= Rrxp + 300) {
+        var Mrxp = '*███▒▒▒▒▒▒▒ 30%*'
+      } else if (Crxp <= Rrxp + 400) {
+        var Mrxp = '*████▒▒▒▒▒▒ 40%*'
+      } else if (Crxp <= Rrxp + 500) {
+        var Mrxp = '*█████▒▒▒▒▒ 50%*'
+      } else if (Crxp <= Rrxp + 600) {
+        var Mrxp = '*██████▒▒▒▒ 60%*'
+      } else if (Crxp <= Rrxp + 700) {
+        var Mrxp = '*███████▒▒▒ 70%*'
+      } else if (Crxp <= Rrxp + 800) {
+        var Mrxp = '*████████▒▒ 80%*'
+      } else if (Crxp <= Rrxp + 999) {
+        var Mrxp = '*█████████▒ 90%*'
+      } else if (Crxp >= Rrxp + 1000) {
+        var Mrxp = '*██████████ 100%*'
+      }
 
-//pv
-if (!isCmd && !isGroup) console.log( '\n  ╔─━━━━━', color(' 𝗖𝗛𝗔𝗧 「 𝗕𝗢𝗧 」','blue'), '━━━━━─╗','\n',
-color(' GRUPO :','lime'),color(groupName,'cyan'),'\n',
-color(' NOMBRE :','lime'),color(pushname,'cyan'),'\n',
-color(' MENSAJE :','lime'),color(budy,'cyan'),'\n',
-color(' HORA :','lime'),color(hora,'cyan'),'\n',
-color(' DATOS :','lime'),color(data,'cyan'),'\n',color(' ╚─━━━━━━━━ '),color ('【✔】 ','red'), '━━━━━━━━━─╝')
+      // Constantes de tipos de mensaje
+      const { getMessageTypes, getTypeMessage, getQuotedTypes } = require('./lib/core/types.js')
 
-//comando grupo
-if (isCmd && isGroup) console.log( '\n  ╔─━━━ ', color('  𝗖𝗠𝗗「 𝗨𝗦𝗨𝗔𝗥𝗜𝗢 」','blue'), '━━━─╗','\n',
-color(' GRUPO :','lime'),color(groupName,'cyan'),'\n',
-color(' NOMBRE :','lime'),color(pushname,'cyan'),'\n',
-color(' COMANDO :','lime'),color(comando,'cyan'),'\n',
-color(' HORA :','lime'),color(hora,'cyan'),'\n',
-color(' DATOS :','lime'),color(data,'cyan'),'\n',color(' ╚─━━━━━━ '),color ('𝗘𝗹𝗶𝘀𝘃𝗮𝗻 | 𝗥𝘆𝘂𝗸','red'), '━━━━━─╝')
+      const types = getMessageTypes(type)
+      const isImage = types.isImage
+      const isVideo = types.isVideo
+      const isAudio = types.isAudio
+      const isSticker = types.isSticker
+      const isContact = types.isContact
+      const isLocation = types.isLocation
+      const isProduct = types.isProduct
+      const isMedia = types.isMedia
 
-//mensaje grupo
-if (!isCmd && isGroup) console.log( '\n  ╔─━━━━━', color(' 𝗖𝗛𝗔𝗧「 𝗕𝗢𝗧 」','blue'), '━━━━━─╗','\n',
-color(' GRUPO :','lime'),color(groupName,'cyan'),'\n',
-color(' NOMBRE :','lime'),color(pushname,'cyan'),'\n',
-color(' MENSAJE :','lime'),color(budy,'cyan'),'\n',
-color(' HORA :','lime'),color(hora,'cyan'),'\n',
-color(' DATOS :','lime'),color(data,'cyan'),'\n',color(' ╚─━━━━━━━━━ '),color ('【✔】 ','red'), '━━━━━━━━━─╝')
-   
-  
-   expiredClaim();
- expiredMinar()
-expiredAttp()
-expiredEmoji()
-expiredEve()
-expiredDayli()
-expiredPescar()
-expiredRuleta()
-//ban grupo
-if(isBanGp) {
-return
-}
+      const typeMessage = getTypeMessage(body, types)
+
+      const quotedTypes = getQuotedTypes(type, content)
+      const isQuotedMsg = quotedTypes.isQuotedMsg
+      const isQuotedImage = quotedTypes.isQuotedImage
+      const isQuotedVideo = quotedTypes.isQuotedVideo
+      const isQuotedDocument = quotedTypes.isQuotedDocument
+      const isQuotedAudio = quotedTypes.isQuotedAudio
+      const isQuotedSticker = quotedTypes.isQuotedSticker
+      const isQuotedContact = quotedTypes.isQuotedContact
+      const isQuotedLocation = quotedTypes.isQuotedLocation
+      const isQuotedProduct = quotedTypes.isQuotedProduct
+
+
+      const getFileBuffer = async (mediakey, MediaType) => {
+        const stream = await downloadContentFromMessage(mediakey, MediaType)
+        let buffer = Buffer.from([])
+        for await (const chunk of stream) {
+          buffer = Buffer.concat([buffer, chunk])
+        }
+        return buffer
+      }
+
+
+
+      //funcion para mencionar 
+
+      const obtenerMencionado = (info) => {
+        const context = info.message?.extendedTextMessage?.contextInfo
+          || info.message?.contextInfo
+          || null;
+
+        if (context?.mentionedJid && context.mentionedJid.length > 0) {
+          return context.mentionedJid[0];
+        }
+
+        if (context?.participant) {
+          return context.participant;
+        }
+
+        return null;
+      };
+
+      // Time: now imported from lib/time.js
+
+      // Respuestas predefinidas
+      const { getRespuestas } = require('./lib/utils/responses.js')
+      const respuesta = getRespuestas(sender)
+
+
+      // Verificados
+      const SvnC = { key: { participant: '0@s.whatsapp.net' }, message: { contactMessage: { displayName: `${pushname}` } } };
+
+      // generarCodigo ahora viene de lib/helpers.js
+
+
+      // MENSAJES EN CONSOLA
+
+      // comando pv
+      if (!isGroup && isCmd) console.log('\n  ╔─━━━━ ', color(' 𝗖𝗠𝗗 「 𝗨𝗦𝗨𝗔𝗥𝗜𝗢 」', 'blue'), '━━━━─╗', '\n',
+        color(' GRUPO :', 'lime'), color(groupName, 'cyan'), '\n',
+        color(' NOMBRE :', 'lime'), color(pushname, 'cyan'), '\n',
+        color(' COMANDO :', 'lime'), color(comando, 'cyan'), '\n',
+        color(' HORA :', 'lime'), color(hora, 'cyan'), '\n',
+        color(' DATOS :', 'lime'), color(data, 'cyan'), '\n', color(' ╚─━━━━━━ '), color('𝗘𝗹𝗶𝘀𝘃𝗮𝗻 | 𝗥𝘆𝘂𝗸', 'red'), '━━━━━─╝')
+
+      //pv
+      if (!isCmd && !isGroup) console.log('\n  ╔─━━━━━', color(' 𝗖𝗛𝗔𝗧 「 𝗕𝗢𝗧 」', 'blue'), '━━━━━─╗', '\n',
+        color(' GRUPO :', 'lime'), color(groupName, 'cyan'), '\n',
+        color(' NOMBRE :', 'lime'), color(pushname, 'cyan'), '\n',
+        color(' MENSAJE :', 'lime'), color(budy, 'cyan'), '\n',
+        color(' HORA :', 'lime'), color(hora, 'cyan'), '\n',
+        color(' DATOS :', 'lime'), color(data, 'cyan'), '\n', color(' ╚─━━━━━━━━ '), color('【✔】 ', 'red'), '━━━━━━━━━─╝')
+
+      //comando grupo
+      if (isCmd && isGroup) console.log('\n  ╔─━━━ ', color('  𝗖𝗠𝗗「 𝗨𝗦𝗨𝗔𝗥𝗜𝗢 」', 'blue'), '━━━─╗', '\n',
+        color(' GRUPO :', 'lime'), color(groupName, 'cyan'), '\n',
+        color(' NOMBRE :', 'lime'), color(pushname, 'cyan'), '\n',
+        color(' COMANDO :', 'lime'), color(comando, 'cyan'), '\n',
+        color(' HORA :', 'lime'), color(hora, 'cyan'), '\n',
+        color(' DATOS :', 'lime'), color(data, 'cyan'), '\n', color(' ╚─━━━━━━ '), color('𝗘𝗹𝗶𝘀𝘃𝗮𝗻 | 𝗥𝘆𝘂𝗸', 'red'), '━━━━━─╝')
+
+      //mensaje grupo
+      if (!isCmd && isGroup) console.log('\n  ╔─━━━━━', color(' 𝗖𝗛𝗔𝗧「 𝗕𝗢𝗧 」', 'blue'), '━━━━━─╗', '\n',
+        color(' GRUPO :', 'lime'), color(groupName, 'cyan'), '\n',
+        color(' NOMBRE :', 'lime'), color(pushname, 'cyan'), '\n',
+        color(' MENSAJE :', 'lime'), color(budy, 'cyan'), '\n',
+        color(' HORA :', 'lime'), color(hora, 'cyan'), '\n',
+        color(' DATOS :', 'lime'), color(data, 'cyan'), '\n', color(' ╚─━━━━━━━━━ '), color('【✔】 ', 'red'), '━━━━━━━━━─╝')
+
+
+      expiredClaim();
+      expiredMinar()
+      expiredAttp()
+      expiredEmoji()
+      expiredEve()
+      expiredDayli()
+      expiredPescar()
+      expiredRuleta()
+      //ban grupo
+      if (isBanGp) {
+        return
+      }
       // antiprivado
-if(isAntipv && !isGroup && !isOwner){
-sock.updateBlockStatus(sender, 'block')
-}
+      if (isAntipv && !isGroup && !isOwner) {
+        sock.updateBlockStatus(sender, 'block')
+      }
 
-// INICIO DE COMANDOS
-//solo funciona si está activado el bot
-// Si el grupo está en modo admin y el usuario no es admin ni owner, se bloquea su acceso
-if (isModoAdmin && !isGroupAdmins && !isOwner) return;
-if (!botActivo && !isOwner) return
+      // INICIO DE COMANDOS
+      //solo funciona si está activado el bot
+      // Si el grupo está en modo admin y el usuario no es admin ni owner, se bloquea su acceso
+      if (isModoAdmin && !isGroupAdmins && !isOwner) return;
+      if (!botActivo && !isOwner) return
 
-switch(comando) {
+      switch (comando) {
 
 
-case 'prueba':
-enviar(`Este es un comando de prueba 🌟🌟
+        case 'prueba':
+          enviar(`Este es un comando de prueba 🌟🌟
 
 ......`);
-break
+          break
 
-case 'comando2':
-enviar(`🧩Este es un comando nuevo`);
-break
-//Comandos owner
+        case 'comando2':
+          enviar(`🧩Este es un comando nuevo`);
+          break
+        //Comandos owner
 
 
-  
-case 'miapi':
-case 'apikey': {
 
-try{
+        case 'miapi':
+        case 'apikey': {
 
-const apiURL = `${APINAUFRA}/api/keyinfo?apikey=${NAUFRA_KEY}`;
+          try {
 
-const data = await fetchJson(apiURL);
+            const apiURL = `${APINAUFRA}/api/keyinfo?apikey=${NAUFRA_KEY}`;
 
-if(!data.status){
-return enviar("❌ Error consultando API");
-}
+            const data = await fetchJson(apiURL);
 
-enviar(`🔑 *INFORMACIÓN DE API*
+            if (!data.status) {
+              return enviar("❌ Error consultando API");
+            }
+
+            enviar(`🔑 *INFORMACIÓN DE API*
 
 👤 Usuario: ${data.usuario}
 
@@ -562,126 +556,126 @@ enviar(`🔑 *INFORMACIÓN DE API*
 
 🌐 API: api.naufrabot.com`);
 
-}catch(e){
+          } catch (e) {
 
-console.log(e)
+            console.log(e)
 
-enviar("❌ Error consultando API")
+            enviar("❌ Error consultando API")
 
-}
+          }
 
-}
-break;
-  
-  
-  case 'menu':
-case 'help': {
-    if (!isGroup) return;
-    if (!isReg) return enviar(respuesta.registro);
-
-    const Mnu = Menu(timeFt, Bot, sender, groupName, groupMembers);
-
-    // Enviar imagen del menú completa
-    await sock.sendMessage(from, {
-        image: { url: JpgBot },
-        caption: Mnu,
-        mentions: [sender]
-    }, { quoted: info });
-}
-break;
-
-case 'boton': 
-case 'botonon':
-case 'encenderbot':
-  if (!isOwner) return enviar(respuesta.miowner)
-  if (botActivo) return enviar('✅ El bot ya está encendido.')
-  guardarEstadoBot(true)
-  enviar('🤖 El bot ha sido *ACTIVADO* y volverá a responder a los comandos.')
-break
-
-case 'botoff':
-case 'apagabot':
-case 'offbot':
-  if (!isOwner) return enviar(respuesta.miowner)
-  if (!botActivo) return enviar('⚠️ El bot ya estaba apagado.')
-  guardarEstadoBot(false)
-  enviar('😴 El bot ha sido *DESACTIVADO* y dejará de responder a los comandos.')
-break
-
-
-case 'antiprivado':
-case 'antipv':{
-if(!isOwner) return enviar(respuesta.miowner)
-if(args[0]=== 'on' ){
-if(isAntipv) return enviar('El anti-privado ya esta activo')
-Antipv.push('activo')
-fs.writeFileSync('./settings/Json/chat.json' , JSON.stringify(Antipv))
-enviar('Anti-privado activado exitosamente')
-} else if(args[0] === 'off'){
-if(!isAntipv) return enviar('El anti-privado ya estaba desactivado')
-Antipv.splice('desactivo')
-fs.writeFileSync('./settings/Json/chat.json' , JSON.stringify(Antipv))
-enviar('Anti-privado desactivado exitosamente')
-} else {
-enviar('on para activar y off para desactivar')
-}
-}
-break 
-
-
-
-case 'rvisu': case 'revelarvisu': case 'open':
-    if(!isOwner) return enviar(respuesta.miowner)
-    enviar('🥱')
-    try{    
-        if(JSON.stringify(info).includes("videoMessage")) {
-            var vio = info.message?.extendedTextMessage?.contextInfo?.quotedMessage
-            var viewImage = vio?.imageMessage || info.message?.imageMessage || vio?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || vio?.viewOnceMessage?.message?.imageMessage
-            var viewVideo = vio?.videoMessage || info.message?.videoMessage || vio?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage || vio?.viewOnceMessage?.message?.videoMessage
-            viewVideo.viewOnce = false
-            viewVideo.video = {url: viewVideo.url}
-            viewVideo.caption += "El vídeo fue *Revelado*"
-            sock.sendMessage(from, viewVideo)
-        } else {
-            var vio = info.message?.extendedTextMessage?.contextInfo?.quotedMessage
-            var viewImage = vio?.imageMessage || info.message?.imageMessage || vio?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || vio?.viewOnceMessage?.message?.imageMessage
-            var viewVideo = vio?.videoMessage || info.message?.videoMessage || vio?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage || vio?.viewOnceMessage?.message?.videoMessage
-            viewImage.viewOnce = false
-            viewImage.image = {url: `${viewImage.url}`}
-            viewImage.caption += "😼"
-            sock.sendMessage(from, viewImage)
         }
-    } catch(e){
-        console.log(e)
-        enviar(e)
-    }
-    break
-    
-case 'reiniciar': {
-    console.log("=== DEBUG REINICIAR ===");
-    console.log("Número que ejecuta el comando:", sender);
-    console.log("Número(s) configurados como owner:", global.owner || owner || "No definido");
-    console.log("¿Es owner?:", isOwner);
-
-    if (!isOwner) return enviar(respuesta.miowner);
-
-    enviar('𝚁𝙴𝙸𝙽𝙸𝙲𝙸𝙰𝙽𝙳𝙾, 𝙰𝙶𝚄𝙰𝚁𝙳𝙴 𝚄𝙽 𝙼𝙾𝙼𝙴𝙽𝚃𝙾 ');
-    setTimeout(async () => {
-        console.log("Reiniciando el bot...");
-        process.exit(0);
-    }, 1000);
-}
-break;
+          break;
 
 
-//información 
+        case 'menu':
+        case 'help': {
+          if (!isGroup) return;
+          if (!isReg) return enviar(respuesta.registro);
 
-case 'infobot': case 'ping': {
-if (!isGroup) return
-let timestamp = speed()
-let latensi = speed() - timestamp
-uptime = process.uptime()
-botinfo = `
+          const Mnu = Menu(timeFt, Bot, sender, groupName, groupMembers);
+
+          // Enviar imagen del menú completa
+          await sock.sendMessage(from, {
+            image: { url: JpgBot },
+            caption: Mnu,
+            mentions: [sender]
+          }, { quoted: info });
+        }
+          break;
+
+        case 'boton':
+        case 'botonon':
+        case 'encenderbot':
+          if (!isOwner) return enviar(respuesta.miowner)
+          if (botActivo) return enviar('✅ El bot ya está encendido.')
+          guardarEstadoBot(true)
+          enviar('🤖 El bot ha sido *ACTIVADO* y volverá a responder a los comandos.')
+          break
+
+        case 'botoff':
+        case 'apagabot':
+        case 'offbot':
+          if (!isOwner) return enviar(respuesta.miowner)
+          if (!botActivo) return enviar('⚠️ El bot ya estaba apagado.')
+          guardarEstadoBot(false)
+          enviar('😴 El bot ha sido *DESACTIVADO* y dejará de responder a los comandos.')
+          break
+
+
+        case 'antiprivado':
+        case 'antipv': {
+          if (!isOwner) return enviar(respuesta.miowner)
+          if (args[0] === 'on') {
+            if (isAntipv) return enviar('El anti-privado ya esta activo')
+            Antipv.push('activo')
+            fs.writeFileSync('./settings/Json/chat.json', JSON.stringify(Antipv))
+            enviar('Anti-privado activado exitosamente')
+          } else if (args[0] === 'off') {
+            if (!isAntipv) return enviar('El anti-privado ya estaba desactivado')
+            Antipv.splice('desactivo')
+            fs.writeFileSync('./settings/Json/chat.json', JSON.stringify(Antipv))
+            enviar('Anti-privado desactivado exitosamente')
+          } else {
+            enviar('on para activar y off para desactivar')
+          }
+        }
+          break
+
+
+
+        case 'rvisu': case 'revelarvisu': case 'open':
+          if (!isOwner) return enviar(respuesta.miowner)
+          enviar('🥱')
+          try {
+            if (JSON.stringify(info).includes("videoMessage")) {
+              var vio = info.message?.extendedTextMessage?.contextInfo?.quotedMessage
+              var viewImage = vio?.imageMessage || info.message?.imageMessage || vio?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || vio?.viewOnceMessage?.message?.imageMessage
+              var viewVideo = vio?.videoMessage || info.message?.videoMessage || vio?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage || vio?.viewOnceMessage?.message?.videoMessage
+              viewVideo.viewOnce = false
+              viewVideo.video = { url: viewVideo.url }
+              viewVideo.caption += "El vídeo fue *Revelado*"
+              sock.sendMessage(from, viewVideo)
+            } else {
+              var vio = info.message?.extendedTextMessage?.contextInfo?.quotedMessage
+              var viewImage = vio?.imageMessage || info.message?.imageMessage || vio?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || vio?.viewOnceMessage?.message?.imageMessage
+              var viewVideo = vio?.videoMessage || info.message?.videoMessage || vio?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage || vio?.viewOnceMessage?.message?.videoMessage
+              viewImage.viewOnce = false
+              viewImage.image = { url: `${viewImage.url}` }
+              viewImage.caption += "😼"
+              sock.sendMessage(from, viewImage)
+            }
+          } catch (e) {
+            console.log(e)
+            enviar(e)
+          }
+          break
+
+        case 'reiniciar': {
+          console.log("=== DEBUG REINICIAR ===");
+          console.log("Número que ejecuta el comando:", sender);
+          console.log("Número(s) configurados como owner:", global.owner || owner || "No definido");
+          console.log("¿Es owner?:", isOwner);
+
+          if (!isOwner) return enviar(respuesta.miowner);
+
+          enviar('𝚁𝙴𝙸𝙽𝙸𝙲𝙸𝙰𝙽𝙳𝙾, 𝙰𝙶𝚄𝙰𝚁𝙳𝙴 𝚄𝙽 𝙼𝙾𝙼𝙴𝙽𝚃𝙾 ');
+          setTimeout(async () => {
+            console.log("Reiniciando el bot...");
+            process.exit(0);
+          }, 1000);
+        }
+          break;
+
+
+        //información 
+
+        case 'infobot': case 'ping': {
+          if (!isGroup) return
+          let timestamp = speed()
+          let latensi = speed() - timestamp
+          uptime = process.uptime()
+          botinfo = `
 ╔═【 𝑰𝒏𝒇𝒐 𝒅𝒆𝒍 𝑩𝒐𝒕 】═╗
 ⏰  𝐇𝐎𝐑𝐀  »  ${time}
 📅  𝐅𝐄𝐂𝐇𝐀 »  ${data}
@@ -694,13 +688,13 @@ botinfo = `
 👤  𝐔𝐒𝐔𝐀𝐑𝐈𝐎 »  ${pushname}
 ╚══❖═══════❖══╝
 `
-sock.sendMessage(from, { image: { url: JpgBot }, caption: botinfo }, { quoted: info })
-}
-break 
+          sock.sendMessage(from, { image: { url: JpgBot }, caption: botinfo }, { quoted: info })
+        }
+          break
 
-case 'botcompleto':
-case 'bot':
-enviar(`💫 ¿𝙌𝙪𝙞𝙚𝙧𝙚𝙨 𝙪𝙣 𝙗𝙤𝙩 𝙘𝙤𝙢𝙥𝙡𝙚𝙩𝙤 𝙘𝙤𝙣 𝙨𝙪𝙥𝙚𝙧 𝙁𝙪𝙣𝙘𝙞𝙤𝙣𝙚𝙨? 🤖
+        case 'botcompleto':
+        case 'bot':
+          enviar(`💫 ¿𝙌𝙪𝙞𝙚𝙧𝙚𝙨 𝙪𝙣 𝙗𝙤𝙩 𝙘𝙤𝙢𝙥𝙡𝙚𝙩𝙤 𝙘𝙤𝙣 𝙨𝙪𝙥𝙚𝙧 𝙁𝙪𝙣𝙘𝙞𝙤𝙣𝙚𝙨? 🤖
 
 *[💡]  ᴏɴʟɪɴᴇ 24/7*
 *[💡]  sᴏᴘᴏʀᴛᴇ 100% ᴅɪsᴘᴏɴɪʙʟᴇ*
@@ -749,11 +743,11 @@ enviar(`💫 ¿𝙌𝙪𝙞𝙚𝙧𝙚𝙨 𝙪𝙣 𝙗𝙤𝙩 𝙘𝙤𝙢�
 *_________👑 𝘾𝙊𝙉𝙏𝙍𝘼𝙏𝙀 👑__________*
 [🔥] *Puedes contratar el bot directamente desde nuestra pagina web oficial*👇
 [💬] https://naufrabot.com/`);
-break
+          break
 
-case 'personalizarbot': {
+        case 'personalizarbot': {
 
-let texto = `🤖 *PERSONALIZAR NAUFRABOT BASE*
+          let texto = `🤖 *PERSONALIZAR NAUFRABOT BASE*
 
 Este bot es *100% editable*, puedes modificarlo completamente a tu gusto.
 
@@ -798,15 +792,15 @@ Ahí encontrarás guías para:
 
 ¡Haz tu propia versión del bot!`
 
-await sock.sendMessage(from,{ text: texto },{ quoted: info })
+          await sock.sendMessage(from, { text: texto }, { quoted: info })
 
-}
-break
+        }
+          break
 
 
-case 'comprarapi': {
+        case 'comprarapi': {
 
-let texto = `🌐 *COMPRAR API PARA EL BOT*
+          let texto = `🌐 *COMPRAR API PARA EL BOT*
 
 Algunos comandos del bot necesitan *API externa* para funcionar correctamente.
 
@@ -849,30 +843,30 @@ https://api.naufrabot.com
 
 🚀 *Potencia tu bot con la API oficial de Naufrabot.*`
 
-await sock.sendMessage(from,{ text: texto },{ quoted: info })
+          await sock.sendMessage(from, { text: texto }, { quoted: info })
 
-}
-break
+        }
+          break
 
 
-case 'grupos':
-enviar(`🧩 𝙂𝙍𝙐𝙋𝙊 𝙊𝙁𝙄𝘾𝙄𝘼𝙇 𝙋𝘼𝙍𝘼 𝙐𝙎𝘼𝙍 𝙐𝙉 𝘽𝙊𝙏 𝘼𝘾𝙏𝙄𝙑𝙊 24/7 👇
+        case 'grupos':
+          enviar(`🧩 𝙂𝙍𝙐𝙋𝙊 𝙊𝙁𝙄𝘾𝙄𝘼𝙇 𝙋𝘼𝙍𝘼 𝙐𝙎𝘼𝙍 𝙐𝙉 𝘽𝙊𝙏 𝘼𝘾𝙏𝙄𝙑𝙊 24/7 👇
 
 ➫https://chat.whatsapp.com/Jd7WKQBsAhkCG4k1SPxK7r?mode=ac_t`);
-break
+          break
 
-case 'serdueño':
-case 'sercreador':
-case 'owner':
-case 'serowner':
-enviar(`*🧩 Mira el siguiente vídeo donde te enseño cómo convertirte en dueño del bot y usar los comandos de owner 👇*
+        case 'serdueño':
+        case 'sercreador':
+        case 'owner':
+        case 'serowner':
+          enviar(`*🧩 Mira el siguiente vídeo donde te enseño cómo convertirte en dueño del bot y usar los comandos de owner 👇*
 
 ➫https://youtu.be/LugjBfJEoiQ?si=Z-qaGhjNdC-p3fGS`);
-break
+          break
 
-case 'canal':
-case 'canales':
-enviar(`𝘾𝙖𝙣𝙖𝙡𝙚𝙨 𝙤𝙛𝙞𝙘𝙞𝙖𝙡𝙚𝙨 𝙥𝙖𝙧𝙖 𝙧𝙚𝙘𝙞𝙗𝙞𝙧:
+        case 'canal':
+        case 'canales':
+          enviar(`𝘾𝙖𝙣𝙖𝙡𝙚𝙨 𝙤𝙛𝙞𝙘𝙞𝙖𝙡𝙚𝙨 𝙥𝙖𝙧𝙖 𝙧𝙚𝙘𝙞𝙗𝙞𝙧:
 🌐𝙉𝙤𝙫𝙚𝙙𝙖𝙙𝙚𝙨 
 🌐𝙎𝙤𝙧𝙩𝙚𝙤𝙨
 🌐𝙄𝙣𝙛𝙤𝙧𝙢𝙖𝙘𝙞𝙤𝙣 
@@ -893,573 +887,573 @@ https://www.tiktok.com/@naufra.zapp?_t=8lMjEw7d9SX&_r=1
 *➫ WhatsApp*
 https://whatsapp.com/channel/0029Vaz3WoQ6RGJPJQcMXQ14
 `)
-break
+          break
 
 
 
 
-case 'serbot':
-    try {
-        const moneybot = `𝗣𝗲𝗻𝘀𝗮𝘀𝘁𝗲 𝗾𝘂𝗲 𝘁𝗲 𝗴𝗲𝗻𝗲𝗿𝗮𝗿𝗶𝗮 𝗲𝗹 𝗖𝗼𝗱𝗶𝗴𝗼 𝗤𝗥, ¿𝗩𝗲𝗿𝗱𝗮𝗱? 😂
+        case 'serbot':
+          try {
+            const moneybot = `𝗣𝗲𝗻𝘀𝗮𝘀𝘁𝗲 𝗾𝘂𝗲 𝘁𝗲 𝗴𝗲𝗻𝗲𝗿𝗮𝗿𝗶𝗮 𝗲𝗹 𝗖𝗼𝗱𝗶𝗴𝗼 𝗤𝗥, ¿𝗩𝗲𝗿𝗱𝗮𝗱? 😂
 
 𝗟𝗮𝗺𝗲𝗻𝘁𝗮𝗯𝗹𝗲𝗺𝗲𝗻𝘁𝗲, *𝗲𝗻 𝗲𝘀𝘁𝗲 𝗯𝗼𝘁 𝗻𝗼 𝗽𝘂𝗲𝗱𝗲𝘀 𝘀𝗲𝗿 𝘀𝘂𝗯 𝗯𝗼𝘁* 𝗽𝗼𝗿𝗾𝘂𝗲 𝗲𝘀𝗼 𝗰𝗼𝗺𝗽𝗿𝗼𝗺𝗲𝘁𝗲 𝗹𝗼𝘀 𝗿𝗲𝗰𝘂𝗲𝗿𝘀𝗼𝘀 𝗱𝗲𝗹 𝘀𝗲𝗿𝘃𝗶𝗱𝗼𝗿 𝘆 𝗹𝗼 𝗵𝗮𝗰𝗲 𝗺𝗮𝘀 𝗹𝗲𝗻𝘁𝗼.  
 𝗦𝗶 𝗿𝗲𝗮𝗹𝗺𝗲𝗻𝘁𝗲 𝗾𝘂𝗲𝗿𝗲𝘀 𝘀𝗲𝗿 𝘀𝘂𝗯 𝗯𝗼𝘁, 𝗽𝘂𝗲𝗱𝗲𝘀 𝗼𝗯𝘁𝗲𝗻𝗲𝗿 𝗺𝗮𝘀 𝗶𝗻𝗳𝗼𝗿𝗺𝗮𝗰𝗶𝗼𝗻 𝗲𝗻 𝗻𝘂𝗲𝘀𝘁𝗿𝗮 𝗽𝗮𝗴𝗶𝗻𝗮 𝘄𝗲𝗯:  
 🔗 https://naufrabot.com/subbots/`;
 
-        // Enviar el mensaje final
-        await enviar(moneybot);
+            // Enviar el mensaje final
+            await enviar(moneybot);
 
-    } catch (e) {
-        console.error(e);
-        enviar("Error al procesar el comando.");
-    }
-break;
-
-
-//AJUSTES DEL GRUPO
-
-case 'welcome' : 
-case 'bienvenida' :
-if (!isGroup) return 
-if(args.length<1) return enviar('「 𝟏 𝐏𝐚𝐫𝐚 𝐀𝐜𝐭𝐢𝐯𝐚𝐫 𝐲 𝟎 𝐏𝐚𝐫𝐚 𝐃𝐞𝐬𝐚𝐜𝐭𝐢𝐯𝐚𝐫 」 ')
-if(!isGroupAdmins) return enviar(respuesta.admin)
-if(!isBotGroupAdmins) return enviar('El bot necesita ser administrador') 
-if(Number(args[0])=== 1) {
-if(iswelkom) return enviar('「 ✅ 𝐋𝐚 𝐁𝐢𝐞𝐧𝐯𝐞𝐧𝐢𝐝𝐚 𝐘𝐚 𝐄𝐬𝐭𝐚 𝐀𝐜𝐭𝐢𝐯𝐚𝐝𝐚 𝐄𝐧 𝐄𝐥 𝐆𝐫𝐮𝐩𝐨 」 ')
-welkom.push(from)
-fs.writeFileSync('./settings/Grupo/Json/welkom.json',JSON.stringify(welkom))
-enviar('「 ✅ 𝐀𝐜𝐭𝐢𝐯𝐚𝐝𝐨 𝐄𝐱𝐢𝐭𝐨𝐬𝐚𝐦𝐞𝐧𝐭𝐞 」')
-} else if (Number(args[0])=== 0 ) {
-if (!iswelkom) return enviar('「 ❌ 𝐋𝐚 𝐛𝐢𝐞𝐧𝐯𝐞𝐧𝐢𝐝𝐚 𝐧𝐨 𝐞𝐬𝐭𝐚 𝐚𝐜𝐭𝐢𝐯𝐚𝐝𝐚」')
-welkom.splice(from,1)
-fs.writeFileSync('./settings/Grupo/Json/welkom.json',JSON.stringify(welkom))
-enviar('❌ 𝐃𝐞𝐬𝐚𝐜𝐭𝐢𝐯𝐚𝐝𝐨 𝐞𝐱𝐢𝐭𝐨𝐬𝐚𝐦𝐞𝐧𝐭𝐞 ')
-} else {
-enviar('「 𝟏 𝐏𝐚𝐫𝐚 𝐀𝐜𝐭𝐢𝐯𝐚𝐫 𝐲 𝟎 𝐏𝐚𝐫𝐚 𝐃𝐞𝐬𝐚𝐜𝐭𝐢𝐯𝐚𝐫 」')
-}
-break
+          } catch (e) {
+            console.error(e);
+            enviar("Error al procesar el comando.");
+          }
+          break;
 
 
-case 'bangp':{
-  if (!isGroup) return  
-  if(!isOwner) return enviar(respuesta.miowner)
-  if(!isBanGp) { // antes estaba al revés
-    const JsonGp = './settings/Grupo/Json/grupo.json';
-    bngp.push(from)
-    fs.writeFileSync(JsonGp, JSON.stringify(bngp));
-    enviar('✅ GRUPO BANEADO EXITOSAMENTE')
-  } else {
-    enviar('⚠️ El GRUPO YA SE ENCUENTRA BANEADO')
-  }
-}
-break
+        //AJUSTES DEL GRUPO
 
-case 'unbangp':{
-  if (!isGroup) return  
-  if(!isOwner) return enviar(respuesta.miowner)
-  if(isBanGp) { // antes también estaba al revés
-    const JsonGp = './settings/Grupo/Json/grupo.json';
-    bngp = bngp.filter(g => g !== from)
-    fs.writeFileSync(JsonGp, JSON.stringify(bngp));
-    enviar('✅ GRUPO DESBANEADO EXITOSAMENTE')
-  } else {
-    enviar('⚠️ El GRUPO YA SE ENCUENTRA DESBANEADO')
-  }
-}
-break
+        case 'welcome':
+        case 'bienvenida':
+          if (!isGroup) return
+          if (args.length < 1) return enviar('「 𝟏 𝐏𝐚𝐫𝐚 𝐀𝐜𝐭𝐢𝐯𝐚𝐫 𝐲 𝟎 𝐏𝐚𝐫𝐚 𝐃𝐞𝐬𝐚𝐜𝐭𝐢𝐯𝐚𝐫 」 ')
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          if (!isBotGroupAdmins) return enviar('El bot necesita ser administrador')
+          if (Number(args[0]) === 1) {
+            if (iswelkom) return enviar('「 ✅ 𝐋𝐚 𝐁𝐢𝐞𝐧𝐯𝐞𝐧𝐢𝐝𝐚 𝐘𝐚 𝐄𝐬𝐭𝐚 𝐀𝐜𝐭𝐢𝐯𝐚𝐝𝐚 𝐄𝐧 𝐄𝐥 𝐆𝐫𝐮𝐩𝐨 」 ')
+            welkom.push(from)
+            fs.writeFileSync('./settings/Grupo/Json/welkom.json', JSON.stringify(welkom))
+            enviar('「 ✅ 𝐀𝐜𝐭𝐢𝐯𝐚𝐝𝐨 𝐄𝐱𝐢𝐭𝐨𝐬𝐚𝐦𝐞𝐧𝐭𝐞 」')
+          } else if (Number(args[0]) === 0) {
+            if (!iswelkom) return enviar('「 ❌ 𝐋𝐚 𝐛𝐢𝐞𝐧𝐯𝐞𝐧𝐢𝐝𝐚 𝐧𝐨 𝐞𝐬𝐭𝐚 𝐚𝐜𝐭𝐢𝐯𝐚𝐝𝐚」')
+            welkom.splice(from, 1)
+            fs.writeFileSync('./settings/Grupo/Json/welkom.json', JSON.stringify(welkom))
+            enviar('❌ 𝐃𝐞𝐬𝐚𝐜𝐭𝐢𝐯𝐚𝐝𝐨 𝐞𝐱𝐢𝐭𝐨𝐬𝐚𝐦𝐞𝐧𝐭𝐞 ')
+          } else {
+            enviar('「 𝟏 𝐏𝐚𝐫𝐚 𝐀𝐜𝐭𝐢𝐯𝐚𝐫 𝐲 𝟎 𝐏𝐚𝐫𝐚 𝐃𝐞𝐬𝐚𝐜𝐭𝐢𝐯𝐚𝐫 」')
+          }
+          break
 
 
+        case 'bangp': {
+          if (!isGroup) return
+          if (!isOwner) return enviar(respuesta.miowner)
+          if (!isBanGp) { // antes estaba al revés
+            const JsonGp = './settings/Grupo/Json/grupo.json';
+            bngp.push(from)
+            fs.writeFileSync(JsonGp, JSON.stringify(bngp));
+            enviar('✅ GRUPO BANEADO EXITOSAMENTE')
+          } else {
+            enviar('⚠️ El GRUPO YA SE ENCUENTRA BANEADO')
+          }
+        }
+          break
 
-case 'todos':
-case 'revivir':
-  if(!isReg) return enviar(respuesta.registro)
-if(!isGroup) return enviar('Es enserio invocar en un chat , te violo tu tio verdad')
-if(!isGroupAdmins) return enviar(respuesta.admin) 
-members_id = []
-teks = (args.length > 1) ? body.slice(8).trim(): ''
-teks += `𝐓𝐎𝐓𝐀𝐋 : ${groupMembers.length}\n`
-nu = 0
-for (let mem of groupMembers) {
-nu += 1
-teks += ` ➫[${nu.toString()}] @${mem.id.split('@')[0]}\n`
-members_id.push(mem.id)
-}
-mentions(`
+        case 'unbangp': {
+          if (!isGroup) return
+          if (!isOwner) return enviar(respuesta.miowner)
+          if (isBanGp) { // antes también estaba al revés
+            const JsonGp = './settings/Grupo/Json/grupo.json';
+            bngp = bngp.filter(g => g !== from)
+            fs.writeFileSync(JsonGp, JSON.stringify(bngp));
+            enviar('✅ GRUPO DESBANEADO EXITOSAMENTE')
+          } else {
+            enviar('⚠️ El GRUPO YA SE ENCUENTRA DESBANEADO')
+          }
+        }
+          break
+
+
+
+        case 'todos':
+        case 'revivir':
+          if (!isReg) return enviar(respuesta.registro)
+          if (!isGroup) return enviar('Es enserio invocar en un chat , te violo tu tio verdad')
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          members_id = []
+          teks = (args.length > 1) ? body.slice(8).trim() : ''
+          teks += `𝐓𝐎𝐓𝐀𝐋 : ${groupMembers.length}\n`
+          nu = 0
+          for (let mem of groupMembers) {
+            nu += 1
+            teks += ` ➫[${nu.toString()}] @${mem.id.split('@')[0]}\n`
+            members_id.push(mem.id)
+          }
+          mentions(`
 🗣️💬 ❝¡𝑳𝑳𝒂𝒎𝒂𝒅𝒂 𝒂 𝒕𝒐𝒅𝒐 𝑬𝒍 𝑴𝒖𝒏𝒅𝒐!❞ \n\n➫ ${teks}
 `, members_id, true)
-break
+          break
 
 
-case 'anuncio':{
-if(!isGroup) return enviar('Es enserio invocar en un chat , te violo tu tio verdad')
-if(!isGroupAdmins) return enviar(respuesta.admin) 
-men = []
-num = 0
-teks = `
+        case 'anuncio': {
+          if (!isGroup) return enviar('Es enserio invocar en un chat , te violo tu tio verdad')
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          men = []
+          num = 0
+          teks = `
 🗣💬 ❝𝑨𝒕𝒆𝒏𝒄𝒊𝒐𝒏 𝒂 𝒆𝒔𝒕𝒆 𝑨𝒏𝒖𝒏𝒄𝒊𝒐.❞
  👉 ❝ ${q} ❞ 👈 
 \n`
-for(let m of groupMembers){
-num +=1 
-teks += `• [${num.toString()}] @${m.id.split('@')[0]}\n`
-men.push(m.id)
-}
-mentions(teks,men,true)
-}
-break 
+          for (let m of groupMembers) {
+            num += 1
+            teks += `• [${num.toString()}] @${m.id.split('@')[0]}\n`
+            men.push(m.id)
+          }
+          mentions(teks, men, true)
+        }
+          break
 
 
-case 'modoadmin': {
-  if (!isGroup) return enviar("⚠️ Este comando solo se puede usar en grupos.");
-  if (!isGroupAdmins) return enviar("🚫 Solo los administradores pueden cambiar este modo.");
-  
-  const JsonModoAdmin = './settings/Grupo/Json/modo_admin.json';
-  let modoAdmin = JSON.parse(fs.readFileSync(JsonModoAdmin));
+        case 'modoadmin': {
+          if (!isGroup) return enviar("⚠️ Este comando solo se puede usar en grupos.");
+          if (!isGroupAdmins) return enviar("🚫 Solo los administradores pueden cambiar este modo.");
 
-  const estado = args[0]; // puede ser "1" o "0"
+          const JsonModoAdmin = './settings/Grupo/Json/modo_admin.json';
+          let modoAdmin = JSON.parse(fs.readFileSync(JsonModoAdmin));
 
-  if (!estado) return enviar("🧩 Usa el comando correctamente:\n\n*modoadmin 1* → Activar modo admin\n*modoadmin 0* → Desactivar modo admin");
+          const estado = args[0]; // puede ser "1" o "0"
 
-  if (estado === "1") {
-    if (!modoAdmin.includes(from)) {
-      modoAdmin.push(from);
-      fs.writeFileSync(JsonModoAdmin, JSON.stringify(modoAdmin, null, 2));
-      enviar("✅ *Modo admin activado* — Ahora solo los administradores pueden usar el bot en este grupo.");
-    } else {
-      enviar("⚠️ El modo admin ya estaba activado en este grupo.");
-    }
-  } 
-  
-  else if (estado === "0") {
-    if (modoAdmin.includes(from)) {
-      modoAdmin = modoAdmin.filter(g => g !== from);
-      fs.writeFileSync(JsonModoAdmin, JSON.stringify(modoAdmin, null, 2));
-      enviar("🟢 *Modo admin desactivado* — Todos los miembros pueden usar el bot nuevamente.");
-    } else {
-      enviar("⚠️ El modo admin ya estaba desactivado en este grupo.");
-    }
-  } 
-  
-  else {
-    enviar("❌ Solo puedes usar *1* para activar o *0* para desactivar.");
-  }
-}
-break;
+          if (!estado) return enviar("🧩 Usa el comando correctamente:\n\n*modoadmin 1* → Activar modo admin\n*modoadmin 0* → Desactivar modo admin");
 
+          if (estado === "1") {
+            if (!modoAdmin.includes(from)) {
+              modoAdmin.push(from);
+              fs.writeFileSync(JsonModoAdmin, JSON.stringify(modoAdmin, null, 2));
+              enviar("✅ *Modo admin activado* — Ahora solo los administradores pueden usar el bot en este grupo.");
+            } else {
+              enviar("⚠️ El modo admin ya estaba activado en este grupo.");
+            }
+          }
 
+          else if (estado === "0") {
+            if (modoAdmin.includes(from)) {
+              modoAdmin = modoAdmin.filter(g => g !== from);
+              fs.writeFileSync(JsonModoAdmin, JSON.stringify(modoAdmin, null, 2));
+              enviar("🟢 *Modo admin desactivado* — Todos los miembros pueden usar el bot nuevamente.");
+            } else {
+              enviar("⚠️ El modo admin ya estaba desactivado en este grupo.");
+            }
+          }
 
-case 'hidetag' :
-case 'notify' :
-  if(!isReg) return enviar(respuesta.registro)
-  if(!isGroupAdmins) return enviar(respuesta.admin)
-if(!q) return enviar('Digite un texto ejemplo !notify hola hermanos 🔥')
-if(!isGroup) return enviartexto ('Enserio , hidetag en un chat')
-if(!isGroupAdmins) return enviartexto ("El bot necesita ser administrador")
-			var group = await sock.groupMetadata(from)
-			var member = group['participants']
-			var mem = []
-			member.map(async adm => {
-			mem.push(adm.id.replace('c.us', 's.whatsapp.net'))
-			})
-			var optionshidetag = {
-			text : q,
-			contextInfo: { mentionedJid: mem },
-			quoted: m
-			}
-			sock.sendMessage(from, optionshidetag)
-			break
-
-
-case 'kick' :
-case 'ban' :
-case 'largate' :{
-if (!isGroup) return  
-if(!isGroupAdmins) return enviar(respuesta.admin)
-if(!isBotGroupAdmins) return enviar (respuesta.botadmin)
-let mentioned = obtenerMencionado(info);
-
-    if (!mentioned) return enviar("⚠️ Debes mencionar a alguien para usar este comando.");
-
-if(mentioned === BotNumber || mentioned === owner) return enviar('🤨')
-await sock.groupParticipantsUpdate(from, [mentioned] , 'remove')
-enviar('Accion realizada exitosamente')
-}
-break 
-     
+          else {
+            enviar("❌ Solo puedes usar *1* para activar o *0* para desactivar.");
+          }
+        }
+          break;
 
 
 
-// ⚙️ Comando para activar/desactivar antilink
-case 'antilink':
-  if (!isGroupAdmins) return enviar(respuesta.admin)
-  if (!isBotGroupAdmins) return enviar(respuesta.botadmin)
-  if (args.length < 1) return enviar(`𝐃𝐈𝐆𝐈𝐓𝐄 𝟏 𝐏𝐀𝐑𝐀 𝐀𝐂𝐓𝐈𝐕𝐀𝐑 𝐘 𝟎 𝐏𝐀𝐑𝐀 𝐃𝐄𝐒𝐀𝐂𝐓𝐈𝐕𝐀𝐑`)
-
-  if (Number(args[0]) === 1) {
-    if (isAntiLink) return enviar('✅ El antilink ya está activado en este grupo')
-    antilink.push(from)
-    fs.writeFileSync('./settings/Grupo/Json/antilink.json', JSON.stringify(antilink, null, 2))
-    enviar('✅ ● ️𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐀𝐂𝐓𝐈𝐕𝐀𝐃𝐎 ● ️')
-  } 
-  else if (Number(args[0]) === 0) {
-    if (!isAntiLink) return enviar('❌ El antilink ya está desactivado en este grupo')
-    const index = antilink.indexOf(from)
-    antilink.splice(index, 1)
-    fs.writeFileSync('./settings/Grupo/Json/antilink.json', JSON.stringify(antilink, null, 2))
-    enviar('❌ ● ️𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐃𝐄𝐒𝐀𝐂𝐓𝐈𝐕𝐀𝐃𝐎 ● ️')
-  } 
-  else {
-    enviar(`𝐃𝐈𝐆𝐈𝐓𝐄 𝟏 𝐏𝐀𝐑𝐀 𝐀𝐂𝐓𝐈𝐕𝐀𝐑 𝐘 𝟎 𝐏𝐀𝐑𝐀 𝐃𝐄𝐒𝐀𝐂𝐓𝐈𝐕𝐀𝐑`)
-  }
-break;
+        case 'hidetag':
+        case 'notify':
+          if (!isReg) return enviar(respuesta.registro)
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          if (!q) return enviar('Digite un texto ejemplo !notify hola hermanos 🔥')
+          if (!isGroup) return enviartexto('Enserio , hidetag en un chat')
+          if (!isGroupAdmins) return enviartexto("El bot necesita ser administrador")
+          var group = await sock.groupMetadata(from)
+          var member = group['participants']
+          var mem = []
+          member.map(async adm => {
+            mem.push(adm.id.replace('c.us', 's.whatsapp.net'))
+          })
+          var optionshidetag = {
+            text: q,
+            contextInfo: { mentionedJid: mem },
+            quoted: m
+          }
+          sock.sendMessage(from, optionshidetag)
+          break
 
 
-case 'grupo': {
+        case 'kick':
+        case 'ban':
+        case 'largate': {
+          if (!isGroup) return
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          if (!isBotGroupAdmins) return enviar(respuesta.botadmin)
+          let mentioned = obtenerMencionado(info);
 
-if (!isGroup) return enviar(respuesta.grupos)
-if (!isGroupAdmins) return enviar(respuesta.admin)
-if (!isBotGroupAdmins) return enviar(respuesta.botadmin)
+          if (!mentioned) return enviar("⚠️ Debes mencionar a alguien para usar este comando.");
 
-if (!args[0]) {
-return enviar(`⚙️ *Configuración del grupo*
+          if (mentioned === BotNumber || mentioned === owner) return enviar('🤨')
+          await sock.groupParticipantsUpdate(from, [mentioned], 'remove')
+          enviar('Accion realizada exitosamente')
+        }
+          break
+
+
+
+
+        // ⚙️ Comando para activar/desactivar antilink
+        case 'antilink':
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          if (!isBotGroupAdmins) return enviar(respuesta.botadmin)
+          if (args.length < 1) return enviar(`𝐃𝐈𝐆𝐈𝐓𝐄 𝟏 𝐏𝐀𝐑𝐀 𝐀𝐂𝐓𝐈𝐕𝐀𝐑 𝐘 𝟎 𝐏𝐀𝐑𝐀 𝐃𝐄𝐒𝐀𝐂𝐓𝐈𝐕𝐀𝐑`)
+
+          if (Number(args[0]) === 1) {
+            if (isAntiLink) return enviar('✅ El antilink ya está activado en este grupo')
+            antilink.push(from)
+            fs.writeFileSync('./settings/Grupo/Json/antilink.json', JSON.stringify(antilink, null, 2))
+            enviar('✅ ● ️𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐀𝐂𝐓𝐈𝐕𝐀𝐃𝐎 ● ️')
+          }
+          else if (Number(args[0]) === 0) {
+            if (!isAntiLink) return enviar('❌ El antilink ya está desactivado en este grupo')
+            const index = antilink.indexOf(from)
+            antilink.splice(index, 1)
+            fs.writeFileSync('./settings/Grupo/Json/antilink.json', JSON.stringify(antilink, null, 2))
+            enviar('❌ ● ️𝐀𝐍𝐓𝐈𝐋𝐈𝐍𝐊 𝐃𝐄𝐒𝐀𝐂𝐓𝐈𝐕𝐀𝐃𝐎 ● ️')
+          }
+          else {
+            enviar(`𝐃𝐈𝐆𝐈𝐓𝐄 𝟏 𝐏𝐀𝐑𝐀 𝐀𝐂𝐓𝐈𝐕𝐀𝐑 𝐘 𝟎 𝐏𝐀𝐑𝐀 𝐃𝐄𝐒𝐀𝐂𝐓𝐈𝐕𝐀𝐑`)
+          }
+          break;
+
+
+        case 'grupo': {
+
+          if (!isGroup) return enviar(respuesta.grupos)
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          if (!isBotGroupAdmins) return enviar(respuesta.botadmin)
+
+          if (!args[0]) {
+            return enviar(`⚙️ *Configuración del grupo*
 
 Usa:
 • */grupo abrir* → Abrir el grupo
 • */grupo cerrar* → Cerrar el grupo`)
-}
+          }
 
-if (args[0] === 'abrir') {
+          if (args[0] === 'abrir') {
 
-await sock.groupSettingUpdate(from, 'not_announcement')
+            await sock.groupSettingUpdate(from, 'not_announcement')
 
-enviar(`🟢 *GRUPO ABIERTO*
+            enviar(`🟢 *GRUPO ABIERTO*
 
 Ahora todos los miembros pueden enviar mensajes.`)
 
-} else if (args[0] === 'cerrar') {
+          } else if (args[0] === 'cerrar') {
 
-await sock.groupSettingUpdate(from, 'announcement')
+            await sock.groupSettingUpdate(from, 'announcement')
 
-enviar(`🔒 *GRUPO CERRADO*
+            enviar(`🔒 *GRUPO CERRADO*
 
 Solo los administradores pueden enviar mensajes.`)
 
-} else {
+          } else {
 
-enviar(`⚠️ Opción inválida
+            enviar(`⚠️ Opción inválida
 
 Usa:
 • */grupo abrir*
 • */grupo cerrar*`)
-}
+          }
 
-}
-break
+        }
+          break
 
 
-// STICKERS 
-case 's':
-case 'sticker':
-  if(!isReg) return enviar(respuesta.registro)
-  if(coins < 1) return enviar(respuesta.coins)
-var RSM = info.message?.extendedTextMessage?.contextInfo?.quotedMessage
-var boij2 = RSM?.imageMessage || info.message?.imageMessage || RSM?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || RSM?.viewOnceMessage?.message?.imageMessage
-var boij = RSM?.videoMessage || info.message?.videoMessage || RSM?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage || RSM?.viewOnceMessage?.message?.videoMessage
-if(boij2){
-enviar(`Creando tu sticker supere un poco ❤️`)
-var pack = `
+        // STICKERS 
+        case 's':
+        case 'sticker':
+          if (!isReg) return enviar(respuesta.registro)
+          if (coins < 1) return enviar(respuesta.coins)
+          var RSM = info.message?.extendedTextMessage?.contextInfo?.quotedMessage
+          var boij2 = RSM?.imageMessage || info.message?.imageMessage || RSM?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || RSM?.viewOnceMessage?.message?.imageMessage
+          var boij = RSM?.videoMessage || info.message?.videoMessage || RSM?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage || RSM?.viewOnceMessage?.message?.videoMessage
+          if (boij2) {
+            enviar(`Creando su sticker espere un poco ❤️`)
+            var pack = `
 👑 Dueño 👑
- ✅Naufra
+ ✅Daya
 ⭐𝐂𝐫𝐞𝐚𝐝𝐨 𝐩𝐨𝐫 :
  ${pushname} `
-var author2 = ` 
+            var author2 = ` 
 🤖 𝐁𝐨𝐭 🤖
- ⃟NaufraBot
+ ⃟DayaBot
 💐 𝐆𝐫𝐮𝐩𝐨💐
 ${groupName} `
-owgi = await getFileBuffer(boij2, 'image')
-let encmediaa = await sendImageAsSticker2(sock, from, owgi, info, { packname:pack, author:author2})
-await DLT_FL(encmediaa)
-await addXp(sender,1)
-await delkoin(sender,1)
-} else if(boij && boij.seconds < 11){
-enviar(`Creando tu Sticker ${pushname}`)
-var pack = `
+            owgi = await getFileBuffer(boij2, 'image')
+            let encmediaa = await sendImageAsSticker2(sock, from, owgi, info, { packname: pack, author: author2 })
+            await DLT_FL(encmediaa)
+            await addXp(sender, 1)
+            await delkoin(sender, 1)
+          } else if (boij && boij.seconds < 11) {
+            enviar(`Creando tu Sticker ${pushname}`)
+            var pack = `
 👑 Dueño 👑
- ✅Naufra
+ ✅Daya
 ⭐𝐂𝐫𝐞𝐚𝐝𝐨 𝐩𝐨𝐫 :
  ${pushname} `
-var author2 = ` 
+            var author2 = ` 
 🤖 𝐁𝐨𝐭 🤖
- ⃟NaufraBot
+ ⃟DayaBot
 💐 𝐆𝐫𝐮𝐩𝐨💐
 ${groupName} `
-owgi = await getFileBuffer(boij, 'video')
-let encmedia = await sendVideoAsSticker2(sock, from, owgi, info, { packname:pack, author:author2})
-await DLT_FL(encmedia)
-await addXp(sender,1)
-await delkoin(sender,1)
-} else {
-return enviar(`Marque una imagen o \nUn vídeo máximo de 10 segundos ⏲️`)
-}
-break
+            owgi = await getFileBuffer(boij, 'video')
+            let encmedia = await sendVideoAsSticker2(sock, from, owgi, info, { packname: pack, author: author2 })
+            await DLT_FL(encmedia)
+            await addXp(sender, 1)
+            await delkoin(sender, 1)
+          } else {
+            return enviar(`Marque una imagen o \nUn vídeo máximo de 10 segundos ⏲️`)
+          }
+          break
 
-///Nesecitas clave API//
-case "attp":
-case "attp2":
-case "attp3":
-if(!isReg) return enviar(respuesta.registro)
-if (!q) return enviar("Coloca un texto o emoji después del comando")
+        ///Nesecitas clave API//
+        case "attp":
+        case "attp2":
+        case "attp3":
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q) return enviar("Coloca un texto o emoji después del comando")
 
-try {
+          try {
 
-let url = `${APINAUFRA}/api/${messagesC}?text=${encodeURIComponent(q)}&apikey=${NAUFRA_KEY}`
+            let url = `${APINAUFRA}/api/${messagesC}?text=${encodeURIComponent(q)}&apikey=${NAUFRA_KEY}`
 
-let res = await fetch(url)
-let buffer = await res.buffer()
+            let res = await fetch(url)
+            let buffer = await res.buffer()
 
-await sock.sendMessage(from, {
-sticker: buffer
-}, { quoted: info })
+            await sock.sendMessage(from, {
+              sticker: buffer
+            }, { quoted: info })
 
-} catch (e) {
-console.log(e)
-enviar("Error al crear sticker")
-}
+          } catch (e) {
+            console.log(e)
+            enviar("Error al crear sticker")
+          }
 
-break
+          break
 
 
 
-case 'ship': {
-if(!isReg) return enviar(respuesta.registro)
-if (!isGroup) return enviar('solo disponible en grupos')
+        case 'ship': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!isGroup) return enviar('solo disponible en grupos')
 
-if (!info.message?.extendedTextMessage?.contextInfo?.mentionedJid || 
-info.message.extendedTextMessage.contextInfo.mentionedJid.length < 2)
-return enviar('💞 Menciona a dos personas para calcular su *nivel de amor* 💘')
+          if (!info.message?.extendedTextMessage?.contextInfo?.mentionedJid ||
+            info.message.extendedTextMessage.contextInfo.mentionedJid.length < 2)
+            return enviar('💞 Menciona a dos personas para calcular su *nivel de amor* 💘')
 
-const users = info.message.extendedTextMessage.contextInfo.mentionedJid
+          const users = info.message.extendedTextMessage.contextInfo.mentionedJid
 
-const user1 = users[0]
-const user2 = users[1]
+          const user1 = users[0]
+          const user2 = users[1]
 
-const loveRate = Math.floor(Math.random() * 100) + 1
+          const loveRate = Math.floor(Math.random() * 100) + 1
 
-let foto1, foto2
+          let foto1, foto2
 
-try {
-foto1 = await sock.profilePictureUrl(user1, 'image')
-} catch {
-foto1 = 'https://i.postimg.cc/VkqDjMdJ/75499-coraz-el-dia-de-san-valentin-amor-corazon-de-amor-x750.jpg'
-}
+          try {
+            foto1 = await sock.profilePictureUrl(user1, 'image')
+          } catch {
+            foto1 = 'https://i.postimg.cc/VkqDjMdJ/75499-coraz-el-dia-de-san-valentin-amor-corazon-de-amor-x750.jpg'
+          }
 
-try {
-foto2 = await sock.profilePictureUrl(user2, 'image')
-} catch {
-foto2 = 'https://i.postimg.cc/VkqDjMdJ/75499-coraz-el-dia-de-san-valentin-amor-corazon-de-amor-x750.jpg'
-}
+          try {
+            foto2 = await sock.profilePictureUrl(user2, 'image')
+          } catch {
+            foto2 = 'https://i.postimg.cc/VkqDjMdJ/75499-coraz-el-dia-de-san-valentin-amor-corazon-de-amor-x750.jpg'
+          }
 
-const fondo = 'https://telegra.ph/file/394705b02d10509c435cf.jpg'
+          const fondo = 'https://telegra.ph/file/394705b02d10509c435cf.jpg'
 
-const shipImg = `${APINAUFRA}/api/canvas/ship?apikey=${NAUFRA_KEY}&foto1=${encodeURIComponent(foto1)}&foto2=${encodeURIComponent(foto2)}&fundo=${encodeURIComponent(fondo)}&mat=${loveRate}`
+          const shipImg = `${APINAUFRA}/api/canvas/ship?apikey=${NAUFRA_KEY}&foto1=${encodeURIComponent(foto1)}&foto2=${encodeURIComponent(foto2)}&fundo=${encodeURIComponent(fondo)}&mat=${loveRate}`
 
-await sock.sendMessage(from, {
-image: { url: shipImg },
-caption: `💘 *𝐂𝐀𝐋𝐂𝐔𝐋𝐀𝐃𝐎𝐑 𝐃𝐄 𝐀𝐌𝐎𝐑* 💘
+          await sock.sendMessage(from, {
+            image: { url: shipImg },
+            caption: `💘 *𝐂𝐀𝐋𝐂𝐔𝐋𝐀𝐃𝐎𝐑 𝐃𝐄 𝐀𝐌𝐎𝐑* 💘
 
 @${user1.split('@')[0]} 💖 @${user2.split('@')[0]}
 
 • *${loveRate}% de Amor Eterno* 🌹`,
-mentions: [user1, user2]
+            mentions: [user1, user2]
 
-}, { quoted: info })
+          }, { quoted: info })
 
-}
-break
+        }
+          break
 
-                
-                
-                case 'emojimix': {
-    if (!isReg) return enviar(respuesta.registro);
-    if (coins < 1) return enviar(respuesta.coins);
 
-    if (!q) return enviar(`
+
+        case 'emojimix': {
+          if (!isReg) return enviar(respuesta.registro);
+          if (coins < 1) return enviar(respuesta.coins);
+
+          if (!q) return enviar(`
 🔁𝑪𝒐𝒎𝒃𝒊𝒏𝒂 𝒆𝒎𝒐𝒋𝒊𝒔 𝒚 𝒅𝒆𝒔𝒄𝒖𝒃𝒓𝒆 𝒏𝒖𝒆𝒗𝒂𝒔 𝒄𝒓𝒆𝒂𝒄𝒊𝒐𝒏𝒆𝒔‼️
 ☑️𝑬𝒔𝒄𝒓𝒊𝒃𝒆 𝒆𝒍 𝒄𝒐𝒎𝒂𝒏𝒅𝒐 𝒂𝒔í:
 👉 *!emojimix 😊+😂*`);
 
-    enviar('`🔁 𝑴𝒆𝒛𝒄𝒍𝒂𝒏𝒅𝒐...`');
+          enviar('`🔁 𝑴𝒆𝒛𝒄𝒍𝒂𝒏𝒅𝒐...`');
 
-    try {
-        let [emoji1, emoji2] = q.split`+`;
-        var em = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&
+          try {
+            let [emoji1, emoji2] = q.split`+`;
+            var em = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&
             contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`);
-        
-        for (let res of em.results) {
-            let templateMessage = {
+
+            for (let res of em.results) {
+              let templateMessage = {
                 image: { url: `${res.url}`, quoted: info }
-            };
-            sock.sendMessage(from, templateMessage, { quoted: info });
+              };
+              sock.sendMessage(from, templateMessage, { quoted: info });
 
-            // Reducir 1 moneda y agregar 1 de experiencia
-            await delkoin(sender, 1);
-            await addXp(sender, 1);
+              // Reducir 1 moneda y agregar 1 de experiencia
+              await delkoin(sender, 1);
+              await addXp(sender, 1);
+            }
+
+          } catch (err) {
+            enviar('❌ Ocurrió un error, intenta con otros emojis.');
+            console.log(err);
+          }
         }
-        
-    } catch (err) {
-        enviar('❌ Ocurrió un error, intenta con otros emojis.');
-        console.log(err);
-    }
-}
-break;
+          break;
 
 
-///////////////////HERRAMIENTAS///////////
+        ///////////////////HERRAMIENTAS///////////
 
-case 'amp3':
-case 'tomp3':
-  if(!isReg) return enviar(respuesta.registro)
-if(!isQuotedVideo) return enviar (`[❗] ${sender.split('@')[0]}, Marque un video `)
-enviar('`Creando....`')
-tomp = await getFileBuffer(info.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage , 'video')
-	sock.sendMessage(from,{audio :  tomp, mimetype: 'audio/mpeg'},{ quoted: info })		
-		await addXp(sender,6)
-		await delkoin(sender,3)
-				break 
-				
-		
-  case 'toimg':
-  if(!isReg) return enviar(respuesta.registro)
-if(!isQuotedSticker) return enviar('[❗]• 𝗠𝗔𝗥𝗤𝗨𝗘 𝗨𝗡 𝗦𝗧𝗜𝗖𝗞𝗘𝗥 •')
-try {
-enviar('`Creando....`')
-buff = await getFileBuffer(info.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'sticker')
-sock.sendMessage(from, {image: buff , caption : ` [❗] *${pushname}*, Aquí tienes tu pedido `},{quoted : info }).catch(e => {
-console.log(e);
-enviar('Nose pudo convertir a imagen verifica que sea un sticker y no un gif ❌')
-})
-await addXp(sender,3)
-await delkoin(sender,2)
-} catch {
-enviar('ocurrio un error ')
-}
-break
-
-
-case 'calcular':
-  case 'cal' :
+        case 'amp3':
+        case 'tomp3':
           if (!isReg) return enviar(respuesta.registro)
-          if(args.length == 0) return enviar( ` ┣「 𝗢𝗣𝗘𝗥𝗔𝗖𝗜𝗢𝗡𝗘𝗦 」┫\n╭──────────────────\n│➫┇+ 𝐒𝐮𝐦𝐚\n│➫┇- 𝐑𝐞𝐬𝐭𝐚\n│➫┇/ 𝐃𝐢𝐯𝐢𝐬𝐢𝐨𝐧\n│➫┇* 𝐌𝐮𝐥𝐭𝐢𝐩𝐥𝐢𝐜𝐚𝐜𝐢𝐨𝐧\n│➫ 𝔼𝕛𝕖𝕞𝕡𝕝𝕠 : 𝐂𝐚𝐥 𝟒+𝟒\n╰──────────────────`)
-            const resultzx = eval(q)
-            await sleep(1000)
-            enviar(`\n╭──────────────────\n││「 𝗥𝗘𝗦𝗨𝗟𝗧𝗔𝗗𝗢𝗦 」│\n│➫┇${q} = *${resultzx}*\n╰──────────────────`)
-            break
-            
+          if (!isQuotedVideo) return enviar(`[❗] ${sender.split('@')[0]}, Marque un video `)
+          enviar('`Creando....`')
+          tomp = await getFileBuffer(info.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage, 'video')
+          sock.sendMessage(from, { audio: tomp, mimetype: 'audio/mpeg' }, { quoted: info })
+          await addXp(sender, 6)
+          await delkoin(sender, 3)
+          break
+
+
+        case 'toimg':
+          if (!isReg) return enviar(respuesta.registro)
+          if (!isQuotedSticker) return enviar('[❗]• 𝗠𝗔𝗥𝗤𝗨𝗘 𝗨𝗡 𝗦𝗧𝗜𝗖𝗞𝗘𝗥 •')
+          try {
+            enviar('`Creando....`')
+            buff = await getFileBuffer(info.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage, 'sticker')
+            sock.sendMessage(from, { image: buff, caption: ` [❗] *${pushname}*, Aquí tienes tu pedido ` }, { quoted: info }).catch(e => {
+              console.log(e);
+              enviar('Nose pudo convertir a imagen verifica que sea un sticker y no un gif ❌')
+            })
+            await addXp(sender, 3)
+            await delkoin(sender, 2)
+          } catch {
+            enviar('ocurrio un error ')
+          }
+          break
+
+
+        case 'calcular':
+        case 'cal':
+          if (!isReg) return enviar(respuesta.registro)
+          if (args.length == 0) return enviar(` ┣「 𝗢𝗣𝗘𝗥𝗔𝗖𝗜𝗢𝗡𝗘𝗦 」┫\n╭──────────────────\n│➫┇+ 𝐒𝐮𝐦𝐚\n│➫┇- 𝐑𝐞𝐬𝐭𝐚\n│➫┇/ 𝐃𝐢𝐯𝐢𝐬𝐢𝐨𝐧\n│➫┇* 𝐌𝐮𝐥𝐭𝐢𝐩𝐥𝐢𝐜𝐚𝐜𝐢𝐨𝐧\n│➫ 𝔼𝕛𝕖𝕞𝕡𝕝𝕠 : 𝐂𝐚𝐥 𝟒+𝟒\n╰──────────────────`)
+          const resultzx = eval(q)
+          await sleep(1000)
+          enviar(`\n╭──────────────────\n││「 𝗥𝗘𝗦𝗨𝗟𝗧𝗔𝗗𝗢𝗦 」│\n│➫┇${q} = *${resultzx}*\n╰──────────────────`)
+          break
 
 
 
-//nesecitas api
-case 'gpt': case 'gpt4': case 'openai': case 'chatgpt':
-case 'ia': {
 
-  if (!q) return enviar('❌ Escribe una pregunta');
+        //nesecitas api
+        case 'gpt': case 'gpt4': case 'openai': case 'chatgpt':
+        case 'ia': {
 
-  try {
-  
-    const apiURL = `${APINAUFRA}/chatgpt?apikey=${NAUFRA_KEY}&prompt=${encodeURIComponent(q)}&t=${Date.now()}`;
+          if (!q) return enviar('❌ Escribe una pregunta');
 
-    const data = await fetchJson(apiURL);
+          try {
 
-    const mensaje = `🤖 *ChatGPT*\n\n${data.respuesta}`;
+            const apiURL = `${APINAUFRA}/chatgpt?apikey=${NAUFRA_KEY}&prompt=${encodeURIComponent(q)}&t=${Date.now()}`;
 
-    await sock.sendMessage(from, { text: mensaje }, { quoted: info });
+            const data = await fetchJson(apiURL);
 
-  } catch (e) {
-    console.log("ERROR IA:", e);
-    enviar('❌ Error usando la IA');
-  }
+            const mensaje = `🤖 *ChatGPT*\n\n${data.respuesta}`;
 
-}
-break;
+            await sock.sendMessage(from, { text: mensaje }, { quoted: info });
 
-//nesecita API 
+          } catch (e) {
+            console.log("ERROR IA:", e);
+            enviar('❌ Error usando la IA');
+          }
 
-case 'ytsearch': {
-
-    if (!q) return enviar('❌ Escribe un nombre para buscar en YouTube');
-
-    
-    try {
-
-        
-        const apiURL = `${APINAUFRA}/ytsearch?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q.trim())}`;
-
-        console.log("🔗 Llamando a API:", apiURL);
-
-        const apiData = await fetchJson(apiURL);
-
-        if (!apiData || !apiData.status)
-            return reply('❌ No se pudo obtener respuesta válida de la API');
-
-        if (!apiData.resultados || !Array.isArray(apiData.resultados))
-            return reply('❌ La API devolvió datos inválidos');
-
-        if (apiData.resultados.length === 0)
-            return reply('❌ No se encontraron resultados');
-
-        const firstVideo = apiData.resultados[0];
-
-        let text = `「✦」Resultados para *${q.trim()}*\n\n`;
-
-        for (const video of apiData.resultados) {
-
-            text += `❀ *${video.title}*\n`;
-            text += `> ✐ Canal » *${video.author}*\n`;
-            text += `> ⴵ Duración » *${video.duration}*\n`;
-            text += `> 👁 Visitas » *${video.views.toLocaleString()}*\n`;
-            text += `> 🜸 Link » _${video.url}_\n\n`;
         }
+          break;
 
-        await sock.sendMessage(from, {
-            image: { url: firstVideo.thumbnail },
-            caption: text.trim()
-        }, { quoted: info });
+        //nesecita API 
 
-    } catch (e) {
-        console.log("❌ ERROR YTSEARCH CASE:", e);
-        enviar('❌ Error buscando videos en YouTube');
-    }
+        case 'ytsearch': {
 
-}
-break;
+          if (!q) return enviar('❌ Escribe un nombre para buscar en YouTube');
 
 
-//Economía niveles y experiencia 
+          try {
 
-case 'perfil' : case 'cartera' :
-case 'nivel' : case 'minivel' : {
 
-if(!isReg) return enviar(respuesta.registro)
+            const apiURL = `${APINAUFRA}/ytsearch?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q.trim())}`;
 
-var saldo = MoneyOfSender(sender)
-const Xp = xpOfsender(sender)
-const Mnv = levelOfsender(sender)
-const Rxxp = Rxp(sender)
-const myrep2 = repUser(sender)
-const Xpnull = Rxxp - 1000
+            console.log("🔗 Llamando a API:", apiURL);
 
-if(Xp === null) return addXp(sender,Xpnull)
+            const apiData = await fetchJson(apiURL);
 
-let foto
+            if (!apiData || !apiData.status)
+              return reply('❌ No se pudo obtener respuesta válida de la API');
 
-try {
-foto = await sock.profilePictureUrl(sender, 'image')
-} catch {
-foto = 'https://i.postimg.cc/85NsPp8j/20260131-152616.jpg'
-}
+            if (!apiData.resultados || !Array.isArray(apiData.resultados))
+              return reply('❌ La API devolvió datos inválidos');
 
-const Mp = `
+            if (apiData.resultados.length === 0)
+              return reply('❌ No se encontraron resultados');
+
+            const firstVideo = apiData.resultados[0];
+
+            let text = `「✦」Resultados para *${q.trim()}*\n\n`;
+
+            for (const video of apiData.resultados) {
+
+              text += `❀ *${video.title}*\n`;
+              text += `> ✐ Canal » *${video.author}*\n`;
+              text += `> ⴵ Duración » *${video.duration}*\n`;
+              text += `> 👁 Visitas » *${video.views.toLocaleString()}*\n`;
+              text += `> 🜸 Link » _${video.url}_\n\n`;
+            }
+
+            await sock.sendMessage(from, {
+              image: { url: firstVideo.thumbnail },
+              caption: text.trim()
+            }, { quoted: info });
+
+          } catch (e) {
+            console.log("❌ ERROR YTSEARCH CASE:", e);
+            enviar('❌ Error buscando videos en YouTube');
+          }
+
+        }
+          break;
+
+
+        //Economía niveles y experiencia 
+
+        case 'perfil': case 'cartera':
+        case 'nivel': case 'minivel': {
+
+          if (!isReg) return enviar(respuesta.registro)
+
+          var saldo = MoneyOfSender(sender)
+          const Xp = xpOfsender(sender)
+          const Mnv = levelOfsender(sender)
+          const Rxxp = Rxp(sender)
+          const myrep2 = repUser(sender)
+          const Xpnull = Rxxp - 1000
+
+          if (Xp === null) return addXp(sender, Xpnull)
+
+          let foto
+
+          try {
+            foto = await sock.profilePictureUrl(sender, 'image')
+          } catch {
+            foto = 'https://i.postimg.cc/85NsPp8j/20260131-152616.jpg'
+          }
+
+          const Mp = `
 ╔══✦❖【 𝑻𝒖 𝑷𝒆𝒓𝒇𝒊𝒍 】❖✦══╗
 🏷️  𝐍𝐨𝐦𝐛𝐫𝐞      »  @${sender.split('@')[0]}
 ⚔️  𝐑𝐚𝐧𝐠𝐨       »  ${Mlevel}
@@ -1471,85 +1465,85 @@ const Mp = `
 ▰▰ ${Mrxp} ▰▰
 `
 
-await sock.sendMessage(from,{
-image: { url: foto },
-caption: Mp,
-mentions: [sender]
-},{ quoted: info })
+          await sock.sendMessage(from, {
+            image: { url: foto },
+            caption: Mp,
+            mentions: [sender]
+          }, { quoted: info })
 
-}
-break
-//comando tragamonedas 
-case 'tragamonedas':
-case 'tragamoneda':
-if (!isReg) return enviar("Debes registrarte para jugar.");
-const apuestas = 1; // Coste por jugar
-if (coins < apuestas) return enviar("No tienes suficientes Coins 🪙 para jugar.");
+        }
+          break
+        //comando tragamonedas 
+        case 'tragamonedas':
+        case 'tragamoneda':
+          if (!isReg) return enviar("Debes registrarte para jugar.");
+          const apuestas = 1; // Coste por jugar
+          if (coins < apuestas) return enviar("No tienes suficientes Coins 🪙 para jugar.");
 
-const ahora = Date.now();
-const tiempoGuardado = timeClaimTraga(sender) || 0;
-const tiempoRestante = tiempoGuardado - ahora;
+          const ahora = Date.now();
+          const tiempoGuardado = timeClaimTraga(sender) || 0;
+          const tiempoRestante = tiempoGuardado - ahora;
 
-if (tiempoRestante > 0) {
-    return await enviar(`[❗] 𝙴𝚂𝙿𝙴𝚁𝙴 ${runtime(tiempoRestante / 1000)} para volver a jugar.`);
-} else {
-    const espera = 8 * 60 * 60 * 1000; // 8 horas
-    await addClaimTraga(sender, espera);
-}
+          if (tiempoRestante > 0) {
+            return await enviar(`[❗] 𝙴𝚂𝙿𝙴𝚁𝙴 ${runtime(tiempoRestante / 1000)} para volver a jugar.`);
+          } else {
+            const espera = 8 * 60 * 60 * 1000; // 8 horas
+            await addClaimTraga(sender, espera);
+          }
 
 
-// Restar una moneda por jugar
-await delkoin(sender, apuestas);
+          // Restar una moneda por jugar
+          await delkoin(sender, apuestas);
 
-// Lista de símbolos para la tragamonedas
-const simbolos = ['🥕', '🐰', '🐸', '🦊', '🐱', '🍋', '🔔', '🍒', '🍉', '🍌'];
+          // Lista de símbolos para la tragamonedas
+          const simbolos = ['🥕', '🐰', '🐸', '🦊', '🐱', '🍋', '🔔', '🍒', '🍉', '🍌'];
 
-// Generar filas aleatorias
-const obtenerFila = () => [
-    simbolos[Math.floor(Math.random() * simbolos.length)],
-    simbolos[Math.floor(Math.random() * simbolos.length)],
-    simbolos[Math.floor(Math.random() * simbolos.length)]
-];
+          // Generar filas aleatorias
+          const obtenerFila = () => [
+            simbolos[Math.floor(Math.random() * simbolos.length)],
+            simbolos[Math.floor(Math.random() * simbolos.length)],
+            simbolos[Math.floor(Math.random() * simbolos.length)]
+          ];
 
-// Generar las tres filas
-const filaArriba = obtenerFila();
-const filaAbajo = obtenerFila();
+          // Generar las tres filas
+          const filaArriba = obtenerFila();
+          const filaAbajo = obtenerFila();
 
-let filaCentro;
-const probabilidad = Math.random(); // Número entre 0 y 1
+          let filaCentro;
+          const probabilidad = Math.random(); // Número entre 0 y 1
 
-// 60% de probabilidad de que los tres símbolos del centro sean iguales
-if (probabilidad < 0.6) {
-    const simboloGanador = simbolos[Math.floor(Math.random() * simbolos.length)];
-    filaCentro = [simboloGanador, simboloGanador, simboloGanador]; // Hacer que las 3 sean iguales
-} else {
-    filaCentro = obtenerFila(); // Si no, generar aleatoriamente
-}
+          // 60% de probabilidad de que los tres símbolos del centro sean iguales
+          if (probabilidad < 0.6) {
+            const simboloGanador = simbolos[Math.floor(Math.random() * simbolos.length)];
+            filaCentro = [simboloGanador, simboloGanador, simboloGanador]; // Hacer que las 3 sean iguales
+          } else {
+            filaCentro = obtenerFila(); // Si no, generar aleatoriamente
+          }
 
-// Verificar si el usuario ganó
-const esGanador = filaCentro[0] === filaCentro[1] && filaCentro[1] === filaCentro[2];
+          // Verificar si el usuario ganó
+          const esGanador = filaCentro[0] === filaCentro[1] && filaCentro[1] === filaCentro[2];
 
-let resultadoMensaje = "😢 Has perdido... Inténtalo de nuevo dentro de 8 horas.";
-let premioTexto = "";
+          let resultadoMensaje = "😢 Has perdido... Inténtalo de nuevo dentro de 8 horas.";
+          let premioTexto = "";
 
-// Si gana, recibe aleatoriamente Coins o EXP entre 5 y 10
-if (esGanador) {
-    const premioCantidad = Math.floor(Math.random() * 6) + 5; // Número aleatorio entre 5 y 10
-    const tipoPremio = Math.random() < 0.5 ? 'coins' : 'exp'; // 50% de probabilidad para cada tipo
+          // Si gana, recibe aleatoriamente Coins o EXP entre 5 y 10
+          if (esGanador) {
+            const premioCantidad = Math.floor(Math.random() * 6) + 5; // Número aleatorio entre 5 y 10
+            const tipoPremio = Math.random() < 0.5 ? 'coins' : 'exp'; // 50% de probabilidad para cada tipo
 
-    if (tipoPremio === 'coins') {
-        await addkoin(sender, premioCantidad);
-        premioTexto = `🎉 Recibiste ${premioCantidad} Coins 🪙.`;
-    } else {
-        await addXp(sender, premioCantidad);
-        premioTexto = `📚 Recibiste ${premioCantidad} de EXP.`;
-    }
+            if (tipoPremio === 'coins') {
+              await addkoin(sender, premioCantidad);
+              premioTexto = `🎉 Recibiste ${premioCantidad} Coins 🪙.`;
+            } else {
+              await addXp(sender, premioCantidad);
+              premioTexto = `📚 Recibiste ${premioCantidad} de EXP.`;
+            }
 
-    resultadoMensaje = "🎉 ¡Has ganado! 🎉";
-}
+            resultadoMensaje = "🎉 ¡Has ganado! 🎉";
+          }
 
-// Construcción del mensaje de respuesta
-const mensajeCasino = `
+          // Construcción del mensaje de respuesta
+          const mensajeCasino = `
          *༻  𝙏𝙍𝘼𝙂𝘼𝙈𝙊𝙉𝙀𝘿𝘼𝙎 ༺*
             ┏━━━━┛🎰┗━━━━┓
              ||   【${filaArriba[0]}】【${filaArriba[1]}】【${filaArriba[2]}】   ||
@@ -1564,152 +1558,152 @@ ${resultadoMensaje}
 ${premioTexto}
 `;
 
-// Enviar el mensaje después de 3 segundos
-setTimeout(() => {
-    enviar(mensajeCasino);
-}, 3000);
+          // Enviar el mensaje después de 3 segundos
+          setTimeout(() => {
+            enviar(mensajeCasino);
+          }, 3000);
 
-break;
+          break;
 
 
 
-case"dayli": case "daily":
-if(!isGroup) return
-if(!isReg) return 
-const dayli = checkDayli(sender)
-if(dayli) {
-const ahora = Date.now()
-const time = timeDayli(sender)
-const result = ahora - time
-const resultado = (0 - result) / 1000;
-return sock.sendMessage(from,{text : `Espere ${runtime(resultado)} para su nueva recompensa`},{quoted : info})
-} else {
-const time = 24* 60* 60* 1000
-await addDayli(sender,time)
-const montoExperiencia = 5
-const monto = 1
-enviar(`
+        case "dayli": case "daily":
+          if (!isGroup) return
+          if (!isReg) return
+          const dayli = checkDayli(sender)
+          if (dayli) {
+            const ahora = Date.now()
+            const time = timeDayli(sender)
+            const result = ahora - time
+            const resultado = (0 - result) / 1000;
+            return sock.sendMessage(from, { text: `Espere ${runtime(resultado)} para su nueva recompensa` }, { quoted: info })
+          } else {
+            const time = 24 * 60 * 60 * 1000
+            await addDayli(sender, time)
+            const montoExperiencia = 5
+            const monto = 1
+            enviar(`
 ⏳🪙 𝐑𝐄𝐂𝐎𝐌𝐏𝐄𝐍𝐒𝐀 𝐃𝐈𝐀𝐑𝐈𝐀 🪙⏳
 
 𝑮𝒂𝒏𝒂𝒔𝒕𝒆 ${monto} 𝑪𝒐𝒊𝒏𝒔 𝒚 ${montoExperiencia} 𝒅𝒆 𝑬𝒙𝒑𝒆𝒓𝒊𝒆𝒏𝒄𝒊𝒂.
 `)
-await addkoin(sender,monto)
-await addXp(sender,montoExperiencia)
-}
-break
+            await addkoin(sender, monto)
+            await addXp(sender, montoExperiencia)
+          }
+          break
 
- 
 
-case 'reg': case 'registrarme': case 'registrame': case 'rg':
-    if (isReg) return enviar(respuesta.yaregistro)
-    const nombre = pushname
-    await AddReg(sender, nombre)
-    sock.sendMessage(from, {
-        image: { url: JpgBot },
-        caption: `★━━━━★━━━━★★━━━━★
+
+        case 'reg': case 'registrarme': case 'registrame': case 'rg':
+          if (isReg) return enviar(respuesta.yaregistro)
+          const nombre = pushname
+          await AddReg(sender, nombre)
+          sock.sendMessage(from, {
+            image: { url: JpgBot },
+            caption: `★━━━━★━━━━★★━━━━★
          *༻  𝐑𝐄𝐆𝐈𝐒𝐓𝐑𝐎  ༺*
 🎉𝑅𝑒𝑔𝑖𝑠𝑡𝑟𝑜 𝑐𝑜𝑚𝑝𝑙𝑒𝑡𝑎𝑑𝑜 *${nombre}* 🥳
 🪙𝑹𝒆𝒄𝒊𝒃𝒊𝒔𝒕𝒆 *₹50 Rupias* 🪙 𝒄𝒐𝒎𝒐 𝑹𝒆𝒈𝒂𝒍𝒐 𝒅𝒆 𝑩𝒊𝒆𝒏𝒗𝒆𝒏𝒊𝒅𝒂.
 ◆━━━━━━━▣✦▣━━━━━━━━◆`
-    }, { quoted: info })
-    break
+          }, { quoted: info })
+          break
 
 
-case 'levelup': {
-const XpR = xpOfsender(sender)
-const Rxxp = Rxp(sender)
-if(XpR >= Rxxp + 1000) {
-await addLevel(sender , 1)
-sleep(100)
-await addkoin(sender,10)
-sleep(100)
-await addXp(sender,100)
-sleep(100)
-await addRxp(sender,1000)
-const Mup = ` 
+        case 'levelup': {
+          const XpR = xpOfsender(sender)
+          const Rxxp = Rxp(sender)
+          if (XpR >= Rxxp + 1000) {
+            await addLevel(sender, 1)
+            sleep(100)
+            await addkoin(sender, 10)
+            sleep(100)
+            await addXp(sender, 100)
+            sleep(100)
+            await addRxp(sender, 1000)
+            const Mup = ` 
         ★━━━ 𝐒𝐔𝐁𝐈𝐒𝐓𝐄 𝐃𝐄 𝐍𝐈𝐕𝐄𝐋 ━━━★
 ✪ @${sender.split('@')[0]}
 🎉 ¡𝑭𝒆𝒍𝒊𝒄𝒊𝒅𝒂𝒅𝒆𝒔 𝑯𝒂𝒛 𝒅𝒆𝒔𝒃𝒍𝒐𝒒𝒖𝒆𝒂𝒅𝒐 𝒖𝒏 𝒏𝒖𝒆𝒗𝒐 𝒓𝒂𝒏𝒈𝒐! 💪
 `
-sock.sendMessage(from,{text : Mup , mentions : [sender]},{quoted : info})
-} else {
-enviar(`
+            sock.sendMessage(from, { text: Mup, mentions: [sender] }, { quoted: info })
+          } else {
+            enviar(`
 ❌ 𝑬𝒙𝒑𝒆𝒓𝒊𝒆𝒏𝒄𝒊𝒂 𝒊𝒏𝒔𝒖𝒇𝒊𝒄𝒊𝒆𝒏𝒕𝒆. ${pushname} 𝒅𝒆𝒃𝒆𝒓𝒂𝒔 𝒆𝒏𝒕𝒓𝒆𝒏𝒂𝒓 𝒎𝒂𝒔 𝒔𝒆𝒈𝒖𝒊𝒅𝒐. 
 `)
-}
-}
-break
+          }
+        }
+          break
 
 
 
 
-case 'minar' : {
-if(!isReg) return enviar(respuesta.registro)
-if(!isGroup) return enviar(respuesta.grupos)
-const isMin = checkMinar(sender)
-if(isMin) {
-const ahora = Date.now()
-const time = timeMinar(sender)
-const result = ahora - time
-const resultado = (0 - result) / 1000;
-return enviar(`𝑪𝒉𝒂𝒎𝒃𝒆𝒂𝒏𝒅𝒐... ${runtime(resultado)} `)
-} else {
-const time = 24* 60* 60* 1000
-await addMinar(sender,time)
-const numbeR = [5, 6, 7, 8, 9, 10];
-const randomIndex = Math.floor(Math.random() * numbeR.length);
-const monto = numbeR[randomIndex];
-enviar(`
+        case 'minar': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!isGroup) return enviar(respuesta.grupos)
+          const isMin = checkMinar(sender)
+          if (isMin) {
+            const ahora = Date.now()
+            const time = timeMinar(sender)
+            const result = ahora - time
+            const resultado = (0 - result) / 1000;
+            return enviar(`𝑪𝒉𝒂𝒎𝒃𝒆𝒂𝒏𝒅𝒐... ${runtime(resultado)} `)
+          } else {
+            const time = 24 * 60 * 60 * 1000
+            await addMinar(sender, time)
+            const numbeR = [5, 6, 7, 8, 9, 10];
+            const randomIndex = Math.floor(Math.random() * numbeR.length);
+            const monto = numbeR[randomIndex];
+            enviar(`
                ★━━━ 𝐌𝐈𝐍𝐀𝐍𝐃𝐎... ━━━★
 💰 Descubriste oro puro y obtuviste *₹${monto} Rupias* 
 💬 ❝ 🌟 𝑮𝒓𝒂𝒄𝒊𝒂𝒔 𝒂𝒍 𝑮𝒓𝒆𝒎𝒊𝒐 𝒅𝒆 𝑴𝒊𝒏𝒆𝒓𝒐𝒔 ⛏ 𝒔𝒆 𝒈𝒂𝒓𝒂𝒏𝒕𝒊𝒛𝒂 𝑺𝒖𝒆𝒍𝒅𝒐 𝑴𝒊𝒏𝒊𝒎𝒐 𝒅𝒆 *₹5 Rupias* 🪙.❞
 
 ⏳ 𝑽𝒖𝒆𝒍𝒗𝒆 𝒆𝒏 24 𝒉𝒐𝒓𝒂𝒔.
 `)
-await addkoin(sender,monto)
-}
-}
-break 
+            await addkoin(sender, monto)
+          }
+        }
+          break
 
 
-    case "ruleta": {
-if (!q) return enviar(`Indique un monto para apostar, ejemplo .ruleta 4`);
-if (!isReg) return enviar(respuesta.registro)
-const montto = q
-const monto = (montto * 1) / 1
-if (isNaN(monto)) return enviar(`Indique un monto válido en coins`);
-if (monto > MoneyOfSender(sender)) return enviar(`No tienes suficiente dinero`);
-if (monto > 5) return enviar('La apuesta no debe ser mayor a 5 Rupias');
-const isMinxxx = checkRuleta(sender)
-if(isMinxxx) {
-const ahora = Date.now()
-const time = timeRuleta(sender)
-const result = ahora - time
-const resultado = (0 - result) / 1000;
-return enviar(`Espere... ${runtime(resultado)} `)
-} else {
-const time = 24* 60* 60* 1000
-await addRuleta(sender,time)
-const ppt = ["muere", "vive"]; // Posibilidades
-const pptb = ppt[Math.floor(Math.random() * ppt.length)];  // Elección aleatoria del sistema
-let vit;
+        case "ruleta": {
+          if (!q) return enviar(`Indique un monto para apostar, ejemplo .ruleta 4`);
+          if (!isReg) return enviar(respuesta.registro)
+          const montto = q
+          const monto = (montto * 1) / 1
+          if (isNaN(monto)) return enviar(`Indique un monto válido en coins`);
+          if (monto > MoneyOfSender(sender)) return enviar(`No tienes suficiente dinero`);
+          if (monto > 5) return enviar('La apuesta no debe ser mayor a 5 Rupias');
+          const isMinxxx = checkRuleta(sender)
+          if (isMinxxx) {
+            const ahora = Date.now()
+            const time = timeRuleta(sender)
+            const result = ahora - time
+            const resultado = (0 - result) / 1000;
+            return enviar(`Espere... ${runtime(resultado)} `)
+          } else {
+            const time = 24 * 60 * 60 * 1000
+            await addRuleta(sender, time)
+            const ppt = ["muere", "vive"]; // Posibilidades
+            const pptb = ppt[Math.floor(Math.random() * ppt.length)];  // Elección aleatoria del sistema
+            let vit;
 
-// Modo Duelo Letal
-if (pptb === "muere") {
-    vit = `💭「𝙍𝙖𝙯𝙚𝙧, 𝙚𝙡 𝙎𝙞𝙣 𝙈𝙞𝙚𝙙𝙤 🐺 𝙖𝙥𝙪𝙣𝙩𝙖 𝙖 𝙡𝙖 𝙘𝙖𝙗𝙚𝙯𝙖 𝙙𝙚 ${pushname} 😨🔫」
+            // Modo Duelo Letal
+            if (pptb === "muere") {
+              vit = `💭「𝙍𝙖𝙯𝙚𝙧, 𝙚𝙡 𝙎𝙞𝙣 𝙈𝙞𝙚𝙙𝙤 🐺 𝙖𝙥𝙪𝙣𝙩𝙖 𝙖 𝙡𝙖 𝙘𝙖𝙗𝙚𝙯𝙖 𝙙𝙚 ${pushname} 😨🔫」
 💭「𝙍𝙖𝙯𝙚𝙧 🐺 𝙖𝙥𝙧𝙚𝙩𝙖 𝙚𝙡 𝙜𝙖𝙩𝙞𝙡𝙡𝙤... 💥 𝘽𝙊𝙊𝙈!」
 💭「${pushname} 𝙝𝙖 𝙘𝙖í𝙙𝙤 𝙮 𝙥𝙚𝙧𝙙𝙞ó ${monto} Rupias 🪙」`;
-    await delkoin(sender, monto);
-    // El jugador pierde
-} else if (pptb === "vive") {
-    vit = `💭「𝙍𝙖𝙯𝙚𝙧, 𝙚𝙡 𝙎𝙞𝙣 𝙈𝙞𝙚𝙙𝙤 🐺 𝙖𝙥𝙪𝙣𝙩𝙖 𝙖 𝙡𝙖 𝙘𝙖𝙗𝙚𝙯𝙖 𝙙𝙚 ${pushname} 😨🔫」
+              await delkoin(sender, monto);
+              // El jugador pierde
+            } else if (pptb === "vive") {
+              vit = `💭「𝙍𝙖𝙯𝙚𝙧, 𝙚𝙡 𝙎𝙞𝙣 𝙈𝙞𝙚𝙙𝙤 🐺 𝙖𝙥𝙪𝙣𝙩𝙖 𝙖 𝙡𝙖 𝙘𝙖𝙗𝙚𝙯𝙖 𝙙𝙚 ${pushname} 😨🔫」
 💭「𝙍𝙖𝙯𝙚𝙧 🐺 𝙖𝙥𝙧𝙚𝙩𝙖 𝙚𝙡 𝙜𝙖𝙩𝙞𝙡𝙡𝙤... 💥 𝘽𝙊𝙊𝙈!」
 💭「𝙀𝙨 𝙪𝙣𝙖 𝙗𝙧𝙤𝙢𝙖, ${pushname} 𝙨𝙤𝙗𝙧𝙚𝙫𝙞𝙫𝙚 𝙮 𝙜𝙖𝙣𝙖 ${monto} Rupias 🪙」`;
-    await addkoin(sender, monto);
-    // El jugador gana
-}
+              await addkoin(sender, monto);
+              // El jugador gana
+            }
 
-const datatt = `
+            const datatt = `
 ╭━━━╾⭑✦  ✦⭑╼━━━╮
          ⌬ 𝙍𝙐𝙇𝙀𝙏𝘼 𝙍𝙐𝙎𝘼 ⌬
 ${vit}
@@ -1718,56 +1712,56 @@ ${vit}
 `;
 
 
-enviar(datatt);
-}
-}
-        break
+            enviar(datatt);
+          }
+        }
+          break
 
 
 
 
-case "pescar": {
-if (q) return enviar(`no ponga ninguna palabra solo /pescar`);
-if (!isReg) return enviar(respuesta.registro)
-const isMinxxx = checkPescar(sender)
-if(isMinxxx) {
-const ahora = Date.now()
-const time = timePescar(sender)
-const result = ahora - time
-const resultado = (0 - result) / 1000;
-return enviar(`Espere... ${runtime(resultado)} `)
-} else {
-const time = 8 * 60 * 60 * 1000;
-await addPescar(sender,time)
-const ppt = ["delfin", "pulpo","pez","pez2","pez3","zapato"]; // Posibilidades
-const pptb = ppt[Math.floor(Math.random() * ppt.length)];  // Elección aleatoria del sistema
-let vit;
+        case "pescar": {
+          if (q) return enviar(`no ponga ninguna palabra solo /pescar`);
+          if (!isReg) return enviar(respuesta.registro)
+          const isMinxxx = checkPescar(sender)
+          if (isMinxxx) {
+            const ahora = Date.now()
+            const time = timePescar(sender)
+            const result = ahora - time
+            const resultado = (0 - result) / 1000;
+            return enviar(`Espere... ${runtime(resultado)} `)
+          } else {
+            const time = 8 * 60 * 60 * 1000;
+            await addPescar(sender, time)
+            const ppt = ["delfin", "pulpo", "pez", "pez2", "pez3", "zapato"]; // Posibilidades
+            const pptb = ppt[Math.floor(Math.random() * ppt.length)];  // Elección aleatoria del sistema
+            let vit;
 
-// Cazador Marino
-if (pptb === "delfin") {
-    vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🦈 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙜𝙖𝙣𝙖𝙨 20 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-    await addXp(sender, 20);
-    // El jugador gana
-} else if (pptb === "pulpo") {
-    vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐙 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 8 𝙍𝙪𝙥𝙞𝙖𝙨 💎」`;
-    await addkoin(sender, 8);
-} else if (pptb === "pez") {
-    vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐠 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 4 𝙍𝙪𝙥𝙞𝙖𝙨 💎 𝙮 5 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-    await addkoin(sender, 4);
-    await addXp(sender, 5);
-} else if (pptb === "pez2") {
-    vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐟 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 3 𝙍𝙪𝙥𝙞𝙖𝙨 💎 𝙮 3 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-    await addkoin(sender, 3);
-    await addXp(sender, 3);
-} else if (pptb === "pez3") {
-    vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐡 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 1 𝙍𝙪𝙥𝙞𝙖 💎 𝙮 2 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-    await addkoin(sender, 1);
-    await addXp(sender, 2);
-} else if (pptb === "zapato") {
-    vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🥾 𝙮 𝙖𝙡 𝙩𝙧𝙖𝙩𝙖𝙧 𝙙𝙚 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯, 𝙚́𝙡 𝙨𝙚 𝙧𝙞𝙚 🤣 𝙙𝙚 𝙩𝙞 🥲」`;
-}
+            // Cazador Marino
+            if (pptb === "delfin") {
+              vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🦈 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙜𝙖𝙣𝙖𝙨 20 𝙙𝙚 𝙀𝙓𝙋 📚」`;
+              await addXp(sender, 20);
+              // El jugador gana
+            } else if (pptb === "pulpo") {
+              vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐙 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 8 𝙍𝙪𝙥𝙞𝙖𝙨 💎」`;
+              await addkoin(sender, 8);
+            } else if (pptb === "pez") {
+              vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐠 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 4 𝙍𝙪𝙥𝙞𝙖𝙨 💎 𝙮 5 𝙙𝙚 𝙀𝙓𝙋 📚」`;
+              await addkoin(sender, 4);
+              await addXp(sender, 5);
+            } else if (pptb === "pez2") {
+              vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐟 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 3 𝙍𝙪𝙥𝙞𝙖𝙨 💎 𝙮 3 𝙙𝙚 𝙀𝙓𝙋 📚」`;
+              await addkoin(sender, 3);
+              await addXp(sender, 3);
+            } else if (pptb === "pez3") {
+              vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐡 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 1 𝙍𝙪𝙥𝙞𝙖 💎 𝙮 2 𝙙𝙚 𝙀𝙓𝙋 📚」`;
+              await addkoin(sender, 1);
+              await addXp(sender, 2);
+            } else if (pptb === "zapato") {
+              vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🥾 𝙮 𝙖𝙡 𝙩𝙧𝙖𝙩𝙖𝙧 𝙙𝙚 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯, 𝙚́𝙡 𝙨𝙚 𝙧𝙞𝙚 🤣 𝙙𝙚 𝙩𝙞 🥲」`;
+            }
 
-const datatt = `
+            const datatt = `
 ╔════ ⭑✦.   ✦⭑ ════╗
          ❖ 𝙋𝙀𝙎𝘾𝘼 𝙀𝙉 𝙀𝙇 𝙈𝘼𝙍 ❖
 ${vit}
@@ -1776,10 +1770,10 @@ ${vit}
 `;
 
 
-enviar(datatt);
-}
-}
-        break
+            enviar(datatt);
+          }
+        }
+          break
 
 
 
@@ -1787,58 +1781,56 @@ enviar(datatt);
 
 
 
-case 'listreg' : {
-R_ = []
-teks = '*REGISTRADOS* 😼\n'
-for(let R of registro){
-teks += `• @${R.id.split('@')[0]}\n`
-R_.push(R.id)
-}
-teks += '• ' + registro.length
-mentions(teks,R_,true)
-}
-break 
+        case 'listreg': {
+          R_ = []
+          teks = '*REGISTRADOS* 😼\n'
+          for (let R of registro) {
+            teks += `• @${R.id.split('@')[0]}\n`
+            R_.push(R.id)
+          }
+          teks += '• ' + registro.length
+          mentions(teks, R_, true)
+        }
+          break
 
 
 
 
-case 'regalar':
-case 'tradecoin':
-case 'tradecoins':
-case 'enviarcoins':
-case 'enviar': {
-  if (!isGroup) return enviar("⚠️ Este comando solo funciona en grupos.");
+        case 'regalar':
+        case 'tradecoin':
+        case 'tradecoins':
+        case 'enviarcoins':
+        case 'enviar': {
+          if (!isGroup) return enviar("⚠️ Este comando solo funciona en grupos.");
 
-  (async () => {
-    try {
-      const mencionado = obtenerMencionado(info); // destinatario
-      const emisor = sender; // quien envía las monedas
-      const monto = Number(args[1]);
+          (async () => {
+            try {
+              const mencionado = obtenerMencionado(info); // destinatario
+              const emisor = sender; // quien envía las monedas
+              const monto = Number(args[1]);
 
-      if (!mencionado) return enviar("⚠️ Debes mencionar a alguien para enviarle monedas.\nEj: .regalar @usuario 100");
-      if (mencionado === emisor) return enviar("⚠️ No puedes enviarte monedas a ti mismo.");
-      if (isNaN(monto) || monto <= 0) return enviar("⚠️ Ingresa una cantidad válida de monedas.\nEj: .regalar @usuario 100");
+              if (!mencionado) return enviar("⚠️ Debes mencionar a alguien para enviarle monedas.\nEj: .regalar @usuario 100");
+              if (mencionado === emisor) return enviar("⚠️ No puedes enviarte monedas a ti mismo.");
+              if (isNaN(monto) || monto <= 0) return enviar("⚠️ Ingresa una cantidad válida de monedas.\nEj: .regalar @usuario 100");
 
-      const saldoEmisor = await MoneyOfM(emisor);
-      if (saldoEmisor < monto) return enviar("❌ No tienes suficientes monedas para hacer esta transferencia.");
+              const saldoEmisor = await MoneyOfM(emisor);
+              if (saldoEmisor < monto) return enviar("❌ No tienes suficientes monedas para hacer esta transferencia.");
 
-      // Realizar transferencia
-      await delkoin(emisor, monto);
-      await addkoin(mencionado, monto);
-      await sleep(100);
+              // Realizar transferencia
+              await delkoin(emisor, monto);
+              await addkoin(mencionado, monto);
+              await sleep(100);
 
-      const nuevoSaldo = await MoneyOfM(emisor);
-      enviar(`✅ Transferencia completada.\nUsted envió *₹${monto} Rupias.*`, {
-        mentions: [emisor, mencionado]
-      });
-    } catch (e) {
-      enviar('❌ Error: ' + e.message);
-    }
-  })();
-}
-break;
-
-
+              const nuevoSaldo = await MoneyOfM(emisor);
+              enviar(`✅ Transferencia completada.\nUsted envió *₹${monto} Rupias.*`, {
+                mentions: [emisor, mencionado]
+              });
+            } catch (e) {
+              enviar('❌ Error: ' + e.message);
+            }
+          })();
+        }
+          break;
 
 
 
@@ -1846,104 +1838,106 @@ break;
 
 
 
-case 'rep' : case 'mirep' : case 'mireputacion':
-if(!isReg) return enviar(respuesta.registro)
-const myrep = repUser(sender)
-const mitulamide30milimetros = `
+
+
+        case 'rep': case 'mirep': case 'mireputacion':
+          if (!isReg) return enviar(respuesta.registro)
+          const myrep = repUser(sender)
+          const mitulamide30milimetros = `
 ╭━━━╾⭑✦REPUTACIÓN✦⭑╼━━━╮
 𝑳𝒂 𝑹𝒆𝒑𝒖𝒕𝒂𝒄𝒊𝒐𝒏 𝒅𝒆 ${pushname} 𝒆𝒔 𝒅𝒆 ${myrep}.
 `
-if (myrep < 20) {
-    await sock.sendMessage(from, {
-        image: { url: "https://i.postimg.cc/NfJfvsBW/Untitled-05-12-2024-09-16-50-1.png" },
-        caption: mitulamide30milimetros
-    }, { quoted: info });
-} else if (myrep >= 21 && myrep <= 40) {
-    await sock.sendMessage(from, {
-        image: { url: "https://i.postimg.cc/PxjdQNQ8/Untitled-05-12-2024-09-16-50-2.png" },
-        caption: mitulamide30milimetros
-    }, { quoted: info });
-} else if (myrep >= 41 && myrep <= 60) {
-    await sock.sendMessage(from, {
-        image: { url: "https://i.postimg.cc/HL5pMbXg/Untitled-05-12-2024-09-16-50-3.png" },
-        caption: mitulamide30milimetros
-    }, { quoted: info });
-} else if (myrep >= 61 && myrep <= 80) {
-    await sock.sendMessage(from, {
-        image: { url: "https://i.postimg.cc/brWX3NWB/IMG-20241223-WA0014.jpg" },
-        caption: mitulamide30milimetros
-    }, { quoted: info });
-} else {
-    await sock.sendMessage(from, {
-        image: { url: "https://i.postimg.cc/Cx9hdcZ7/Untitled-05-12-2024-09-16-50-5.png" },
-        caption: mitulamide30milimetros
-    }, { quoted: info });
-}
+          if (myrep < 20) {
+            await sock.sendMessage(from, {
+              image: { url: "https://i.postimg.cc/NfJfvsBW/Untitled-05-12-2024-09-16-50-1.png" },
+              caption: mitulamide30milimetros
+            }, { quoted: info });
+          } else if (myrep >= 21 && myrep <= 40) {
+            await sock.sendMessage(from, {
+              image: { url: "https://i.postimg.cc/PxjdQNQ8/Untitled-05-12-2024-09-16-50-2.png" },
+              caption: mitulamide30milimetros
+            }, { quoted: info });
+          } else if (myrep >= 41 && myrep <= 60) {
+            await sock.sendMessage(from, {
+              image: { url: "https://i.postimg.cc/HL5pMbXg/Untitled-05-12-2024-09-16-50-3.png" },
+              caption: mitulamide30milimetros
+            }, { quoted: info });
+          } else if (myrep >= 61 && myrep <= 80) {
+            await sock.sendMessage(from, {
+              image: { url: "https://i.postimg.cc/brWX3NWB/IMG-20241223-WA0014.jpg" },
+              caption: mitulamide30milimetros
+            }, { quoted: info });
+          } else {
+            await sock.sendMessage(from, {
+              image: { url: "https://i.postimg.cc/Cx9hdcZ7/Untitled-05-12-2024-09-16-50-5.png" },
+              caption: mitulamide30milimetros
+            }, { quoted: info });
+          }
 
-break 
+          break
 
-case 'rank' : case 'rankrep' : 
-if(!isGroup) return 
-if(!isGroupAdmins) return enviar(respuesta.admin)
-let teks2 = `
+        case 'rank': case 'rankrep':
+          if (!isGroup) return
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          let teks2 = `
 ▭▬ ۞ ▬▛ ༼⁠ᘛ 𝑳𝒖𝒏𝒂-𝑩𝒐𝒕 ᘚ༽ ▜▬ ۞ ▬▭
 *༻❦ 𝐑𝐀𝐍𝐊𝐈𝐍𝐆 𝐃𝐄 𝐑𝐄𝐏𝐔𝐓𝐀𝐂𝐈𝐎𝐍 ❦༺\n`;
-registro.sort((a, b) => b.rep - a.rep) // Ordena de mayor a menor
-       .slice(0, 10) // Toma solo los 10 primeros
-       .forEach((usuario, indice) => {
-           teks2 += `• 🚩Numero ${indice + 1}: *${usuario.nombre}* | *${usuario.rep}* de Reputación\n`;
-       });
-enviar(teks2)
-break 
+          registro.sort((a, b) => b.rep - a.rep) // Ordena de mayor a menor
+            .slice(0, 10) // Toma solo los 10 primeros
+            .forEach((usuario, indice) => {
+              teks2 += `• 🚩Numero ${indice + 1}: *${usuario.nombre}* | *${usuario.rep}* de Reputación\n`;
+            });
+          enviar(teks2)
+          break
 
-case 'rankcoins': {
-  if (!isGroup) return;
-  if(!isGroupAdmins) return enviar(respuesta.admin)
-  const pathi = './settings/Grupo/Json/registros.json';
+        case 'rankcoins': {
+          if (!isGroup) return;
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          const pathi = './settings/Grupo/Json/registros.json';
 
-  // Leer los datos actualizados en el momento
-  const registro = JSON.parse(fs.readFileSync(pathi, 'utf8'));
+          // Leer los datos actualizados en el momento
+          const registro = JSON.parse(fs.readFileSync(pathi, 'utf8'));
 
-  let rankingMensaje = `*🏆 RANKING DE MILLONARIOS*\n\nTOP.  USUARIO.   RUPIAS\n\n`;
+          let rankingMensaje = `*🏆 RANKING DE MILLONARIOS*\n\nTOP.  USUARIO.   RUPIAS\n\n`;
 
-  // Convertir a array si registro es un objeto
-  const rankingArray = Array.isArray(registro)
-    ? registro
-    : Object.entries(registro).map(([jid, data]) => ({
-        nombre: data.nombre || jid.split('@')[0],
-        dinero: data.dinero || 0,
-      }));
+          // Convertir a array si registro es un objeto
+          const rankingArray = Array.isArray(registro)
+            ? registro
+            : Object.entries(registro).map(([jid, data]) => ({
+              nombre: data.nombre || jid.split('@')[0],
+              dinero: data.dinero || 0,
+            }));
 
-  rankingArray
-    .sort((a, b) => b.dinero - a.dinero)
-    .slice(0, 10)
-    .forEach((usuario, index) => {
-      rankingMensaje += `• ${index + 1}. *${usuario.nombre}* ➫ _${usuario.dinero}_ Rupias\n`;
-    });
+          rankingArray
+            .sort((a, b) => b.dinero - a.dinero)
+            .slice(0, 10)
+            .forEach((usuario, index) => {
+              rankingMensaje += `• ${index + 1}. *${usuario.nombre}* ➫ _${usuario.dinero}_ Rupias\n`;
+            });
 
-  enviar(rankingMensaje);
-}
-break;
-
-
+          enviar(rankingMensaje);
+        }
+          break;
 
 
-case 'ranknivel':{
-if(!isGroup) return 
-if(!isGroupAdmins) return enviar(respuesta.admin)
-let teks = `
+
+
+        case 'ranknivel': {
+          if (!isGroup) return
+          if (!isGroupAdmins) return enviar(respuesta.admin)
+          let teks = `
 *RANKING DE NIVEL* :
 TOP.   USUARIO.   NIVEL\n`
-registro.sort((a,b) => b.nivel - a.nivel).forEach((usuario,index) => {
-teks +=`• ${index + 1 }.     *${usuario.nombre}*  ➫  _*${usuario.nivel}*_\n`
-});
-enviar(teks)
-}
-break 
+          registro.sort((a, b) => b.nivel - a.nivel).forEach((usuario, index) => {
+            teks += `• ${index + 1}.     *${usuario.nombre}*  ➫  _*${usuario.nivel}*_\n`
+          });
+          enviar(teks)
+        }
+          break
 
-case "tienda":
+        case "tienda":
 
-if (!q) return enviar(`
+          if (!q) return enviar(`
 ✦━───༺༻───━✦
 🎀❖ 𝓣𝓘𝓔𝓝𝓓𝓐 ❖🎀
 
@@ -1970,193 +1964,193 @@ if (!q) return enviar(`
 `);
 
 
-if (q.startsWith("1")) {
-    if (coins < 50) return enviar("❌ No tienes suficientes Reales para hacer esta compra. Necesitas al menos 50 Rupias.");
-    await delkoin(sender, 50);
-    await addXp(sender, 200);
+          if (q.startsWith("1")) {
+            if (coins < 50) return enviar("❌ No tienes suficientes Reales para hacer esta compra. Necesitas al menos 50 Rupias.");
+            await delkoin(sender, 50);
+            await addXp(sender, 200);
 
-    return enviar(`🐱💬 Gracias ${pushname}, cambiaste 50 Rupias por 200 EXP.`);
-}
+            return enviar(`🐱💬 Gracias ${pushname}, cambiaste 50 Rupias por 200 EXP.`);
+          }
 
-if (q.startsWith("2")) {
-    const args = q.split(" ");
-    const nivel = parseInt(args[1]);
-    const nuevoNombre = args.slice(2).join(" ");
+          if (q.startsWith("2")) {
+            const args = q.split(" ");
+            const nivel = parseInt(args[1]);
+            const nuevoNombre = args.slice(2).join(" ");
 
-    if (isNaN(nivel) || !nuevoNombre) {
-        return enviar("❌ Usa el comando correctamente: .tienda 2 <nivel> <nuevo nombre>\nEjemplo: .tienda 2 8 Los Poderosos");
-    }
+            if (isNaN(nivel) || !nuevoNombre) {
+              return enviar("❌ Usa el comando correctamente: .tienda 2 <nivel> <nuevo nombre>\nEjemplo: .tienda 2 8 Los Poderosos");
+            }
 
-    if (coins < 50) {
-        return enviar("❌ No tienes suficientes Coins para cambiar el nombre del rango. Necesitas 50 Coins.");
-    }
+            if (coins < 50) {
+              return enviar("❌ No tienes suficientes Coins para cambiar el nombre del rango. Necesitas 50 Coins.");
+            }
 
-    const path = './settings/rangos.json';
-    let rangosData;
+            const path = './settings/rangos.json';
+            let rangosData;
 
-    try {
-        rangosData = JSON.parse(fs.readFileSync(path));
-    } catch (e) {
-        return enviar("⚠️ Error al leer los rangos. Asegúrate de que el archivo exista y esté bien formado.");
-    }
+            try {
+              rangosData = JSON.parse(fs.readFileSync(path));
+            } catch (e) {
+              return enviar("⚠️ Error al leer los rangos. Asegúrate de que el archivo exista y esté bien formado.");
+            }
 
-    rangosData[nivel] = nuevoNombre;
+            rangosData[nivel] = nuevoNombre;
 
-    try {
-        fs.writeFileSync(path, JSON.stringify(rangosData, null, 2));
-        await delkoin(sender, 50);
+            try {
+              fs.writeFileSync(path, JSON.stringify(rangosData, null, 2));
+              await delkoin(sender, 50);
 
-        return enviar(`✅ ¡Perfecto, ${pushname}!\nHas cambiado el rango del nivel *${nivel}* a:\n✨ *${nuevoNombre}* ✨\nY se descontaron 50 Rupias 🪙`);
-    } catch (e) {
-        return enviar("⚠️ No se pudo guardar el nuevo nombre. Intenta de nuevo.");
-    }
-}
+              return enviar(`✅ ¡Perfecto, ${pushname}!\nHas cambiado el rango del nivel *${nivel}* a:\n✨ *${nuevoNombre}* ✨\nY se descontaron 50 Rupias 🪙`);
+            } catch (e) {
+              return enviar("⚠️ No se pudo guardar el nuevo nombre. Intenta de nuevo.");
+            }
+          }
 
-break;
+          break;
 
-//DESCARGAS
-
-
-//nesecitas api
-
-case 'playvideo':
-case 'ytmp4': {
-if(!isReg) return enviar(respuesta.registro)
-  if (!q)
-    return enviar('❌ Escribe un nombre o link de YouTube');
-  try {
+        //DESCARGAS
 
 
+        //nesecitas api
 
-    // Endpoint info del video
-    const apiURL =
-      `${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
-
-    const apiData = await fetchJson(apiURL);
-
-    // SI YTINFO FUNCIONA
-    if (apiData && apiData.Estado === "online") {
-
-      const data = apiData.Resultado;
-
-      await sock.sendMessage(from, {
-        image: { url: data.Miniatura },
-        caption: `「✪」 *${data.Titulo}*\n\n*ⴵ Duración:* ${data.Duracion}\n*✐ Canal:* ${data.Canal.Nombre}\n*👁 Vistas:* ${data.Visualizaciones}\n*🜸 Link:* ${data.EnlaceYoutube}`
-      }, { quoted: info });
-
-      await sock.sendMessage(from, {
-        video: { url: `${data.EnlaceDescarga}&apikey=${NAUFRA_KEY}` }, // 🔑 Agregar key también aquí
-        mimetype: 'video/mp4',
-        caption: data.Titulo
-      }, { quoted: info });
-
-      return;
-    }
-
-    // SI YTINFO FALLA → DESCARGA IGUAL
-    const videoURL =
-      `${APINAUFRA}/ytmp4?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
-
-    await sock.sendMessage(from, {
-      video: { url: videoURL },
-      mimetype: 'video/mp4',
-      caption: q
-    }, { quoted: info });
-
-  } catch (e) {
-
-    console.log("ERROR PLAYVIDEO:", e);
-
-    enviar('❌ Error descargando video');
-
-  }
-
-}
-break;
-
-case 'playdoc': {
-if(!isReg) return enviar(respuesta.registro)
-if (!q)
-return enviar('❌ Escribe un nombre o link de YouTube');
+        case 'playvideo':
+        case 'ytmp4': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q)
+            return enviar('❌ Escribe un nombre o link de YouTube');
+          try {
 
 
 
-try {
+            // Endpoint info del video
+            const apiURL =
+              `${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
 
-const apiURL =
-`${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
+            const apiData = await fetchJson(apiURL);
 
-const apiData = await fetchJson(apiURL);
+            // SI YTINFO FUNCIONA
+            if (apiData && apiData.Estado === "online") {
 
-// SI YTINFO FUNCIONA
-if (apiData && apiData.Estado === "online") {
+              const data = apiData.Resultado;
 
-const data = apiData.Resultado;
+              await sock.sendMessage(from, {
+                image: { url: data.Miniatura },
+                caption: `「✪」 *${data.Titulo}*\n\n*ⴵ Duración:* ${data.Duracion}\n*✐ Canal:* ${data.Canal.Nombre}\n*👁 Vistas:* ${data.Visualizaciones}\n*🜸 Link:* ${data.EnlaceYoutube}`
+              }, { quoted: info });
 
-await sock.sendMessage(from, {
-image: { url: data.Miniatura },
-caption: `「✪」 *${data.Titulo}*
+              await sock.sendMessage(from, {
+                video: { url: `${data.EnlaceDescarga}&apikey=${NAUFRA_KEY}` }, // 🔑 Agregar key también aquí
+                mimetype: 'video/mp4',
+                caption: data.Titulo
+              }, { quoted: info });
+
+              return;
+            }
+
+            // SI YTINFO FALLA → DESCARGA IGUAL
+            const videoURL =
+              `${APINAUFRA}/ytmp4?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
+
+            await sock.sendMessage(from, {
+              video: { url: videoURL },
+              mimetype: 'video/mp4',
+              caption: q
+            }, { quoted: info });
+
+          } catch (e) {
+
+            console.log("ERROR PLAYVIDEO:", e);
+
+            enviar('❌ Error descargando video');
+
+          }
+
+        }
+          break;
+
+        case 'playdoc': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q)
+            return enviar('❌ Escribe un nombre o link de YouTube');
+
+
+
+          try {
+
+            const apiURL =
+              `${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
+
+            const apiData = await fetchJson(apiURL);
+
+            // SI YTINFO FUNCIONA
+            if (apiData && apiData.Estado === "online") {
+
+              const data = apiData.Resultado;
+
+              await sock.sendMessage(from, {
+                image: { url: data.Miniatura },
+                caption: `「✪」 *${data.Titulo}*
 
 *ⴵ Duración:* ${data.Duracion}
 *✐ Canal:* ${data.Canal.Nombre}
 *👁 Vistas:* ${data.Visualizaciones}
 *🜸 Link:* ${data.EnlaceYoutube}
 `
-}, { quoted: info });
+              }, { quoted: info });
 
 
-await sock.sendMessage(from, {
-document: { url: `${data.EnlaceDescarga}&apikey=${NAUFRA_KEY}` },
-mimetype: 'video/mp4',
-fileName: `${data.Titulo}.mp4`
-}, { quoted: info });
+              await sock.sendMessage(from, {
+                document: { url: `${data.EnlaceDescarga}&apikey=${NAUFRA_KEY}` },
+                mimetype: 'video/mp4',
+                fileName: `${data.Titulo}.mp4`
+              }, { quoted: info });
 
-return;
-}
+              return;
+            }
 
 
-// SI YTINFO FALLA → DESCARGA IGUAL
-const videoURL =
-`${APINAUFRA}/ytmp4?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
+            // SI YTINFO FALLA → DESCARGA IGUAL
+            const videoURL =
+              `${APINAUFRA}/ytmp4?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
 
-await sock.sendMessage(from, {
-document: { url: videoURL },
-mimetype: 'video/mp4',
-fileName: `video.mp4`
-}, { quoted: info });
+            await sock.sendMessage(from, {
+              document: { url: videoURL },
+              mimetype: 'video/mp4',
+              fileName: `video.mp4`
+            }, { quoted: info });
 
-} catch (e) {
+          } catch (e) {
 
-console.log("ERROR MP4DOC:", e);
+            console.log("ERROR MP4DOC:", e);
 
-enviar('❌ Error enviando documento');
+            enviar('❌ Error enviando documento');
 
-}
+          }
 
-}
-break;
+        }
+          break;
 
-case 'play': {
-if(!isReg) return enviar(respuesta.registro)
-if (!q) return enviar('❌ Escribe un nombre o link de YouTube')
+        case 'play': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q) return enviar('❌ Escribe un nombre o link de YouTube')
 
-try {
+          try {
 
-let query = encodeURIComponent(q.trim())
+            let query = encodeURIComponent(q.trim())
 
-// INFO DEL VIDEO
-let apiURL = `${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${query}`
+            // INFO DEL VIDEO
+            let apiURL = `${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${query}`
 
-let apiData = await fetchJson(apiURL)
+            let apiData = await fetchJson(apiURL)
 
-// SI LA API RESPONDE BIEN
-if (apiData && apiData.Estado === "online" && apiData.Resultado) {
+            // SI LA API RESPONDE BIEN
+            if (apiData && apiData.Estado === "online" && apiData.Resultado) {
 
-let data = apiData.Resultado
+              let data = apiData.Resultado
 
-await sock.sendMessage(from, {
-image: { url: data.Miniatura },
-caption: `「✪」 *${data.Titulo}*
+              await sock.sendMessage(from, {
+                image: { url: data.Miniatura },
+                caption: `「✪」 *${data.Titulo}*
 
 *ⴵ Duración:* ${data.Duracion}
 *✐ Canal:* ${data.Canal.Nombre}
@@ -2164,485 +2158,485 @@ caption: `「✪」 *${data.Titulo}*
 *🜸 Link:* ${data.EnlaceYoutube}
 
 *📥 Descargando audio...*`
-}, { quoted: info })
+              }, { quoted: info })
 
-// AUDIO
-await sock.sendMessage(from, {
-audio: {
-url: `${APINAUFRA}/ytmp3?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(data.EnlaceYoutube)}`
-},
-mimetype: 'audio/mpeg',
-ptt: false
-}, { quoted: info })
+              // AUDIO
+              await sock.sendMessage(from, {
+                audio: {
+                  url: `${APINAUFRA}/ytmp3?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(data.EnlaceYoutube)}`
+                },
+                mimetype: 'audio/mpeg',
+                ptt: false
+              }, { quoted: info })
 
-return
+              return
 
-}
-
-
-// SI FALLA YTINFO → DESCARGA DIRECTO
-let audioURL = `${APINAUFRA}/ytmp3?apikey=${NAUFRA_KEY}&url=${query}`
-
-await sock.sendMessage(from, {
-audio: { url: audioURL },
-mimetype: 'audio/mpeg',
-ptt: false
-}, { quoted: info })
+            }
 
 
-} catch (e) {
+            // SI FALLA YTINFO → DESCARGA DIRECTO
+            let audioURL = `${APINAUFRA}/ytmp3?apikey=${NAUFRA_KEY}&url=${query}`
 
-console.log("ERROR PLAY:", e)
-
-enviar('❌ Error descargando música')
-
-}
-
-}
-break
+            await sock.sendMessage(from, {
+              audio: { url: audioURL },
+              mimetype: 'audio/mpeg',
+              ptt: false
+            }, { quoted: info })
 
 
+          } catch (e) {
+
+            console.log("ERROR PLAY:", e)
+
+            enviar('❌ Error descargando música')
+
+          }
+
+        }
+          break
 
 
 
-case 'fb':
-case 'facebook': {
-if(!isReg) return enviar(respuesta.registro)
-    if (!q)
-        return enviar('❌ Escribe un link de Facebook');
-
-    
-
-    try {
-
-      
-        // URL de descarga directa (no JSON)
-        const videoURL = `${APINAUFRA}/fbvideo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
-
-        // Enviar video directamente al bot
-        await sock.sendMessage(from, {
-            video: { url: videoURL },
-            mimetype: 'video/mp4',
-            caption: `*🎬 Video de Facebook*\n${q}`
-        }, { quoted: info });
-
-    } catch (e) {
-        console.log("ERROR FBVIDEO:", e);
-        enviar('❌ Error descargando video de Facebook');
-    }
-
-}
-break;
 
 
-case 'tiktok': {
-if(!isReg) return enviar(respuesta.registro)
-    if (!q)
-        return enviar('❌ Escribe un link de TikTok');
-
-    try {
-
-        // API key del usuario (puedes sacarla de tu DB si quieres dinámico)
-        
-        // Endpoint directo de descarga TikTok
-        const videoURL = `${APINAUFRA}/tiktok?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
-
-        // Opcional: miniatura y título con un endpoint /ttinfo
-        // Por simplicidad aquí solo enviamos el video directamente
-        await sock.sendMessage(from, {
-            video: { url: videoURL },
-            mimetype: 'video/mp4',
-            caption: `*🎬 Video de TikTok*\n${q}`
-        }, { quoted: info });
-
-    } catch (e) {
-        console.log("ERROR TIKTOK:", e);
-        enviar('❌ Error descargando video de TikTok');
-    }
-
-}
-break;
+        case 'fb':
+        case 'facebook': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q)
+            return enviar('❌ Escribe un link de Facebook');
 
 
-case 'mediafire': {
-if(!isReg) return enviar(respuesta.registro)
-    if (!q) return enviar('❌ Envia un link de MediaFire');
 
-    enviar("📥 Descargando archivo...");
+          try {
 
-    try {
 
-        const axios = require("axios");
+            // URL de descarga directa (no JSON)
+            const videoURL = `${APINAUFRA}/fbvideo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
 
-        const apiURL = `${APINAUFRA}/mediafire-dl?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q)}&t=${Date.now()}`;
+            // Enviar video directamente al bot
+            await sock.sendMessage(from, {
+              video: { url: videoURL },
+              mimetype: 'video/mp4',
+              caption: `*🎬 Video de Facebook*\n${q}`
+            }, { quoted: info });
 
-        const response = await axios.get(apiURL, {
-            responseType: 'arraybuffer'
-        });
+          } catch (e) {
+            console.log("ERROR FBVIDEO:", e);
+            enviar('❌ Error descargando video de Facebook');
+          }
 
-        // Obtener nombre desde header
-        let fileName = "archivo";
+        }
+          break;
 
-        const disposition = response.headers['content-disposition'];
 
-        if (disposition && disposition.includes("filename=")) {
-            fileName = disposition
+        case 'tiktok': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q)
+            return enviar('❌ Escribe un link de TikTok');
+
+          try {
+
+            // API key del usuario (puedes sacarla de tu DB si quieres dinámico)
+
+            // Endpoint directo de descarga TikTok
+            const videoURL = `${APINAUFRA}/tiktok?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
+
+            // Opcional: miniatura y título con un endpoint /ttinfo
+            // Por simplicidad aquí solo enviamos el video directamente
+            await sock.sendMessage(from, {
+              video: { url: videoURL },
+              mimetype: 'video/mp4',
+              caption: `*🎬 Video de TikTok*\n${q}`
+            }, { quoted: info });
+
+          } catch (e) {
+            console.log("ERROR TIKTOK:", e);
+            enviar('❌ Error descargando video de TikTok');
+          }
+
+        }
+          break;
+
+
+        case 'mediafire': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q) return enviar('❌ Envia un link de MediaFire');
+
+          enviar("📥 Descargando archivo...");
+
+          try {
+
+            const axios = require("axios");
+
+            const apiURL = `${APINAUFRA}/mediafire-dl?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q)}&t=${Date.now()}`;
+
+            const response = await axios.get(apiURL, {
+              responseType: 'arraybuffer'
+            });
+
+            // Obtener nombre desde header
+            let fileName = "archivo";
+
+            const disposition = response.headers['content-disposition'];
+
+            if (disposition && disposition.includes("filename=")) {
+              fileName = disposition
                 .split("filename=")[1]
                 .replace(/"/g, "")
                 .trim();
+            }
+
+            const mimeType = response.headers['content-type'] || 'application/octet-stream';
+
+            await sock.sendMessage(from, {
+              document: Buffer.from(response.data),
+              mimetype: mimeType,
+              fileName: fileName
+            }, { quoted: info });
+
+          } catch (e) {
+            console.log(e);
+            enviar('❌ Error descargando archivo');
+          }
+
         }
+          break;
 
-        const mimeType = response.headers['content-type'] || 'application/octet-stream';
+        case 'instagram': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q)
+            return enviar('❌ Escribe un link de Instagram');
 
-        await sock.sendMessage(from, {
-            document: Buffer.from(response.data),
-            mimetype: mimeType,
-            fileName: fileName
-        }, { quoted: info });
+          try {
+            // Endpoint directo de descarga Instagram
+            const videoURL = `${APINAUFRA}/instagram?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
 
-    } catch (e) {
-        console.log(e);
-        enviar('❌ Error descargando archivo');
-    }
+            // Enviar video directamente al bot
+            await sock.sendMessage(from, {
+              video: { url: videoURL },
+              mimetype: 'video/mp4',
+              caption: `*🎬 Video de Instagram*\n${q}`
+            }, { quoted: info });
 
-}
-break;
+          } catch (e) {
+            console.log("ERROR INSTAGRAM:", e);
+            enviar('❌ Error descargando video de Instagram');
+          }
 
-case 'instagram': {
-if(!isReg) return enviar(respuesta.registro)
-    if (!q)
-        return enviar('❌ Escribe un link de Instagram');
-
-    try {
-        // Endpoint directo de descarga Instagram
-        const videoURL = `${APINAUFRA}/instagram?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
-
-        // Enviar video directamente al bot
-        await sock.sendMessage(from, {
-            video: { url: videoURL },
-            mimetype: 'video/mp4',
-            caption: `*🎬 Video de Instagram*\n${q}`
-        }, { quoted: info });
-
-    } catch (e) {
-        console.log("ERROR INSTAGRAM:", e);
-        enviar('❌ Error descargando video de Instagram');
-    }
-
-}
-break;
+        }
+          break;
 
 
-//nesecitas api
-case 'pinterest':
-case 'pin': {
-if(!isReg) return enviar(respuesta.registro)
-  if (!q)
-    return enviar('❌ Escribe qué quieres buscar');
+        //nesecitas api
+        case 'pinterest':
+        case 'pin': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q)
+            return enviar('❌ Escribe qué quieres buscar');
 
-  try {
+          try {
 
-    const apiURL =
-      `${APINAUFRA}/pinterest-search?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
+            const apiURL =
+              `${APINAUFRA}/pinterest-search?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
 
-    await sock.sendMessage(from, {
-      image: { url: apiURL },
-      caption: `*📌 Resultado para:* ${q}`
-    }, { quoted: info });
+            await sock.sendMessage(from, {
+              image: { url: apiURL },
+              caption: `*📌 Resultado para:* ${q}`
+            }, { quoted: info });
 
-  } catch (e) {
+          } catch (e) {
 
-    console.log("ERROR PINTEREST:", e);
-    enviar('❌ Error buscando la imagen');
+            console.log("ERROR PINTEREST:", e);
+            enviar('❌ Error buscando la imagen');
 
-  }
+          }
 
-}
-break;
+        }
+          break;
 
-case 'horoscopo':
-case 'horóscopo': {
+        case 'horoscopo':
+        case 'horóscopo': {
 
-  if (!q) return enviar('❌ Escribe tu signo zodiacal.\nEjemplo: .horoscopo aries');
+          if (!q) return enviar('❌ Escribe tu signo zodiacal.\nEjemplo: .horoscopo aries');
 
-  const signo = q.toLowerCase().trim();
+          const signo = q.toLowerCase().trim();
 
-  enviar("🔮 Consultando tu horóscopo del día...");
+          enviar("🔮 Consultando tu horóscopo del día...");
 
-  try {
-    
+          try {
 
-    const apiURL = `${APINAUFRA}/horoscopo?apikey=${NAUFRA_KEY}&signo=${encodeURIComponent(signo)}&t=${Date.now()}`;
 
-    const data = await fetchJson(apiURL);
+            const apiURL = `${APINAUFRA}/horoscopo?apikey=${NAUFRA_KEY}&signo=${encodeURIComponent(signo)}&t=${Date.now()}`;
 
-    const mensaje = 
-`🔮 *Horóscopo de ${data.signo.toUpperCase()}*
+            const data = await fetchJson(apiURL);
+
+            const mensaje =
+              `🔮 *Horóscopo de ${data.signo.toUpperCase()}*
 📅 ${data.fecha}
 
 ${data.descripcion}
 
 ✨ ¡Que tengas un excelente día!`;
 
-    await sock.sendMessage(from, { text: mensaje }, { quoted: info });
+            await sock.sendMessage(from, { text: mensaje }, { quoted: info });
 
-  } catch (e) {
-    console.log("ERROR HOROSCOPO:", e);
-    enviar('❌ No pude obtener el horóscopo. Verifica el signo.');
-  }
+          } catch (e) {
+            console.log("ERROR HOROSCOPO:", e);
+            enviar('❌ No pude obtener el horóscopo. Verifica el signo.');
+          }
 
-}
-break;
-  
-  
-case 'wikipedia':
-case 'wiki': {
-if(!isReg) return enviar(respuesta.registro)
-  if (!q) return enviar('❌ Escribe qué quieres buscar');
-
-  
-  try {
-    
-    // En la misma VPS
-    const apiURL = `${APINAUFRA}/wikipedia?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
-
-    const data = await fetchJson(apiURL);
-
-    const mensaje = `📚 *${data.titulo}*\n${data.descripcion}\n🔗 ${data.enlace}`;
-await sock.sendMessage(from, { text: mensaje }, { quoted: info });
-
-  } catch (e) {
-    console.log("ERROR WIKI:", e);
-    enviar('❌ Error buscando en Wikipedia');
-  }
-
-}
-break;
+        }
+          break;
 
 
-case 'google':
-case 'g': {
-if(!isReg) return enviar(respuesta.registro)
-  if (!q) return enviar('❌ Escribe qué quieres buscar en Google');
-
-  
-  try {
-    
-    const apiURL = `${APINAUFRA}/google?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
-
-    const data = await fetchJson(apiURL);
-
-    const mensaje = `🌐 *${data.titulo}*\n${data.descripcion}\n🔗 ${data.enlace}`;
-
-    await sock.sendMessage(from, {
-      text: mensaje
-    }, { quoted: info });
-
-  } catch (e) {
-    console.log("ERROR GOOGLE:", e);
-    enviar('❌ Error buscando en Google');
-  }
-}
-break;
-
-case 'simi': {
-if(!isReg) return enviar(respuesta.registro)
-try {
-
-  if (!q) return enviar('💬 Usa: /simi texto');
+        case 'wikipedia':
+        case 'wiki': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q) return enviar('❌ Escribe qué quieres buscar');
 
 
-  
+          try {
 
-  const personalidad = encodeURIComponent(
-    "Responde en español como un bot sarcástico, con respuestas largas, un poco agresivo con malas palabras, sexualizado y divertido. Sé corto y con carácter. Usando muchas palabras sexuales y algo agresivas."
-  );
+            // En la misma VPS
+            const apiURL = `${APINAUFRA}/wikipedia?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
 
-  const texto = encodeURIComponent(q);
+            const data = await fetchJson(apiURL);
 
-  const apiURL = `${APINAUFRA}/chat?apikey=${NAUFRA_KEY}&prompt=${personalidad}%20Pregunta:%20${texto}&t=${Date.now()}`;
+            const mensaje = `📚 *${data.titulo}*\n${data.descripcion}\n🔗 ${data.enlace}`;
+            await sock.sendMessage(from, { text: mensaje }, { quoted: info });
 
-  const data = await fetchJson(apiURL);
+          } catch (e) {
+            console.log("ERROR WIKI:", e);
+            enviar('❌ Error buscando en Wikipedia');
+          }
 
-  if (!data || !data.respuesta) {
-    return enviar('❌ Simi no respondió.');
-  }
+        }
+          break;
 
-  const msg = `
+
+        case 'google':
+        case 'g': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q) return enviar('❌ Escribe qué quieres buscar en Google');
+
+
+          try {
+
+            const apiURL = `${APINAUFRA}/google?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
+
+            const data = await fetchJson(apiURL);
+
+            const mensaje = `🌐 *${data.titulo}*\n${data.descripcion}\n🔗 ${data.enlace}`;
+
+            await sock.sendMessage(from, {
+              text: mensaje
+            }, { quoted: info });
+
+          } catch (e) {
+            console.log("ERROR GOOGLE:", e);
+            enviar('❌ Error buscando en Google');
+          }
+        }
+          break;
+
+        case 'simi': {
+          if (!isReg) return enviar(respuesta.registro)
+          try {
+
+            if (!q) return enviar('💬 Usa: /simi texto');
+
+
+
+
+            const personalidad = encodeURIComponent(
+              "Responde en español como un bot sarcástico, con respuestas largas, un poco agresivo con malas palabras, sexualizado y divertido. Sé corto y con carácter. Usando muchas palabras sexuales y algo agresivas."
+            );
+
+            const texto = encodeURIComponent(q);
+
+            const apiURL = `${APINAUFRA}/chat?apikey=${NAUFRA_KEY}&prompt=${personalidad}%20Pregunta:%20${texto}&t=${Date.now()}`;
+
+            const data = await fetchJson(apiURL);
+
+            if (!data || !data.respuesta) {
+              return enviar('❌ Simi no respondió.');
+            }
+
+            const msg = `
 '💬 ${data.respuesta}
 `.trim();
 
-  enviar(msg);
+            enviar(msg);
 
-} catch (e) {
-  console.log(e);
-  enviar('❌ Error con Simi.');
-}
-}
-break;
+          } catch (e) {
+            console.log(e);
+            enviar('❌ Error con Simi.');
+          }
+        }
+          break;
 
 
 
-case 'descargarapk':
-case 'apk': {
-if(!isReg) return enviar(respuesta.registro)
-  if (!q)
-    return enviar('❌ Escribe el nombre de la aplicación\nEjemplo: .apk whatsapp');
+        case 'descargarapk':
+        case 'apk': {
+          if (!isReg) return enviar(respuesta.registro)
+          if (!q)
+            return enviar('❌ Escribe el nombre de la aplicación\nEjemplo: .apk whatsapp');
 
-  try {
+          try {
 
-    // 🔎 1️⃣ Buscar app
-    const searchURL =
-      `${APINAUFRA}/aptoide-search?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
+            // 🔎 1️⃣ Buscar app
+            const searchURL =
+              `${APINAUFRA}/aptoide-search?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
 
-    const search = await fetchJson(searchURL);
+            const search = await fetchJson(searchURL);
 
-    if (!search.resultado || search.resultado.length === 0)
-      return enviar('❌ No se encontró la aplicación');
+            if (!search.resultado || search.resultado.length === 0)
+              return enviar('❌ No se encontró la aplicación');
 
-    const app = search.resultado[0];
+            const app = search.resultado[0];
 
-    enviar(`*⇓ Descargando:* ${app.nombre}\n⏳ Espera un momento...`);
+            enviar(`*⇓ Descargando:* ${app.nombre}\n⏳ Espera un momento...`);
 
-    // ⬇ 2️⃣ Descargar usando el package
-    const downloadURL =
-      `${APINAUFRA}/aptoide-download?apikey=${NAUFRA_KEY}&package=${app.paquete}&t=${Date.now()}`;
+            // ⬇ 2️⃣ Descargar usando el package
+            const downloadURL =
+              `${APINAUFRA}/aptoide-download?apikey=${NAUFRA_KEY}&package=${app.paquete}&t=${Date.now()}`;
 
-    await sock.sendMessage(from, {
-      document: { url: downloadURL },
-      mimetype: "application/vnd.android.package-archive",
-      fileName: `${app.nombre}.apk`,
-      caption:
-`📦 *${app.nombre}*
+            await sock.sendMessage(from, {
+              document: { url: downloadURL },
+              mimetype: "application/vnd.android.package-archive",
+              fileName: `${app.nombre}.apk`,
+              caption:
+                `📦 *${app.nombre}*
 *✰ Rating:* ${app.rating}
 *⇓ Descargas:* ${app.descargas}
 *❒ Tamaño:* ${app.tamaño}
 *❂ Versión:* ${app.version}`
-    }, { quoted: info });
+            }, { quoted: info });
 
-  } catch (e) {
+          } catch (e) {
 
-    console.log("ERROR APK PRO:", e);
-    enviar('❌ Error descargando la aplicación');
+            console.log("ERROR APK PRO:", e);
+            enviar('❌ Error descargando la aplicación');
 
-  }
+          }
 
-}
-break;
+        }
+          break;
 
-//Parejas
-
-
-case 'alea': case 'casar' : case 'parejas':{
-  if(!isReg) return enviar(respuesta.registro)
-const men1 = groupMembers[Math.floor(Math.random() * groupMetadata.participants.length)]
-const men3 = groupMembers[Math.floor(Math.random() * groupMetadata.participants.length)]
-const men2 = men1.id
-const men4 = men3.id
-const rmen = `𝙰 @${men4.split('@')[0]} 𝙻𝙴 𝙶𝚄𝚂𝚃𝙰 @${men2.split('@')[0]} 𝚈 𝙳𝙴𝙱𝙴𝚁𝙸𝙰𝙽 𝙲𝙰𝚂𝙰𝚁𝚂𝙴`
-sock.sendMessage(from,{text : rmen , mentions :[men4,men2]},{quoted : info})
-}
-break 
+        //Parejas
 
 
+        case 'alea': case 'casar': case 'parejas': {
+          if (!isReg) return enviar(respuesta.registro)
+          const men1 = groupMembers[Math.floor(Math.random() * groupMetadata.participants.length)]
+          const men3 = groupMembers[Math.floor(Math.random() * groupMetadata.participants.length)]
+          const men2 = men1.id
+          const men4 = men3.id
+          const rmen = `𝙰 @${men4.split('@')[0]} 𝙻𝙴 𝙶𝚄𝚂𝚃𝙰 @${men2.split('@')[0]} 𝚈 𝙳𝙴𝙱𝙴𝚁𝙸𝙰𝙽 𝙲𝙰𝚂𝙰𝚁𝚂𝙴`
+          sock.sendMessage(from, { text: rmen, mentions: [men4, men2] }, { quoted: info })
+        }
+          break
 
 
 
-// COMANDOS SIN PREFIJO
-default:
 
 
-/// 🚫 ANTILINK MEJORADO CON DEPURACIÓN Y COMPATIBILIDAD LID/JID
+        // COMANDOS SIN PREFIJO
+        default:
 
-const { jidNormalizedUser } = require("baileys")
-const texto = (budy || "").toLowerCase()
 
-if (isGroup && isAntiLink && !isGroupAdmins && !isOwner) {
-  if (texto.includes(".com") || texto.includes("http://") || texto.includes("https://")) {
-    console.log("⚠️ Enlace detectado:", texto)
+          /// 🚫 ANTILINK MEJORADO CON DEPURACIÓN Y COMPATIBILIDAD LID/JID
 
-    const groupMetadata = await sock.groupMetadata(from)
-    const botIsAdmin = groupMetadata.participants.find(p => p.id === owner && p.admin)
-    if (!isBotGroupAdmins) return enviar("⚠️ No soy administrador, no puedo expulsar.")
+          const { jidNormalizedUser } = require("baileys")
+          const texto = (budy || "").toLowerCase()
 
-    const member = groupMetadata.participants.find(p => p.id === sender)
-    if (!member) return console.log("⚠️ El usuario ya no está en el grupo.")
+          if (isGroup && isAntiLink && !isGroupAdmins && !isOwner) {
+            if (texto.includes(".com") || texto.includes("http://") || texto.includes("https://")) {
+              console.log("⚠️ Enlace detectado:", texto)
 
-    const Kick = jidNormalizedUser(sender)
-    console.log("👞 Intentando expulsar a:", Kick)
+              const groupMetadata = await sock.groupMetadata(from)
+              const botIsAdmin = groupMetadata.participants.find(p => p.id === owner && p.admin)
+              if (!isBotGroupAdmins) return enviar("⚠️ No soy administrador, no puedo expulsar.")
 
-    try {
-      console.log("🗑️ Eliminando mensaje...")
-      await sock.sendMessage(from, { 
-        delete: { remoteJid: from, fromMe: false, id: info.key.id, participant: sender } 
-      })
+              const member = groupMetadata.participants.find(p => p.id === sender)
+              if (!member) return console.log("⚠️ El usuario ya no está en el grupo.")
 
-      console.log("🚷 Expulsando usuario...")
-      const result = await sock.groupParticipantsUpdate(from, [Kick], "remove")
-      console.log("✅ Resultado expulsión:", result)
+              const Kick = jidNormalizedUser(sender)
+              console.log("👞 Intentando expulsar a:", Kick)
 
-      await enviar(`🚫 Se detectó un link prohibido, el usuario @${sender.split("@")[0]} fue eliminado`, { mentions: [sender] })
+              try {
+                console.log("🗑️ Eliminando mensaje...")
+                await sock.sendMessage(from, {
+                  delete: { remoteJid: from, fromMe: false, id: info.key.id, participant: sender }
+                })
 
-    } catch (err) {
-      console.log("❌ Error al ejecutar antilink:")
-      console.log("Mensaje:", err.message)
-      console.log("Stack completo:", err)
-      await enviar(`⚠️ No se pudo expulsar a @${sender.split("@")[0]}.\nMotivo: ${err.message}`, { mentions: [sender] })
+                console.log("🚷 Expulsando usuario...")
+                const result = await sock.groupParticipantsUpdate(from, [Kick], "remove")
+                console.log("✅ Resultado expulsión:", result)
+
+                await enviar(`🚫 Se detectó un link prohibido, el usuario @${sender.split("@")[0]} fue eliminado`, { mentions: [sender] })
+
+              } catch (err) {
+                console.log("❌ Error al ejecutar antilink:")
+                console.log("Mensaje:", err.message)
+                console.log("Stack completo:", err)
+                await enviar(`⚠️ No se pudo expulsar a @${sender.split("@")[0]}.\nMotivo: ${err.message}`, { mentions: [sender] })
+              }
+            }
+          }
+
+
+
+
+          if (budy.startsWith('=>Duueño')) {
+            if (!isOwner) return enviar(respuesta.miowner)
+            function Return(sul) {
+              sat = JSON.stringify(sul, null, 2)
+              bang = util.format(sat)
+              if (sat == undefined) {
+                bang = util.format(sul)
+              }
+              enviar(bang)
+            }
+            try {
+              enviar(util.format(eval(`(async () => { return ${budy.slice(3)} })()`)))
+            } catch (e) {
+              enviar(String(e))
+            }
+          }
+
+
+
+
+      }
+
+    } catch (e) {
+
+      e = String(e)
+      if (!e.includes("this.isZero") && !e.includes("Could not find MIME for Buffer <null>") && !e.includes("Cannot read property 'conversation' of null") && !e.includes("Cannot read property 'contextInfo' of undefined") && !e.includes("Cannot set property 'mtype' of undefined") && !e.includes("jid is not defined")) {
+        console.log('Error : %s', color(e, 'red'))
+      }
+
     }
-  }
-}
 
 
 
-    
-   if (budy.startsWith('=>Duueño')) {
-    if (!isOwner) return enviar(respuesta.miowner)
-        function Return(sul) {
-             sat = JSON.stringify(sul, null, 2)
-                  bang = util.format(sat)
-                       if (sat == undefined) {
-                            bang = util.format(sul)
-                            }
-                            enviar(bang)
-                    }
-                    try {
-                        enviar(util.format(eval(`(async () => { return ${budy.slice(3)} })()`)))
-                    } catch (e) {
-                        enviar(String(e))
-                    }
-                }
-                
-                		      		      
-              		      		      		      	
-                		      		      		      		      		      		      		      		      
-}
- 
- } catch (e) {
-
- e = String(e)
-if (!e.includes("this.isZero") && !e.includes("Could not find MIME for Buffer <null>") && !e.includes("Cannot read property 'conversation' of null") && !e.includes("Cannot read property 'contextInfo' of undefined") && !e.includes("Cannot set property 'mtype' of undefined") && !e.includes("jid is not defined")) {
-console.log('Error : %s', color(e, 'red'))
-}
- 
- }   
- 
- 
- 
- 
- 
- 
-        
-    })
 
 
-    
+
+
+  })
+
+
+
 }
 ///////////MODIFIC INDEX 
 startProo()
 fs.watchFile('./index.js', (curr, prev) => {
-if (curr.mtime.getTime() !== prev.mtime.getTime()) {
-console.log(color('  [❗] El archivo Index fue modificada',"blue"));
-process.exit()
-}
+  if (curr.mtime.getTime() !== prev.mtime.getTime()) {
+    console.log(color('  [❗] El archivo Index fue modificada', "blue"));
+    process.exit()
+  }
 })
 
