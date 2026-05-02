@@ -48,8 +48,8 @@ const { fetchJson, getBuffer, fetchBuffer } = require('./lib/download.js')
 const { getExtension, getRandom } = require('./lib/utils-fuctions.js')
 
  //Stickers
-const { sendVideoAsSticker, sendImageAsSticker } = require('./fuction/sticker/rename.js');
-const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./fuction/sticker/rename2.js');
+const { sendVideoAsSticker, sendImageAsSticker } = require('./lib/sticker.js');
+const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./lib/sticker2.js');
  
  //Grupos js
 const { MoneyOfSender, addkoin, delkoin, AddReg, checkOfReg , addLevel, addXp,levelOfsender , xpOfsender ,checkOfRegM ,addkoinM , delkoinM , MoneyOfM,Rxp, addRxp ,addRep , delRep , repUser  } = require('./settings/Grupo/Js/reg.js')
