@@ -42,7 +42,7 @@ const banner = cfonts.render("Naufra| Bot| Base", {
   gradient: ["green","blue"]
 })
       // FUNCIONES DESCARGA 
-const { fetchJson , getBuffer ,fetchBuffer } = require('./fuction/download/gets.js')
+const { fetchJson, getBuffer, fetchBuffer } = require('./lib/download.js')
 
 
 const { getExtension, getRandom } = require('./lib/utils-fuctions.js')
