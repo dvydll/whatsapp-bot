@@ -52,7 +52,7 @@ const { sendVideoAsSticker, sendImageAsSticker } = require('./lib/whatsapp/stick
 const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./lib/whatsapp/sticker/sticker2.js');
 
 //Grupos js
-const { MoneyOfSender, addkoin, delkoin, AddReg, checkOfReg, addLevel, addXp, levelOfsender, xpOfsender, checkOfRegM, addkoinM, delkoinM, MoneyOfM, Rxp, addRxp, addRep, delRep, repUser } = require('./settings/Grupo/Js/reg.js')
+const economy = require('./lib/systems/economy.js')
 
 // GAMES
 const { addClaim, checkClaim, timeClaim, expiredClaim } = require('./lib/systems/games/claim.js')
@@ -319,9 +319,9 @@ async function startProo() {
       const iswelkom = isGroup ? welkom.includes(from) : false
       const isBanGp = isGroup ? bngp.includes(from) : false
       const isAntipv = Antipv.includes('activo')
-      const isReg = checkOfReg(sender)
+      const isReg = economy.checkOfReg(sender)
       const isAntiLink = isGroup ? antilink.includes(from) : false
-      const coins = MoneyOfSender(sender)
+      const coins = economy.MoneyOfSender(sender)
 
       // 🟢 Sistema de encendido/apagado global del bot
 
@@ -355,15 +355,15 @@ async function startProo() {
 
       //rangos
       const rangos = JSON.parse(fs.readFileSync('./settings/rangos.json'))
-      const YouN = levelOfsender(sender)
+      const YouN = economy.levelOfsender(sender)
       const Mlevel = rangos[YouN] || '🎖️𝐒𝐢𝐧 𝐑𝐚𝐧𝐠𝐨🎖️'
 
 
 
 
 
-      const Rrxp = Rxp(sender)
-      const Crxp = xpOfsender(sender)
+      const Rrxp = economy.Rxp(sender)
+      const Crxp = economy.xpOfsender(sender)
       var Mrxp;
       if (Crxp <= Rrxp + 50) {
         var Mrxp = '*▒▒▒▒▒▒▒▒▒▒ 0%*'
@@ -1174,8 +1174,8 @@ ${groupName} `
             owgi = await getFileBuffer(boij2, 'image')
             let encmediaa = await sendImageAsSticker2(sock, from, owgi, info, { packname: pack, author: author2 })
             await DLT_FL(encmediaa)
-            await addXp(sender, 1)
-            await delkoin(sender, 1)
+            await economy.addXp(sender, 1)
+            await economy.delkoin(sender, 1)
           } else if (boij && boij.seconds < 11) {
             enviar(`Creando tu Sticker ${pushname}`)
             var pack = `
@@ -1191,8 +1191,8 @@ ${groupName} `
             owgi = await getFileBuffer(boij, 'video')
             let encmedia = await sendVideoAsSticker2(sock, from, owgi, info, { packname: pack, author: author2 })
             await DLT_FL(encmedia)
-            await addXp(sender, 1)
-            await delkoin(sender, 1)
+            await economy.addXp(sender, 1)
+            await economy.delkoin(sender, 1)
           } else {
             return enviar(`Marque una imagen o \nUn vídeo máximo de 10 segundos ⏲️`)
           }
@@ -1297,8 +1297,8 @@ ${groupName} `
               sock.sendMessage(from, templateMessage, { quoted: info });
 
               // Reducir 1 moneda y agregar 1 de experiencia
-              await delkoin(sender, 1);
-              await addXp(sender, 1);
+              await economy.delkoin(sender, 1);
+              await economy.addXp(sender, 1);
             }
 
           } catch (err) {
@@ -1318,8 +1318,8 @@ ${groupName} `
           enviar('`Creando....`')
           tomp = await getFileBuffer(info.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage, 'video')
           sock.sendMessage(from, { audio: tomp, mimetype: 'audio/mpeg' }, { quoted: info })
-          await addXp(sender, 6)
-          await delkoin(sender, 3)
+          await economy.addXp(sender, 6)
+          await economy.delkoin(sender, 3)
           break
 
 
@@ -1333,8 +1333,8 @@ ${groupName} `
               console.log(e);
               enviar('Nose pudo convertir a imagen verifica que sea un sticker y no un gif ❌')
             })
-            await addXp(sender, 3)
-            await delkoin(sender, 2)
+            await economy.addXp(sender, 3)
+            await economy.delkoin(sender, 2)
           } catch {
             enviar('ocurrio un error ')
           }
@@ -1436,14 +1436,14 @@ ${groupName} `
 
           if (!isReg) return enviar(respuesta.registro)
 
-          var saldo = MoneyOfSender(sender)
-          const Xp = xpOfsender(sender)
-          const Mnv = levelOfsender(sender)
-          const Rxxp = Rxp(sender)
-          const myrep2 = repUser(sender)
+          var saldo = economy.MoneyOfSender(sender)
+          const Xp = economy.xpOfsender(sender)
+          const Mnv = economy.levelOfsender(sender)
+          const Rxxp = economy.Rxp(sender)
+          const myrep2 = economy.repUser(sender)
           const Xpnull = Rxxp - 1000
 
-          if (Xp === null) return addXp(sender, Xpnull)
+          if (Xp === null) return economy.addXp(sender, Xpnull)
 
           let foto
 
@@ -1493,7 +1493,7 @@ ${groupName} `
 
 
           // Restar una moneda por jugar
-          await delkoin(sender, apuestas);
+          await economy.delkoin(sender, apuestas);
 
           // Lista de símbolos para la tragamonedas
           const simbolos = ['🥕', '🐰', '🐸', '🦊', '🐱', '🍋', '🔔', '🍒', '🍉', '🍌'];
@@ -1532,10 +1532,10 @@ ${groupName} `
             const tipoPremio = Math.random() < 0.5 ? 'coins' : 'exp'; // 50% de probabilidad para cada tipo
 
             if (tipoPremio === 'coins') {
-              await addkoin(sender, premioCantidad);
+              await economy.addkoin(sender, premioCantidad);
               premioTexto = `🎉 Recibiste ${premioCantidad} Coins 🪙.`;
             } else {
-              await addXp(sender, premioCantidad);
+              await economy.addXp(sender, premioCantidad);
               premioTexto = `📚 Recibiste ${premioCantidad} de EXP.`;
             }
 
@@ -1587,8 +1587,8 @@ ${premioTexto}
 
 𝑮𝒂𝒏𝒂𝒔𝒕𝒆 ${monto} 𝑪𝒐𝒊𝒏𝒔 𝒚 ${montoExperiencia} 𝒅𝒆 𝑬𝒙𝒑𝒆𝒓𝒊𝒆𝒏𝒄𝒊𝒂.
 `)
-            await addkoin(sender, monto)
-            await addXp(sender, montoExperiencia)
+            await economy.addkoin(sender, monto)
+            await economy.addXp(sender, montoExperiencia)
           }
           break
 
@@ -1597,7 +1597,7 @@ ${premioTexto}
         case 'reg': case 'registrarme': case 'registrame': case 'rg':
           if (isReg) return enviar(respuesta.yaregistro)
           const nombre = pushname
-          await AddReg(sender, nombre)
+          await economy.AddReg(sender, nombre)
           sock.sendMessage(from, {
             image: { url: JpgBot },
             caption: `★━━━━★━━━━★★━━━━★
@@ -1610,16 +1610,16 @@ ${premioTexto}
 
 
         case 'levelup': {
-          const XpR = xpOfsender(sender)
-          const Rxxp = Rxp(sender)
+          const XpR = economy.xpOfsender(sender)
+          const Rxxp = economy.Rxp(sender)
           if (XpR >= Rxxp + 1000) {
-            await addLevel(sender, 1)
+            await economy.addLevel(sender, 1)
             sleep(100)
-            await addkoin(sender, 10)
+            await economy.addkoin(sender, 10)
             sleep(100)
-            await addXp(sender, 100)
+            await economy.addXp(sender, 100)
             sleep(100)
-            await addRxp(sender, 1000)
+            await economy.addRxp(sender, 1000)
             const Mup = ` 
         ★━━━ 𝐒𝐔𝐁𝐈𝐒𝐓𝐄 𝐃𝐄 𝐍𝐈𝐕𝐄𝐋 ━━━★
 ✪ @${sender.split('@')[0]}
@@ -1660,7 +1660,7 @@ ${premioTexto}
 
 ⏳ 𝑽𝒖𝒆𝒍𝒗𝒆 𝒆𝒏 24 𝒉𝒐𝒓𝒂𝒔.
 `)
-            await addkoin(sender, monto)
+            await economy.addkoin(sender, monto)
           }
         }
           break
@@ -1672,7 +1672,7 @@ ${premioTexto}
           const montto = q
           const monto = (montto * 1) / 1
           if (isNaN(monto)) return enviar(`Indique un monto válido en coins`);
-          if (monto > MoneyOfSender(sender)) return enviar(`No tienes suficiente dinero`);
+          if (monto > economy.MoneyOfSender(sender)) return enviar(`No tienes suficiente dinero`);
           if (monto > 5) return enviar('La apuesta no debe ser mayor a 5 Rupias');
           const isMinxxx = checkRuleta(sender)
           if (isMinxxx) {
@@ -1693,13 +1693,13 @@ ${premioTexto}
               vit = `💭「𝙍𝙖𝙯𝙚𝙧, 𝙚𝙡 𝙎𝙞𝙣 𝙈𝙞𝙚𝙙𝙤 🐺 𝙖𝙥𝙪𝙣𝙩𝙖 𝙖 𝙡𝙖 𝙘𝙖𝙗𝙚𝙯𝙖 𝙙𝙚 ${pushname} 😨🔫」
 💭「𝙍𝙖𝙯𝙚𝙧 🐺 𝙖𝙥𝙧𝙚𝙩𝙖 𝙚𝙡 𝙜𝙖𝙩𝙞𝙡𝙡𝙤... 💥 𝘽𝙊𝙊𝙈!」
 💭「${pushname} 𝙝𝙖 𝙘𝙖í𝙙𝙤 𝙮 𝙥𝙚𝙧𝙙𝙞ó ${monto} Rupias 🪙」`;
-              await delkoin(sender, monto);
+              await economy.delkoin(sender, monto);
               // El jugador pierde
             } else if (pptb === "vive") {
               vit = `💭「𝙍𝙖𝙯𝙚𝙧, 𝙚𝙡 𝙎𝙞𝙣 𝙈𝙞𝙚𝙙𝙤 🐺 𝙖𝙥𝙪𝙣𝙩𝙖 𝙖 𝙡𝙖 𝙘𝙖𝙗𝙚𝙯𝙖 𝙙𝙚 ${pushname} 😨🔫」
 💭「𝙍𝙖𝙯𝙚𝙧 🐺 𝙖𝙥𝙧𝙚𝙩𝙖 𝙚𝙡 𝙜𝙖𝙩𝙞𝙡𝙡𝙤... 💥 𝘽𝙊𝙊𝙈!」
 💭「𝙀𝙨 𝙪𝙣𝙖 𝙗𝙧𝙤𝙢𝙖, ${pushname} 𝙨𝙤𝙗𝙧𝙚𝙫𝙞𝙫𝙚 𝙮 𝙜𝙖𝙣𝙖 ${monto} Rupias 🪙」`;
-              await addkoin(sender, monto);
+              await economy.addkoin(sender, monto);
               // El jugador gana
             }
 
@@ -1740,23 +1740,23 @@ ${vit}
             // Cazador Marino
             if (pptb === "delfin") {
               vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🦈 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙜𝙖𝙣𝙖𝙨 20 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-              await addXp(sender, 20);
+              await economy.addXp(sender, 20);
               // El jugador gana
             } else if (pptb === "pulpo") {
               vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐙 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 8 𝙍𝙪𝙥𝙞𝙖𝙨 💎」`;
-              await addkoin(sender, 8);
+              await economy.addkoin(sender, 8);
             } else if (pptb === "pez") {
               vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐠 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 4 𝙍𝙪𝙥𝙞𝙖𝙨 💎 𝙮 5 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-              await addkoin(sender, 4);
-              await addXp(sender, 5);
+              await economy.addkoin(sender, 4);
+              await economy.addXp(sender, 5);
             } else if (pptb === "pez2") {
               vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐟 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 3 𝙍𝙪𝙥𝙞𝙖𝙨 💎 𝙮 3 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-              await addkoin(sender, 3);
-              await addXp(sender, 3);
+              await economy.addkoin(sender, 3);
+              await economy.addXp(sender, 3);
             } else if (pptb === "pez3") {
               vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🐡 𝙮 𝙖𝙡 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯 𝙧𝙚𝙘𝙞𝙗𝙚𝙨 1 𝙍𝙪𝙥𝙞𝙖 💎 𝙮 2 𝙙𝙚 𝙀𝙓𝙋 📚」`;
-              await addkoin(sender, 1);
-              await addXp(sender, 2);
+              await economy.addkoin(sender, 1);
+              await economy.addXp(sender, 2);
             } else if (pptb === "zapato") {
               vit = `💭「𝙃𝙖𝙨 𝙖𝙩𝙧𝙖𝙥𝙖𝙙𝙤 𝙪𝙣 🥾 𝙮 𝙖𝙡 𝙩𝙧𝙖𝙩𝙖𝙧 𝙙𝙚 𝙫𝙚𝙣𝙙𝙚𝙧𝙡𝙤 𝙖 𝙆𝙖𝙞 🐯, 𝙚́𝙡 𝙨𝙚 𝙧𝙞𝙚 🤣 𝙙𝙚 𝙩𝙞 🥲」`;
             }
@@ -1813,15 +1813,15 @@ ${vit}
               if (mencionado === emisor) return enviar("⚠️ No puedes enviarte monedas a ti mismo.");
               if (isNaN(monto) || monto <= 0) return enviar("⚠️ Ingresa una cantidad válida de monedas.\nEj: .regalar @usuario 100");
 
-              const saldoEmisor = await MoneyOfM(emisor);
+              const saldoEmisor = await economy.MoneyOfM(emisor);
               if (saldoEmisor < monto) return enviar("❌ No tienes suficientes monedas para hacer esta transferencia.");
 
               // Realizar transferencia
-              await delkoin(emisor, monto);
-              await addkoin(mencionado, monto);
+              await economy.delkoin(emisor, monto);
+              await economy.addkoin(mencionado, monto);
               await sleep(100);
 
-              const nuevoSaldo = await MoneyOfM(emisor);
+              const nuevoSaldo = await economy.MoneyOfM(emisor);
               enviar(`✅ Transferencia completada.\nUsted envió *₹${monto} Rupias.*`, {
                 mentions: [emisor, mencionado]
               });
@@ -1842,7 +1842,7 @@ ${vit}
 
         case 'rep': case 'mirep': case 'mireputacion':
           if (!isReg) return enviar(respuesta.registro)
-          const myrep = repUser(sender)
+          const myrep = economy.repUser(sender)
           const mitulamide30milimetros = `
 ╭━━━╾⭑✦REPUTACIÓN✦⭑╼━━━╮
 𝑳𝒂 𝑹𝒆𝒑𝒖𝒕𝒂𝒄𝒊𝒐𝒏 𝒅𝒆 ${pushname} 𝒆𝒔 𝒅𝒆 ${myrep}.
@@ -1966,8 +1966,8 @@ TOP.   USUARIO.   NIVEL\n`
 
           if (q.startsWith("1")) {
             if (coins < 50) return enviar("❌ No tienes suficientes Reales para hacer esta compra. Necesitas al menos 50 Rupias.");
-            await delkoin(sender, 50);
-            await addXp(sender, 200);
+            await economy.delkoin(sender, 50);
+            await economy.addXp(sender, 200);
 
             return enviar(`🐱💬 Gracias ${pushname}, cambiaste 50 Rupias por 200 EXP.`);
           }
@@ -1998,7 +1998,7 @@ TOP.   USUARIO.   NIVEL\n`
 
             try {
               fs.writeFileSync(path, JSON.stringify(rangosData, null, 2));
-              await delkoin(sender, 50);
+              await economy.delkoin(sender, 50);
 
               return enviar(`✅ ¡Perfecto, ${pushname}!\nHas cambiado el rango del nivel *${nivel}* a:\n✨ *${nuevoNombre}* ✨\nY se descontaron 50 Rupias 🪙`);
             } catch (e) {
