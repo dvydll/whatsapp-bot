@@ -82,6 +82,7 @@ const timeFt = getGreeting()
 
  // Configuraciones
 const { creador, owner, Bot, JpgBot, NAUFRA_KEY, prefixo, APINAUFRA, pairingCode, useMobile } = require('./lib/config.js')
+const { pickRandom, DLT_FL, sleep, isUrl, guardarEstadoBot, getEstadoBot, generarCodigo } = require('./lib/helpers.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
@@ -284,7 +285,7 @@ const mentions = (teks, memberr, id) => {
 (id == null || id == undefined || id == false) ? sock.sendMessage(from, {text: teks.trim(), mentions: memberr}) : sock.sendMessage(from, {text: teks.trim(), mentions: memberr})}
 const quoted = info.quoted ? info.quoted : info
 const mime = (quoted.info || quoted).Mimetype || ""
-const sleep = async (ms) => {return new Promise(resolve => setTimeout(resolve, ms))}
+// sleep ahora viene de lib/helpers.js
 const pushname = info.pushName ? info.pushName : ''
 const isBot = info.key.fromMe ? true : false
 const senderNumber = sender.split("@")[0]
@@ -316,7 +317,7 @@ function esAdminFlexible(sock, listaDeAdmins = []) {
   });
 }
 
-const isUrl = (url) => { return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi')) }
+// isUrl ahora viene de lib/helpers.js
 const deviceType = info.key.id.length > 21 ? 'Android' : info.key.id.substring(0, 2) == '3A' ? 'IPhone' : 'WhatsApp web'
 const options = { timeZone: 'America/Lima', hour12: false }
 const data = new Date().toLocaleDateString('PE', { ...options, day: '2-digit', month: '2-digit', year: '2-digit' })
@@ -354,17 +355,7 @@ const isModoAdmin = isGroup ? modoAdminList.includes(from) : false;
 
 
 
- //Funciones nuevas
-function pickRandom(list) {
-  return list[Math.floor(Math.random() * list.length)];
-} 
-function DLT_FL(file) {
-        try {
-            fs.unlinkSync(file);
-        } catch (error) {
-            return;
-        }
-    }
+ //Funciones nuevas (pickRandom y DLT_FL ahora vienen de lib/helpers.js)
     
  const enviar = (texto) => {
  sock.sendMessage(from,{ text : texto }, {quoted : info})
@@ -470,17 +461,7 @@ const respuesta = getRespuestas(sender)
    // Verificados
  const SvnC = {key : {participant : '0@s.whatsapp.net'},message : {contactMessage : {displayName : `${pushname}`}}};
  
-  // Funciones para crear códigos de 6 Digitos
-  
-  function generarCodigo() {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let codigo = '';
-    for (let i = 0; i < 6; i++) {
-        const indice = Math.floor(Math.random() * caracteres.length);
-        codigo += caracteres.charAt(indice);
-    }
-    return codigo;
-}
+// generarCodigo ahora viene de lib/helpers.js
 
 
  // MENSAJES EN CONSOLA
