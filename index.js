@@ -57,7 +57,7 @@ const { MoneyOfSender, addkoin, delkoin, AddReg, checkOfReg, addLevel, addXp, le
 // GAMES
 const { addClaim, checkClaim, timeClaim, expiredClaim } = require('./lib/systems/games/claim.js')
 const { checkCasino, checkAttp, checkEmoji, checkEve, addClaimTraga, checkClaimTraga, timeClaimTraga, checkRuleta, checkMinar, addCasino, addAttp, addEmoji, addEve, addRuleta, addMinar, expiredCasino, expiredMinar, expiredAttp, expiredEmoji, expiredEve, expiredRuleta, timeAttp, timeEmoji, timeEve, timeRuleta, timeMinar, timeCasino, expiredDayli, JsonDayli, addDayli, timeDayli, checkDayli, checkPescar, timePescar, addPescar, expiredPescar }
-  = require('./Games/Js/mining.js')
+  = require('./lib/systems/games/mining.js')
 
 
 // Menu bot js
