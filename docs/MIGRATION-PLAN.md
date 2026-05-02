@@ -162,15 +162,15 @@ Las carpetas `settings/` y `Games/Json/` funcionan como una **base de datos simp
 | `lib/types.js` | ✅ done | |
 | `lib/config.js` | ✅ done | |
 | `lib/helpers.js` | ✅ done | |
-| `lib/utils-fuctions.js` | ⏳ pending | Fase 1.1 |
-| `lib/download.js` | ⏳ pending | Fase 1.2 |
-| `lib/sticker.js` | ⏳ pending | Fase 1.3 |
-| `lib/sticker2.js` | ⏳ pending | Fase 1.4 |
-| `lib/games-claim.js` | ⏳ pending | Fase 2.1 |
-| `lib/games-mining.js` | ⏳ pending | Fase 2.2 |
-| `lib/economy.js` | ⏳ pending | Fase 2.3 |
-| `lib/menu.js` | ⏳ pending | Fase 2.3 |
-| ADR SQLite | ⏳ pending | Fase 4 |
+| `lib/utils-fuctions.js` | ✅ done | Migrado de fuction/settings/ |
+| `lib/download.js` | ✅ done | Migrado de fuction/download/ |
+| `lib/sticker.js` | ✅ done | Migrado de fuction/sticker/ |
+| `lib/sticker2.js` | ✅ done | Migrado de fuction/sticker/ |
+| `lib/systems/games/claim.js` | ✅ done | Migrado de Games/Js/ |
+| `lib/systems/games/mining.js` | ✅ done | Migrado de Games/Js/ |
+| `lib/systems/economy.js` | ✅ done | Migrado de settings/Grupo/Js/reg.js |
+| `lib/systems/menu.js` | ✅ done | Migrado de settings/Bot/Js/menu.js |
+| ADR SQLite | ⏳ pending | Fase 4 (opcional) |
 
 ---
 
