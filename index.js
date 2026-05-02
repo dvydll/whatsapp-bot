@@ -80,16 +80,8 @@ const timeFt = getGreeting()
 
 
 
- //Configuraciones 
-var { creador, owner, Bot, JpgBot, NAUFRA_KEY } = require("./settings/settings.json");        
-const prefixo = ['#','/','•','.','!','?','*']// @ Prefijos
-const APINAUFRA = 'https://api.naufrabot.com'
-
-
-
-const pairingCode = true;
-
-const useMobile = process.argv.includes("--mobile")
+ // Configuraciones
+const { creador, owner, Bot, JpgBot, NAUFRA_KEY, prefixo, APINAUFRA, pairingCode, useMobile } = require('./lib/config.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
