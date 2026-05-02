@@ -42,14 +42,14 @@ const banner = cfonts.render("Naufra| Bot| Base", {
   gradient: ["green","blue"]
 })
       // FUNCIONES DESCARGA 
-const { fetchJson, getBuffer, fetchBuffer } = require('./lib/download.js')
+const { fetchJson, getBuffer, fetchBuffer } = require('./lib/http/download.js')
 
 
-const { getExtension, getRandom } = require('./lib/utils-fuctions.js')
+const { getExtension, getRandom } = require('./lib/utils/utils-fuctions.js')
 
  //Stickers
-const { sendVideoAsSticker, sendImageAsSticker } = require('./lib/sticker.js');
-const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./lib/sticker2.js');
+const { sendVideoAsSticker, sendImageAsSticker } = require('./lib/whatsapp/sticker/sticker.js');
+const { sendVideoAsSticker2, sendImageAsSticker2 } = require('./lib/whatsapp/sticker/sticker2.js');
  
  //Grupos js
 const { MoneyOfSender, addkoin, delkoin, AddReg, checkOfReg , addLevel, addXp,levelOfsender , xpOfsender ,checkOfRegM ,addkoinM , delkoinM , MoneyOfM,Rxp, addRxp ,addRep , delRep , repUser  } = require('./settings/Grupo/Js/reg.js')
@@ -74,15 +74,15 @@ const Exportion1 = JSON.parse(fs.readFileSync('./Games/Json/exportion1.json'))
 const Cuestions = JSON.parse(fs.readFileSync('./Games/Json/cuestions.json'))
               
    // 𝚃𝙸𝙼𝙴
-const { getTime, getGreeting, runtime } = require('./lib/time.js')
+const { getTime, getGreeting, runtime } = require('./lib/core/time.js')
 const time = getTime()
 const timeFt = getGreeting() 
 
 
 
  // Configuraciones
-const { creador, owner, Bot, JpgBot, NAUFRA_KEY, prefixo, APINAUFRA, pairingCode, useMobile } = require('./lib/config.js')
-const { pickRandom, DLT_FL, sleep, isUrl, guardarEstadoBot, getEstadoBot, generarCodigo } = require('./lib/helpers.js')
+const { creador, owner, Bot, JpgBot, NAUFRA_KEY, prefixo, APINAUFRA, pairingCode, useMobile } = require('./lib/core/config.js')
+const { pickRandom, DLT_FL, sleep, isUrl, guardarEstadoBot, getEstadoBot, generarCodigo } = require('./lib/utils/helpers.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
@@ -398,7 +398,7 @@ const Mlevel = rangos[YouN] || '🎖️𝐒𝐢𝐧 𝐑𝐚𝐧𝐠𝐨🎖️'
  }
  
 // Constantes de tipos de mensaje
-const { getMessageTypes, getTypeMessage, getQuotedTypes } = require('./lib/types.js')
+const { getMessageTypes, getTypeMessage, getQuotedTypes } = require('./lib/core/types.js')
 
 const types = getMessageTypes(type)
 const isImage = types.isImage
@@ -454,7 +454,7 @@ const obtenerMencionado = (info) => {
      // Time: now imported from lib/time.js
 
 // Respuestas predefinidas
-const { getRespuestas } = require('./lib/responses.js')
+const { getRespuestas } = require('./lib/utils/responses.js')
 const respuesta = getRespuestas(sender)
 
  
