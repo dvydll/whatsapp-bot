@@ -414,33 +414,31 @@ const Mlevel = rangos[YouN] || '🎖️𝐒𝐢𝐧 𝐑𝐚𝐧𝐠𝐨🎖️'
  var Mrxp = '*██████████ 100%*'
  }
  
-             // 𝙽iveles
- // Constantes if
- const isImage = type == "imageMessage"
-const isVideo = type == "videoMessage"
-const isAudio = type == "audioMessage"
-const isSticker = type == "stickerMessage"
-const isContact = type == "contactMessage"
-const isLocation = type == "locationMessage"
-const isProduct = type == "productMessage"
-const isMedia = (type === "imageMessage" || type === "videoMessage" || type === "audioMessage") 
-typeMessage = body.substr(0, 50).replace(/\n/g, "")
-if (isImage) typeMessage = "Image"
-else if (isVideo) typeMessage = "Video"
-else if (isAudio) typeMessage = "Audio"
-else if (isSticker) typeMessage = "Sticker"
-else if (isContact) typeMessage = "Contact"
-else if (isLocation) typeMessage = "Location"
-else if (isProduct) typeMessage = "Product"
-const isQuotedMsg = type === "extendedTextMessage" && content.includes("textMessage")
-const isQuotedImage = type === "extendedTextMessage" && content.includes("imageMessage")
-const isQuotedVideo = type === "extendedTextMessage" && content.includes("videoMessage")
-const isQuotedDocument = type === "extendedTextMessage" && content.includes("documentMessage")
-const isQuotedAudio = type === "extendedTextMessage" && content.includes("audioMessage")
-const isQuotedSticker = type === "extendedTextMessage" && content.includes("stickerMessage")
-const isQuotedContact = type === "extendedTextMessage" && content.includes("contactMessage")
-const isQuotedLocation = type === "extendedTextMessage" && content.includes("locationMessage")
-const isQuotedProduct = type === "extendedTextMessage" && content.includes("productMessage")
+// Constantes de tipos de mensaje
+const { getMessageTypes, getTypeMessage, getQuotedTypes } = require('./lib/types.js')
+
+const types = getMessageTypes(type)
+const isImage = types.isImage
+const isVideo = types.isVideo
+const isAudio = types.isAudio
+const isSticker = types.isSticker
+const isContact = types.isContact
+const isLocation = types.isLocation
+const isProduct = types.isProduct
+const isMedia = types.isMedia
+
+const typeMessage = getTypeMessage(body, types)
+
+const quotedTypes = getQuotedTypes(type, content)
+const isQuotedMsg = quotedTypes.isQuotedMsg
+const isQuotedImage = quotedTypes.isQuotedImage
+const isQuotedVideo = quotedTypes.isQuotedVideo
+const isQuotedDocument = quotedTypes.isQuotedDocument
+const isQuotedAudio = quotedTypes.isQuotedAudio
+const isQuotedSticker = quotedTypes.isQuotedSticker
+const isQuotedContact = quotedTypes.isQuotedContact
+const isQuotedLocation = quotedTypes.isQuotedLocation
+const isQuotedProduct = quotedTypes.isQuotedProduct
 
 
 const getFileBuffer = async (mediakey, MediaType) => {
