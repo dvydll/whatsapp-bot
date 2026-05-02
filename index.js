@@ -45,7 +45,7 @@ const banner = cfonts.render("Naufra| Bot| Base", {
 const { fetchJson , getBuffer ,fetchBuffer } = require('./fuction/download/gets.js')
 
 
-const {getExtension, getRandom } =require('./fuction/settings/fuctions.js')
+const { getExtension, getRandom } = require('./lib/utils-fuctions.js')
 
  //Stickers
 const { sendVideoAsSticker, sendImageAsSticker } = require('./fuction/sticker/rename.js');
