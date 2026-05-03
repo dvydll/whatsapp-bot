@@ -208,8 +208,8 @@ async function main() {
       const prefixes = prefixo ? prefixo.map(prefix => prefix.toLowerCase()) : [];
       const lowerBudy = budy.toLowerCase();
       const hasPrefix = prefixes.some(prefix => lowerBudy.startsWith(prefix));
-      const commandArgs = hasPrefix ? lowerBudy.slice(prefixes.find(prefix => lowerBudy.startsWith(prefix)).length).trim()?.split(' ') : lowerBudy.trim()?.split(' ');
-      const comando = removeAccents(commandArgs[0]);
+      const commandArgs = hasPrefix ? lowerBudy.slice(prefixes.find(prefix => lowerBudy.startsWith(prefix)).length).trim()?.split(' ') : [];
+      const comando = hasPrefix ? removeAccents(commandArgs[0]) : '';
       // MULTIPREFIJO
       const mentions = (teks, memberr, id) => {
         (id == null || id == undefined || id == false) ? sock.sendMessage(from, { text: teks.trim(), mentions: memberr }) : sock.sendMessage(from, { text: teks.trim(), mentions: memberr })
