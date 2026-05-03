@@ -83,17 +83,11 @@ const timeFt = getGreeting()
 // Configuraciones
 const { creador, owner, Bot, JpgBot, NAUFRA_KEY, prefixo, APINAUFRA, pairingCode, useMobile } = require('./lib/core/config.js')
 const { pickRandom, DLT_FL, sleep, isUrl, guardarEstadoBot, getEstadoBot, generarCodigo } = require('./lib/utils/helpers.js')
+const { getGroupAdmins } = require('./lib/whatsapp/utils/group-utils.js')
+const { obtenerMencionado } = require('./lib/whatsapp/utils/mention-utils.js')
+const { getFileBuffer } = require('./lib/whatsapp/utils/download-utils.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
-
-function getGroupAdmins(participants) {
-  admins = []
-  for (let i of participants) {
-    if (i.admin == 'admin') admins.push(i.id)
-    if (i.admin == 'superadmin') admins.push(i.id)
-  }
-  return admins
-}
 
 async function startProo() {
   console.clear();
@@ -416,34 +410,8 @@ async function startProo() {
       const isQuotedProduct = quotedTypes.isQuotedProduct
 
 
-      const getFileBuffer = async (mediakey, MediaType) => {
-        const stream = await downloadContentFromMessage(mediakey, MediaType)
-        let buffer = Buffer.from([])
-        for await (const chunk of stream) {
-          buffer = Buffer.concat([buffer, chunk])
-        }
-        return buffer
-      }
-
-
-
-      //funcion para mencionar 
-
-      const obtenerMencionado = (info) => {
-        const context = info.message?.extendedTextMessage?.contextInfo
-          || info.message?.contextInfo
-          || null;
-
-        if (context?.mentionedJid && context.mentionedJid.length > 0) {
-          return context.mentionedJid[0];
-        }
-
-        if (context?.participant) {
-          return context.participant;
-        }
-
-        return null;
-      };
+      // getFileBuffer ahora importado de lib/whatsapp/utils/download-utils.js
+      // obtenerMencionado ahora importado de lib/whatsapp/utils/mention-utils.js
 
       // Time: now imported from lib/time.js
 
