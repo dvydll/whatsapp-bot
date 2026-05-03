@@ -1,10 +1,3 @@
-//Base 100% Editable creditos a Naufrabot 
-
-//Página oficial naufrabot.com
-
-//Sígueme en todas mis redes para estar informados con las novedades de la base 
-
-//Modulos
 const { default: makeWASocket,
   DisconnectReason, JulsBotIncConnect, getAggregateVotesInPollMessage, delay, makeCacheableSignalKeyStore, useMultiFileAuthState,
   fetchLatestBaileysVersion,
@@ -33,7 +26,7 @@ const ffmpeg = require('fluent-ffmpeg')
 
 //color
 const chalk = require('chalk')
-const color = (text, color) => { return !color ? chalk.green(text) : chalk.keyword(color)(text) };
+const color = (text, color) => !color ? chalk.green(text) : chalk.keyword(color)(text);
 
 //baner
 const banner = cfonts.render("Daya| Bot| Base", {
@@ -43,8 +36,6 @@ const banner = cfonts.render("Daya| Bot| Base", {
 })
 // FUNCIONES DESCARGA 
 const { fetchJson, getBuffer, fetchBuffer } = require('./lib/http/download.js')
-
-
 const { getExtension, getRandom } = require('./lib/utils/utils-fuctions.js')
 
 //Stickers
@@ -59,11 +50,10 @@ const { addClaim, checkClaim, timeClaim, expiredClaim } = require('./lib/systems
 const { checkCasino, checkAttp, checkEmoji, checkEve, addClaimTraga, checkClaimTraga, timeClaimTraga, checkRuleta, checkMinar, addCasino, addAttp, addEmoji, addEve, addRuleta, addMinar, expiredCasino, expiredMinar, expiredAttp, expiredEmoji, expiredEve, expiredRuleta, timeAttp, timeEmoji, timeEve, timeRuleta, timeMinar, timeCasino, expiredDayli, JsonDayli, addDayli, timeDayli, checkDayli, checkPescar, timePescar, addPescar, expiredPescar }
   = require('./lib/systems/games/mining.js')
 
-
 // Menu bot js
 const Menu = require('./lib/systems/menu.js')
 
-//configurar ggrupos
+//configurar grupos
 const welkom = JSON.parse(fs.readFileSync('./settings/Grupo/Json/welkom.json'))
 const antilink = JSON.parse(fs.readFileSync('./settings/Grupo/Json/antilink.json'))
 const bngp = JSON.parse(fs.readFileSync('./settings/Grupo/Json/grupo.json'))
@@ -73,12 +63,10 @@ const Exportion = JSON.parse(fs.readFileSync('./Games/Json/exportion.json'))
 const Exportion1 = JSON.parse(fs.readFileSync('./Games/Json/exportion1.json'))
 const Cuestions = JSON.parse(fs.readFileSync('./Games/Json/cuestions.json'))
 
-// 𝚃𝙸𝙼𝙴
+// time
 const { getTime, getGreeting, runtime } = require('./lib/core/time.js')
 const time = getTime()
 const timeFt = getGreeting()
-
-
 
 // Configuraciones
 const { creador, owner, Bot, JpgBot, NAUFRA_KEY, prefixo, APINAUFRA, pairingCode, useMobile } = require('./lib/core/config.js')
@@ -96,10 +84,10 @@ const infoCommands = require('./lib/commands/info.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
-async function startProo() {
+async function main() {
   console.clear();
   console.log(banner.string);
-  console.log(chalk.cyanBright("🔥 NaufraBot Base"));
+  console.log(chalk.cyanBright("🔥 DayaBot"));
 
   // Estado de sesión
   const { state, saveCreds } = await useMultiFileAuthState("./session");
@@ -155,7 +143,7 @@ async function startProo() {
         console.log(chalk.red("❌ Sesión cerrada. Borra la carpeta 'session' y vuelve a emparejar."));
       } else {
         console.log(chalk.yellow("⚠️ Conexión cerrada, reconectando..."));
-        startProo();
+        main();
       }
     } else if (connection === "open") {
       console.log(chalk.greenBright("✅ Conectado exitosamente"));
@@ -166,15 +154,11 @@ async function startProo() {
   // Guardar credenciales cuando se actualicen
   sock.ev.on("creds.update", saveCreds);
 
-
-
-
   // 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙰 𝚈 𝙳𝙴𝚂𝙿𝙴𝙳𝙸𝙳𝙰 - extraído a lib/whatsapp/group-handler.js
   const groupHandler = createGroupHandler(sock, { welkom })
   sock.ev.on("group-participants.update", groupHandler)
 
-  //Bienvenida y despedidas
-
+  // Bienvenida y despedidas
   sock.ev.on('creds.update', saveCreds)
   sock.ev.on("messages.upsert", () => { })
 
@@ -193,18 +177,14 @@ async function startProo() {
 
       var pes = (type === 'conversation' && info.message.conversation) ? info.message.conversation : (type == 'imageMessage') && info.message.imageMessage.caption ? info.message.imageMessage.caption : (type == 'videoMessage') && info.message.videoMessage.caption ? info.message.videoMessage.caption : (type == 'extendedTextMessage') && info.message.extendedTextMessage.text ? info.message.extendedTextMessage.text : ''
 
-      const numerodono = [
-        `${owner}`
-      ];
-
+      const numerodono = [`${owner}`];
 
       const verificarN = async (sla) => {
         const [result] = await sock.onWhatsApp(sla)
-        if (result == undefined) {
-          enviar("Este usuário no existe en WhatsApp")
-        } else {
-          enviar(`${sla} Número existente en WhatsApp con  id: ${result.jid}`)
-        }
+        enviar(!result
+          ? "Este usuário no existe en WhatsApp"
+          : `${sla} Número existente en WhatsApp con id: ${result.jid}`
+        )
       }
 
       // Constantes is
@@ -243,7 +223,6 @@ async function startProo() {
       const BotNumber = sock.user.id?.split(':')[0] + '@s.whatsapp.net'
       const isOwner = numerodono.includes(sender)
 
-
       const isGroupAdmins = groupAdmins.some(admin => admin.id?.includes(sender));
       const isBotGroupAdmins = esAdminFlexible(sock, groupAdmins.map(p => p.id))
       // esAdminFlexible ahora importado de lib/whatsapp/permissions.js
@@ -263,9 +242,7 @@ async function startProo() {
       const coins = economy.MoneyOfSender(sender)
 
       // 🟢 Sistema de encendido/apagado global del bot
-
       const estadoPath = './settings/estadoBot.json'
-
 
       if (!fs.existsSync(estadoPath)) {
         fs.writeFileSync(estadoPath, JSON.stringify({ activo: true }, null, 2))
@@ -276,18 +253,12 @@ async function startProo() {
         botActivo = estado
       }
 
-      //
-
       //MODO ADMIN 
-
       const modoAdminPath = './settings/Grupo/Json/modo_admin.json';
       const modoAdminList = fs.existsSync(modoAdminPath) ? JSON.parse(fs.readFileSync(modoAdminPath)) : [];
       const isModoAdmin = isGroup ? modoAdminList.includes(from) : false;
 
-
-
       //Funciones nuevas (pickRandom y DLT_FL ahora vienen de lib/helpers.js)
-
       const enviar = (texto) => {
         sock.sendMessage(from, { text: texto }, { quoted: info })
       }
@@ -296,11 +267,6 @@ async function startProo() {
       const rangos = JSON.parse(fs.readFileSync('./settings/rangos.json'))
       const YouN = economy.levelOfsender(sender)
       const Mlevel = rangos[YouN] || '🎖️𝐒𝐢𝐧 𝐑𝐚𝐧𝐠𝐨🎖️'
-
-
-
-
-
       const Rrxp = economy.Rxp(sender)
       const Crxp = economy.xpOfsender(sender)
       var Mrxp;
@@ -354,25 +320,19 @@ async function startProo() {
       const isQuotedLocation = quotedTypes.isQuotedLocation
       const isQuotedProduct = quotedTypes.isQuotedProduct
 
-
       // getFileBuffer ahora importado de lib/whatsapp/utils/download-utils.js
       // obtenerMencionado ahora importado de lib/whatsapp/utils/mention-utils.js
 
       // Time: now imported from lib/time.js
-
       // Respuestas predefinidas
       const { getRespuestas } = require('./lib/utils/responses.js')
       const respuesta = getRespuestas(sender)
-
 
       // Verificados
       const SvnC = { key: { participant: '0@s.whatsapp.net' }, message: { contactMessage: { displayName: `${pushname}` } } };
 
       // generarCodigo ahora viene de lib/helpers.js
-
-
       // MENSAJES EN CONSOLA
-
       // comando pv
       if (!isGroup && isCmd) console.log('\n  ╔─━━━━ ', color(' 𝗖𝗠𝗗 「 𝗨𝗦𝗨𝗔𝗥𝗜𝗢 」', 'blue'), '━━━━─╗', '\n',
         color(' GRUPO :', 'lime'), color(groupName, 'cyan'), '\n',
@@ -405,7 +365,6 @@ async function startProo() {
         color(' HORA :', 'lime'), color(hora, 'cyan'), '\n',
         color(' DATOS :', 'lime'), color(data, 'cyan'), '\n', color(' ╚─━━━━━━━━━ '), color('【✔】 ', 'red'), '━━━━━━━━━─╝')
 
-
       expiredClaim();
       expiredMinar()
       expiredAttp()
@@ -414,10 +373,10 @@ async function startProo() {
       expiredDayli()
       expiredPescar()
       expiredRuleta()
+
       //ban grupo
-      if (isBanGp) {
-        return
-      }
+      if (isBanGp) return;
+
       // antiprivado
       if (isAntipv && !isGroup && !isOwner) {
         sock.updateBlockStatus(sender, 'block')
@@ -430,8 +389,6 @@ async function startProo() {
       if (!botActivo && !isOwner) return
 
       switch (comando) {
-
-
         case 'prueba':
           testCommands.prueba({ enviar })
           break
@@ -439,15 +396,12 @@ async function startProo() {
         case 'comando2':
           testCommands.comando2({ enviar })
           break
+
         //Comandos owner
-
-
-
         case 'miapi':
         case 'apikey':
           ownerCommands.miapi({ APINAUFRA, NAUFRA_KEY, enviar })
           break
-
 
         case 'menu':
         case 'help': {
@@ -483,9 +437,9 @@ async function startProo() {
           configCommands.antiprivado({ isOwner, args, Antipv, enviar, respuesta })
           break
 
-
-
-        case 'rvisu': case 'revelarvisu': case 'open':
+        case 'rvisu':
+        case 'revelarvisu':
+        case 'open':
           configCommands.rvisu({ isOwner, enviar, info, sock, from, respuesta })
           break
 
@@ -497,7 +451,6 @@ async function startProo() {
           guardarEstadoBot(false)
           enviar('😴 El bot ha sido *DESACTIVADO* y dejará de responder a los comandos.')
           break
-
 
         case 'antiprivado':
         case 'antipv': {
@@ -517,8 +470,6 @@ async function startProo() {
           }
         }
           break
-
-
 
         case 'rvisu': case 'revelarvisu': case 'open':
           if (!isOwner) return enviar(respuesta.miowner)
@@ -554,7 +505,6 @@ async function startProo() {
 
 
         //información 
-
         case 'infobot': case 'ping': {
           if (!isGroup) return
           let timestamp = speed()
@@ -576,11 +526,9 @@ async function startProo() {
           infoCommands.personalizarbot({ sock, from, info })
           break
 
-
         case 'comprarapi':
           infoCommands.comprarapi({ sock, from, info })
           break
-
 
         case 'grupos':
           infoCommands.grupos({ enviar })
@@ -598,16 +546,11 @@ async function startProo() {
           infoCommands.canal({ enviar })
           break
 
-
-
-
         case 'serbot':
           infoCommands.serbot({ enviar })
           break;
 
-
         //AJUSTES DEL GRUPO
-
         case 'welcome':
         case 'bienvenida':
           if (!isGroup) return
@@ -628,7 +571,6 @@ async function startProo() {
             enviar('「 𝟏 𝐏𝐚𝐫𝐚 𝐀𝐜𝐭𝐢𝐯𝐚𝐫 𝐲 𝟎 𝐏𝐚𝐫𝐚 𝐃𝐞𝐬𝐚𝐜𝐭𝐢𝐯𝐚𝐫 」')
           }
           break
-
 
         case 'bangp': {
           if (!isGroup) return
@@ -658,8 +600,6 @@ async function startProo() {
         }
           break
 
-
-
         case 'todos':
         case 'revivir':
           if (!isReg) return enviar(respuesta.registro)
@@ -679,7 +619,6 @@ async function startProo() {
 `, members_id, true)
           break
 
-
         case 'anuncio': {
           if (!isGroup) return enviar('Es enserio invocar en un chat , te violo tu tio verdad')
           if (!isGroupAdmins) return enviar(respuesta.admin)
@@ -697,7 +636,6 @@ async function startProo() {
           mentions(teks, men, true)
         }
           break
-
 
         case 'modoadmin': {
           if (!isGroup) return enviar("⚠️ Este comando solo se puede usar en grupos.");
@@ -736,8 +674,6 @@ async function startProo() {
         }
           break;
 
-
-
         case 'hidetag':
         case 'notify':
           if (!isReg) return enviar(respuesta.registro)
@@ -759,7 +695,6 @@ async function startProo() {
           sock.sendMessage(from, optionshidetag)
           break
 
-
         case 'kick':
         case 'ban':
         case 'largate': {
@@ -775,9 +710,6 @@ async function startProo() {
           enviar('Accion realizada exitosamente')
         }
           break
-
-
-
 
         // ⚙️ Comando para activar/desactivar antilink
         case 'antilink':
@@ -803,9 +735,7 @@ async function startProo() {
           }
           break;
 
-
         case 'grupo': {
-
           if (!isGroup) return enviar(respuesta.grupos)
           if (!isGroupAdmins) return enviar(respuesta.admin)
           if (!isBotGroupAdmins) return enviar(respuesta.botadmin)
@@ -845,7 +775,6 @@ Usa:
 
         }
           break
-
 
         // STICKERS 
         case 's':
@@ -918,8 +847,6 @@ ${groupName} `
           }
 
           break
-
-
 
         case 'ship': {
           if (!isReg) return enviar(respuesta.registro)
@@ -1004,9 +931,7 @@ ${groupName} `
         }
           break;
 
-
         ///////////////////HERRAMIENTAS///////////
-
         case 'amp3':
         case 'tomp3':
           if (!isReg) return enviar(respuesta.registro)
@@ -1036,7 +961,6 @@ ${groupName} `
           }
           break
 
-
         case 'calcular':
         case 'cal':
           if (!isReg) return enviar(respuesta.registro)
@@ -1046,9 +970,6 @@ ${groupName} `
           enviar(`\n╭──────────────────\n││「 𝗥𝗘𝗦𝗨𝗟𝗧𝗔𝗗𝗢𝗦 」│\n│➫┇${q} = *${resultzx}*\n╰──────────────────`)
           break
 
-
-
-
         //nesecitas api
         case 'gpt': case 'gpt4': case 'openai': case 'chatgpt':
         case 'ia': {
@@ -1056,33 +977,21 @@ ${groupName} `
           if (!q) return enviar('❌ Escribe una pregunta');
 
           try {
-
             const apiURL = `${APINAUFRA}/chatgpt?apikey=${NAUFRA_KEY}&prompt=${encodeURIComponent(q)}&t=${Date.now()}`;
-
             const data = await fetchJson(apiURL);
-
             const mensaje = `🤖 *ChatGPT*\n\n${data.respuesta}`;
-
             await sock.sendMessage(from, { text: mensaje }, { quoted: info });
-
           } catch (e) {
             console.log("ERROR IA:", e);
             enviar('❌ Error usando la IA');
           }
-
         }
           break;
 
         //nesecita API 
-
         case 'ytsearch': {
-
           if (!q) return enviar('❌ Escribe un nombre para buscar en YouTube');
-
-
           try {
-
-
             const apiURL = `${APINAUFRA}/ytsearch?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q.trim())}`;
 
             console.log("🔗 Llamando a API:", apiURL);
@@ -1124,9 +1033,7 @@ ${groupName} `
         }
           break;
 
-
         //Economía niveles y experiencia 
-
         case 'perfil': case 'cartera':
         case 'nivel': case 'minivel': {
 
@@ -1160,7 +1067,6 @@ ${groupName} `
 ╚══✦❖【 𝐏𝐫𝐨𝐠𝐫𝐞𝐬𝐨 】❖✦══╝
 ▰▰ ${Mrxp} ▰▰
 `
-
           await sock.sendMessage(from, {
             image: { url: foto },
             caption: Mp,
@@ -1186,7 +1092,6 @@ ${groupName} `
             const espera = 8 * 60 * 60 * 1000; // 8 horas
             await addClaimTraga(sender, espera);
           }
-
 
           // Restar una moneda por jugar
           await economy.delkoin(sender, apuestas);
@@ -1261,8 +1166,6 @@ ${premioTexto}
 
           break;
 
-
-
         case "dayli": case "daily":
           if (!isGroup) return
           if (!isReg) return
@@ -1288,8 +1191,6 @@ ${premioTexto}
           }
           break
 
-
-
         case 'reg': case 'registrarme': case 'registrame': case 'rg':
           if (isReg) return enviar(respuesta.yaregistro)
           const nombre = pushname
@@ -1303,7 +1204,6 @@ ${premioTexto}
 ◆━━━━━━━▣✦▣━━━━━━━━◆`
           }, { quoted: info })
           break
-
 
         case 'levelup': {
           const XpR = economy.xpOfsender(sender)
@@ -1329,9 +1229,6 @@ ${premioTexto}
           }
         }
           break
-
-
-
 
         case 'minar': {
           if (!isReg) return enviar(respuesta.registro)
@@ -1360,7 +1257,6 @@ ${premioTexto}
           }
         }
           break
-
 
         case "ruleta": {
           if (!q) return enviar(`Indique un monto para apostar, ejemplo .ruleta 4`);
@@ -1398,7 +1294,6 @@ ${premioTexto}
               await economy.addkoin(sender, monto);
               // El jugador gana
             }
-
             const datatt = `
 ╭━━━╾⭑✦  ✦⭑╼━━━╮
          ⌬ 𝙍𝙐𝙇𝙀𝙏𝘼 𝙍𝙐𝙎𝘼 ⌬
@@ -1406,15 +1301,10 @@ ${vit}
 ⌛ 𝙑𝙪𝙚𝙡𝙫𝙚 𝙚𝙣 24 𝙝𝙤𝙧𝙖𝙨...
 ╰━━━╾⭑✦ ⬤ ✦⭑╼━━━╯
 `;
-
-
             enviar(datatt);
           }
         }
           break
-
-
-
 
         case "pescar": {
           if (q) return enviar(`no ponga ninguna palabra solo /pescar`);
@@ -1464,18 +1354,10 @@ ${vit}
 ⌛ 𝙑𝙪𝙚𝙡𝙫𝙚 𝙚𝙣 8 𝙝𝙤𝙧𝙖𝙨...
 ╚════ ⭑✦ ❖ ✦⭑ ════╝
 `;
-
-
             enviar(datatt);
           }
         }
           break
-
-
-
-
-
-
 
         case 'listreg': {
           R_ = []
@@ -1488,9 +1370,6 @@ ${vit}
           mentions(teks, R_, true)
         }
           break
-
-
-
 
         case 'regalar':
         case 'tradecoin':
@@ -1527,14 +1406,6 @@ ${vit}
           })();
         }
           break;
-
-
-
-
-
-
-
-
 
         case 'rep': case 'mirep': case 'mireputacion':
           if (!isReg) return enviar(respuesta.registro)
@@ -1615,9 +1486,6 @@ ${vit}
         }
           break;
 
-
-
-
         case 'ranknivel': {
           if (!isGroup) return
           if (!isGroupAdmins) return enviar(respuesta.admin)
@@ -1632,7 +1500,6 @@ TOP.   USUARIO.   NIVEL\n`
           break
 
         case "tienda":
-
           if (!q) return enviar(`
 ✦━───༺༻───━✦
 🎀❖ 𝓣𝓘𝓔𝓝𝓓𝓐 ❖🎀
@@ -1658,7 +1525,6 @@ TOP.   USUARIO.   NIVEL\n`
 
 ✦━───༺༻───━✦
 `);
-
 
           if (q.startsWith("1")) {
             if (coins < 50) return enviar("❌ No tienes suficientes Reales para hacer esta compra. Necesitas al menos 50 Rupias.");
@@ -1705,18 +1571,13 @@ TOP.   USUARIO.   NIVEL\n`
           break;
 
         //DESCARGAS
-
-
         //nesecitas api
-
         case 'playvideo':
         case 'ytmp4': {
           if (!isReg) return enviar(respuesta.registro)
           if (!q)
             return enviar('❌ Escribe un nombre o link de YouTube');
           try {
-
-
 
             // Endpoint info del video
             const apiURL =
@@ -1754,13 +1615,10 @@ TOP.   USUARIO.   NIVEL\n`
             }, { quoted: info });
 
           } catch (e) {
-
             console.log("ERROR PLAYVIDEO:", e);
-
             enviar('❌ Error descargando video');
 
           }
-
         }
           break;
 
@@ -1769,18 +1627,13 @@ TOP.   USUARIO.   NIVEL\n`
           if (!q)
             return enviar('❌ Escribe un nombre o link de YouTube');
 
-
-
           try {
-
             const apiURL =
               `${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
-
             const apiData = await fetchJson(apiURL);
 
             // SI YTINFO FUNCIONA
             if (apiData && apiData.Estado === "online") {
-
               const data = apiData.Resultado;
 
               await sock.sendMessage(from, {
@@ -1794,7 +1647,6 @@ TOP.   USUARIO.   NIVEL\n`
 `
               }, { quoted: info });
 
-
               await sock.sendMessage(from, {
                 document: { url: `${data.EnlaceDescarga}&apikey=${NAUFRA_KEY}` },
                 mimetype: 'video/mp4',
@@ -1803,7 +1655,6 @@ TOP.   USUARIO.   NIVEL\n`
 
               return;
             }
-
 
             // SI YTINFO FALLA → DESCARGA IGUAL
             const videoURL =
@@ -1816,9 +1667,7 @@ TOP.   USUARIO.   NIVEL\n`
             }, { quoted: info });
 
           } catch (e) {
-
             console.log("ERROR MP4DOC:", e);
-
             enviar('❌ Error enviando documento');
 
           }
@@ -1831,12 +1680,10 @@ TOP.   USUARIO.   NIVEL\n`
           if (!q) return enviar('❌ Escribe un nombre o link de YouTube')
 
           try {
-
             let query = encodeURIComponent(q.trim())
 
             // INFO DEL VIDEO
             let apiURL = `${APINAUFRA}/ytinfo?apikey=${NAUFRA_KEY}&url=${query}`
-
             let apiData = await fetchJson(apiURL)
 
             // SI LA API RESPONDE BIEN
@@ -1866,34 +1713,21 @@ TOP.   USUARIO.   NIVEL\n`
               }, { quoted: info })
 
               return
-
             }
-
 
             // SI FALLA YTINFO → DESCARGA DIRECTO
             let audioURL = `${APINAUFRA}/ytmp3?apikey=${NAUFRA_KEY}&url=${query}`
-
             await sock.sendMessage(from, {
               audio: { url: audioURL },
               mimetype: 'audio/mpeg',
               ptt: false
             }, { quoted: info })
-
-
           } catch (e) {
-
             console.log("ERROR PLAY:", e)
-
             enviar('❌ Error descargando música')
-
           }
-
         }
           break
-
-
-
-
 
         case 'fb':
         case 'facebook': {
@@ -1901,11 +1735,7 @@ TOP.   USUARIO.   NIVEL\n`
           if (!q)
             return enviar('❌ Escribe un link de Facebook');
 
-
-
           try {
-
-
             // URL de descarga directa (no JSON)
             const videoURL = `${APINAUFRA}/fbvideo?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
 
@@ -1920,10 +1750,8 @@ TOP.   USUARIO.   NIVEL\n`
             console.log("ERROR FBVIDEO:", e);
             enviar('❌ Error descargando video de Facebook');
           }
-
         }
           break;
-
 
         case 'tiktok': {
           if (!isReg) return enviar(respuesta.registro)
@@ -1931,9 +1759,7 @@ TOP.   USUARIO.   NIVEL\n`
             return enviar('❌ Escribe un link de TikTok');
 
           try {
-
             // API key del usuario (puedes sacarla de tu DB si quieres dinámico)
-
             // Endpoint directo de descarga TikTok
             const videoURL = `${APINAUFRA}/tiktok?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q.trim())}`;
 
@@ -1953,26 +1779,19 @@ TOP.   USUARIO.   NIVEL\n`
         }
           break;
 
-
         case 'mediafire': {
           if (!isReg) return enviar(respuesta.registro)
           if (!q) return enviar('❌ Envia un link de MediaFire');
-
           enviar("📥 Descargando archivo...");
-
           try {
-
             const axios = require("axios");
-
             const apiURL = `${APINAUFRA}/mediafire-dl?apikey=${NAUFRA_KEY}&url=${encodeURIComponent(q)}&t=${Date.now()}`;
-
             const response = await axios.get(apiURL, {
               responseType: 'arraybuffer'
             });
 
             // Obtener nombre desde header
             let fileName = "archivo";
-
             const disposition = response.headers['content-disposition'];
 
             if (disposition && disposition.includes("filename=")) {
@@ -1989,12 +1808,10 @@ TOP.   USUARIO.   NIVEL\n`
               mimetype: mimeType,
               fileName: fileName
             }, { quoted: info });
-
           } catch (e) {
             console.log(e);
             enviar('❌ Error descargando archivo');
           }
-
         }
           break;
 
@@ -2021,7 +1838,6 @@ TOP.   USUARIO.   NIVEL\n`
 
         }
           break;
-
 
         //nesecitas api
         case 'pinterest':
@@ -2052,20 +1868,12 @@ TOP.   USUARIO.   NIVEL\n`
 
         case 'horoscopo':
         case 'horóscopo': {
-
           if (!q) return enviar('❌ Escribe tu signo zodiacal.\nEjemplo: .horoscopo aries');
-
           const signo = q.toLowerCase().trim();
-
           enviar("🔮 Consultando tu horóscopo del día...");
-
           try {
-
-
             const apiURL = `${APINAUFRA}/horoscopo?apikey=${NAUFRA_KEY}&signo=${encodeURIComponent(signo)}&t=${Date.now()}`;
-
             const data = await fetchJson(apiURL);
-
             const mensaje =
               `🔮 *Horóscopo de ${data.signo.toUpperCase()}*
 📅 ${data.fecha}
@@ -2075,7 +1883,6 @@ ${data.descripcion}
 ✨ ¡Que tengas un excelente día!`;
 
             await sock.sendMessage(from, { text: mensaje }, { quoted: info });
-
           } catch (e) {
             console.log("ERROR HOROSCOPO:", e);
             enviar('❌ No pude obtener el horóscopo. Verifica el signo.');
@@ -2084,23 +1891,17 @@ ${data.descripcion}
         }
           break;
 
-
         case 'wikipedia':
         case 'wiki': {
           if (!isReg) return enviar(respuesta.registro)
           if (!q) return enviar('❌ Escribe qué quieres buscar');
 
-
           try {
-
             // En la misma VPS
             const apiURL = `${APINAUFRA}/wikipedia?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
-
             const data = await fetchJson(apiURL);
-
             const mensaje = `📚 *${data.titulo}*\n${data.descripcion}\n🔗 ${data.enlace}`;
             await sock.sendMessage(from, { text: mensaje }, { quoted: info });
-
           } catch (e) {
             console.log("ERROR WIKI:", e);
             enviar('❌ Error buscando en Wikipedia');
@@ -2109,19 +1910,14 @@ ${data.descripcion}
         }
           break;
 
-
         case 'google':
         case 'g': {
           if (!isReg) return enviar(respuesta.registro)
           if (!q) return enviar('❌ Escribe qué quieres buscar en Google');
 
-
           try {
-
             const apiURL = `${APINAUFRA}/google?apikey=${NAUFRA_KEY}&q=${encodeURIComponent(q)}&t=${Date.now()}`;
-
             const data = await fetchJson(apiURL);
-
             const mensaje = `🌐 *${data.titulo}*\n${data.descripcion}\n🔗 ${data.enlace}`;
 
             await sock.sendMessage(from, {
@@ -2138,40 +1934,29 @@ ${data.descripcion}
         case 'simi': {
           if (!isReg) return enviar(respuesta.registro)
           try {
-
             if (!q) return enviar('💬 Usa: /simi texto');
-
-
-
 
             const personalidad = encodeURIComponent(
               "Responde en español como un bot sarcástico, con respuestas largas, un poco agresivo con malas palabras, sexualizado y divertido. Sé corto y con carácter. Usando muchas palabras sexuales y algo agresivas."
             );
 
             const texto = encodeURIComponent(q);
-
             const apiURL = `${APINAUFRA}/chat?apikey=${NAUFRA_KEY}&prompt=${personalidad}%20Pregunta:%20${texto}&t=${Date.now()}`;
-
             const data = await fetchJson(apiURL);
 
-            if (!data || !data.respuesta) {
-              return enviar('❌ Simi no respondió.');
-            }
+            if (!data || !data.respuesta) return enviar('❌ Simi no respondió.');
 
             const msg = `
 '💬 ${data.respuesta}
 `.trim();
 
             enviar(msg);
-
           } catch (e) {
             console.log(e);
             enviar('❌ Error con Simi.');
           }
         }
           break;
-
-
 
         case 'descargarapk':
         case 'apk': {
@@ -2221,8 +2006,6 @@ ${data.descripcion}
           break;
 
         //Parejas
-
-
         case 'alea': case 'casar': case 'parejas': {
           if (!isReg) return enviar(respuesta.registro)
           const men1 = groupMembers[Math.floor(Math.random() * groupMetadata.participants.length)]
@@ -2234,16 +2017,9 @@ ${data.descripcion}
         }
           break
 
-
-
-
-
         // COMANDOS SIN PREFIJO
         default:
-
-
           /// 🚫 ANTILINK MEJORADO CON DEPURACIÓN Y COMPATIBILIDAD LID/JID
-
           const { jidNormalizedUser } = require("baileys")
           const texto = (budy || "").toLowerCase()
 
@@ -2282,9 +2058,6 @@ ${data.descripcion}
             }
           }
 
-
-
-
           if (budy.startsWith('=>Duueño')) {
             if (!isOwner) return enviar(respuesta.miowner)
             function Return(sul) {
@@ -2301,35 +2074,21 @@ ${data.descripcion}
               enviar(String(e))
             }
           }
-
-
-
-
       }
-
     } catch (e) {
       // Error handler extraído a lib/whatsapp/error-handler.js
       const handleMessageError = createMessageErrorHandler(color)
       handleMessageError(e)
     }
-
-
-
-
-
-
-
   })
-
-
-
 }
-///////////MODIFIC INDEX 
-startProo()
+
+main()
+
+///////////MODIFIC INDEX
 fs.watchFile('./index.js', (curr, prev) => {
   if (curr.mtime.getTime() !== prev.mtime.getTime()) {
-    console.log(color('  [❗] El archivo Index fue modificada', "blue"));
+    console.warn(color('  [❗] El archivo Index fue modificada', "blue"));
     process.exit()
   }
 })
-

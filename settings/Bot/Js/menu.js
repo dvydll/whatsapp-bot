@@ -1,6 +1,6 @@
-const Menu = ( timeFt , Bot , sender , groupName  , groupMembers ) => {  
-return `
- ❱ ➢${timeFt}, @${sender.split('@')[0]} 
+const Menu = (timeFt, Bot, sender, groupName, groupMembers) => {
+  return `
+ ❱ ➢${timeFt}, @${sender?.split('@')[0]} 
 ╭══════════════════ 
 │✦ ➮ sᴏʏ: ${Bot}
 │✦ ➮ ᴘʀᴇғɪᴊᴏ ᴀᴄᴛᴜᴀʟ: 𝐌𝐮𝐥𝐭𝐢𝐩𝐫𝐞𝐟𝐢𝐣𝐨
@@ -173,6 +173,6 @@ return `
 > ➥Prende el bot
  
 `}
-module.exports = Menu 
+module.exports = Menu
 
 
