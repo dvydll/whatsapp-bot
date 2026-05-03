@@ -162,7 +162,7 @@ lib/whatsapp/
 |------|--------|--------|-------|
 | A | `message-parser.js` | ✅ done | Ya existia (lib/core/types.js) |
 | A | `message-context.js` | ✅ done | Ya existia (lib/core/types.js) |
-| B | `permissions.js` | ⏳ pending | |
+| B | `permissions.js` | ✅ done | Extraido esAdminFlexible |
 | C | `group-handler.js` | ⏳ pending | |
 | C | `error-handler.js` | ⏳ pending | |
 | E | `download-utils.js` | ✅ done | Extraido a lib/whatsapp/utils/ |

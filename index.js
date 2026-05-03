@@ -36,7 +36,7 @@ const chalk = require('chalk')
 const color = (text, color) => { return !color ? chalk.green(text) : chalk.keyword(color)(text) };
 
 //baner
-const banner = cfonts.render("Naufra| Bot| Base", {
+const banner = cfonts.render("Daya| Bot| Base", {
   font: 'pallet',
   align: 'center',
   gradient: ["green", "blue"]
@@ -87,6 +87,7 @@ const { getGroupAdmins } = require('./lib/whatsapp/utils/group-utils.js')
 const { obtenerMencionado } = require('./lib/whatsapp/utils/mention-utils.js')
 const { getFileBuffer } = require('./lib/whatsapp/utils/download-utils.js')
 const { esAdminFlexible } = require('./lib/whatsapp/permissions.js')
+const { createGroupHandler } = require('./lib/whatsapp/group-handler.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
@@ -163,51 +164,9 @@ async function startProo() {
 
 
 
-  // 𝙲𝙾𝙽𝙴𝚇𝙸𝙾𝙽 
-  // 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙰 𝚈 𝙳𝙴𝚂𝙿𝙴𝙳𝙸𝙳𝙰 
-  sock.ev.on("group-participants.update", async (anu) => {
-    if (!welkom.includes(anu.id)) return
-    try {
-      const metadata = await sock.groupMetadata(anu.id)
-      participants = anu.participants
-      for (let num of participants) {
-
-        if (anu.action == 'add') {
-          const welcomeImg = "https://i.ibb.co/HDf3hw9J/20250702-214923.jpg";
-          const grup = metadata.subject
-          const num = anu.participants[0]
-          const mem = metadata.participants.length
-          const descr = metadata.desc
-          const sol = `💌 「 Bienvenid@ a *${grup}* @${num.split('@')[0]} 
-『 👥 Miembros actuales: ${mem} 』`
-
-          await sock.sendMessage(anu.id, {
-            image: { url: welcomeImg },
-            caption: sol,
-            mentions: [num]  // 👈 Aquí haces la mención real
-          })
-        }
-        if (anu.action == 'promote') {
-          num = anu.participants[0]
-          teks = `
-✦━─┈༓༒༓┈─━✦
-
-     *✧༺ 𝓝𝓾𝓮𝓿𝓸 𝓐𝓭𝓶𝓲𝓷 ༻✧*
-
-🪪 𝗡𝗼𝗺𝗯𝗿𝗲: @${num.split('@')[0]}
-🌐 𝗚𝗿𝘂𝗽𝗼: ${metadata.subject}
-💌 「 ¡Enhorabuena! 🎉 Has ascendido a la mesa de los administradores 🪄 」
-
-✦━─┈༓༒༓┈─━✦
-`
-          await sock.sendMessage(anu.id, { image: { url: "https://i.postimg.cc/0ygy14nq/20251017-152852.jpg" }, caption: teks })
-        }
-
-      }
-    } catch (e) {
-      console.log('Error: %s', color(e, "red"))
-    }
-  })
+// 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙰 𝚈 𝙳𝙴𝚂𝙿𝙴𝙳𝙸𝙳𝙰 - extraído a lib/whatsapp/group-handler.js
+  const groupHandler = createGroupHandler(sock, { welkom })
+  sock.ev.on("group-participants.update", groupHandler)
 
   //Bienvenida y despedidas
 
@@ -281,7 +240,7 @@ async function startProo() {
 
 
       const isGroupAdmins = groupAdmins.some(admin => admin.id?.includes(sender));
-const isBotGroupAdmins = esAdminFlexible(sock, groupAdmins.map(p => p.id))
+      const isBotGroupAdmins = esAdminFlexible(sock, groupAdmins.map(p => p.id))
       // esAdminFlexible ahora importado de lib/whatsapp/permissions.js
 
       // isUrl ahora viene de lib/helpers.js
