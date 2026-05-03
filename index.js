@@ -89,6 +89,7 @@ const { getFileBuffer } = require('./lib/whatsapp/utils/download-utils.js')
 const { esAdminFlexible } = require('./lib/whatsapp/permissions.js')
 const { createGroupHandler } = require('./lib/whatsapp/group-handler.js')
 const { createMessageErrorHandler } = require('./lib/whatsapp/error-handler.js')
+const testCommands = require('./lib/commands/test.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
@@ -429,13 +430,11 @@ async function startProo() {
 
 
         case 'prueba':
-          enviar(`Este es un comando de prueba 🌟🌟
-
-......`);
+          testCommands.prueba({ enviar })
           break
 
         case 'comando2':
-          enviar(`🧩Este es un comando nuevo`);
+          testCommands.comando2({ enviar })
           break
         //Comandos owner
 
