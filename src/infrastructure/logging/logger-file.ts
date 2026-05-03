@@ -74,7 +74,7 @@ function getFileSize(filePath: string): number {
  * Rota el archivo de log (renombra a .old o elimina)
  */
 function rotateLogFile(logPath: string, maxFiles: number, compress: boolean = true): void {
-  const ext = logPath.split('.').pop();
+  const ext = logPath?.split('.').pop();
   const base = logPath.replace(`.${ext}`, '');
   const oldPath = `${base}.old.${ext}`;
 

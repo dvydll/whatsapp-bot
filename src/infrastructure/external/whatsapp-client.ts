@@ -290,7 +290,7 @@ export class WhatsAppClientImpl implements WhatsAppClient {
     const user = this.socket.user as any;
     return {
       jid: user?.jid || '',
-      name: user?.name || user?.jid?.split('@')[0] || 'WhatsApp Bot',
+      name: user?.name || user?.jid ??.split('@')[0] || 'WhatsApp Bot',
     };
   }
 

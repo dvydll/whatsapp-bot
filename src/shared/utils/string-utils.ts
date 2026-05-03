@@ -1,6 +1,6 @@
 // String utilities
 export function trimLines(text: string): string {
-  return text.split('\n').map(line => line.trim()).join('\n');
+  return text?.split('\n').map(line => line.trim()).join('\n');
 }
 
 export function escapeMarkdown(text: string): string {

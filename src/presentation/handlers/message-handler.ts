@@ -4,17 +4,15 @@
  */
 
 import { getConfig } from '../../config/env.js';
-import { Permissions, type PermissionLevel } from '../../shared/constants/permissions.js';
-import { AppError } from '../../shared/errors/app-error.js';
-import { getLogger, type Logger } from '../../infrastructure/logging/logger.js';
 import type {
-  WhatsAppClient,
   IncomingMessage,
+  WhatsAppClient,
 } from '../../infrastructure/external/whatsapp-client.js';
+import { getLogger, type Logger } from '../../infrastructure/logging/logger.js';
+import { Permissions, type PermissionLevel } from '../../shared/constants/permissions.js';
 import type {
-  CommandCallback,
-  CommandParams,
   CommandDefinition,
+  CommandParams
 } from './command-registry.js';
 
 /**
@@ -210,7 +208,7 @@ export class MessageHandlerImpl implements MessageHandler {
     }
 
     // Separar comando de argumentos
-    const parts = commandPart.split(/\s+/);
+    const parts = commandPart?.split(/\s+/);
     const command = parts[0]?.toLowerCase();
     const args = parts.slice(1);
 
@@ -305,6 +303,5 @@ export function getMessageHandler(): MessageHandler | null {
 }
 
 export type {
-  MessageHandlerImpl as Impl,
-  MessageHandler as IMessageHandler,
+  MessageHandler as IMessageHandler, MessageHandlerImpl as Impl
 };
