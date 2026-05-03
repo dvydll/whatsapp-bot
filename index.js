@@ -90,6 +90,9 @@ const { esAdminFlexible } = require('./lib/whatsapp/permissions.js')
 const { createGroupHandler } = require('./lib/whatsapp/group-handler.js')
 const { createMessageErrorHandler } = require('./lib/whatsapp/error-handler.js')
 const testCommands = require('./lib/commands/test.js')
+const ownerCommands = require('./lib/commands/owner.js')
+const configCommands = require('./lib/commands/config.js')
+const infoCommands = require('./lib/commands/info.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
@@ -166,7 +169,7 @@ async function startProo() {
 
 
 
-// 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙰 𝚈 𝙳𝙴𝚂𝙿𝙴𝙳𝙸𝙳𝙰 - extraído a lib/whatsapp/group-handler.js
+  // 𝙱𝙸𝙴𝙽𝚅𝙴𝙽𝙸𝙳𝙰 𝚈 𝙳𝙴𝚂𝙿𝙴𝙳𝙸𝙳𝙰 - extraído a lib/whatsapp/group-handler.js
   const groupHandler = createGroupHandler(sock, { welkom })
   sock.ev.on("group-participants.update", groupHandler)
 
@@ -214,8 +217,8 @@ async function startProo() {
       const nome = info.pushName ? info.pushName : ''
       const groupAdmins = groupMembers.filter(p => p.admin);
       const Sadm = isGroup ? getGroupAdmins(groupAdmins) : ''
-      const messagesC = pes.slice(0).trim().split(/ +/).shift().toLowerCase()
-      const args = body.trim().split(/ +/).slice(1)
+      const messagesC = pes.slice(0).trim()?.split(/ +/).shift().toLowerCase()
+      const args = body.trim()?.split(/ +/).slice(1)
       const q = args.join(' ')
       const text = args.join(' ')
       const isCmd = body.startsWith(prefixo)
@@ -225,7 +228,7 @@ async function startProo() {
       const prefixes = prefixo ? prefixo.map(prefix => prefix.toLowerCase()) : [];
       const lowerBudy = budy.toLowerCase();
       const hasPrefix = prefixes.some(prefix => lowerBudy.startsWith(prefix));
-      const commandArgs = hasPrefix ? lowerBudy.slice(prefixes.find(prefix => lowerBudy.startsWith(prefix)).length).trim().split(' ') : lowerBudy.trim().split(' ');
+      const commandArgs = hasPrefix ? lowerBudy.slice(prefixes.find(prefix => lowerBudy.startsWith(prefix)).length).trim()?.split(' ') : lowerBudy.trim()?.split(' ');
       const comando = removeAccents(commandArgs[0]);
       // MULTIPREFIJO
       const mentions = (teks, memberr, id) => {
@@ -236,8 +239,8 @@ async function startProo() {
       // sleep ahora viene de lib/helpers.js
       const pushname = info.pushName ? info.pushName : ''
       const isBot = info.key.fromMe ? true : false
-      const senderNumber = sender.split("@")[0]
-      const BotNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net'
+      const senderNumber = sender?.split("@")[0]
+      const BotNumber = sock.user.id?.split(':')[0] + '@s.whatsapp.net'
       const isOwner = numerodono.includes(sender)
 
 
@@ -441,39 +444,9 @@ async function startProo() {
 
 
         case 'miapi':
-        case 'apikey': {
-
-          try {
-
-            const apiURL = `${APINAUFRA}/api/keyinfo?apikey=${NAUFRA_KEY}`;
-
-            const data = await fetchJson(apiURL);
-
-            if (!data.status) {
-              return enviar("❌ Error consultando API");
-            }
-
-            enviar(`🔑 *INFORMACIÓN DE API*
-
-👤 Usuario: ${data.usuario}
-
-📊 Requests usadas: ${data.usadas}
-📦 Límite total: ${data.limite}
-
-⚡ Restantes: ${data.restantes}
-
-🌐 API: api.naufrabot.com`);
-
-          } catch (e) {
-
-            console.log(e)
-
-            enviar("❌ Error consultando API")
-
-          }
-
-        }
-          break;
+        case 'apikey':
+          ownerCommands.miapi({ APINAUFRA, NAUFRA_KEY, enviar })
+          break
 
 
         case 'menu':
@@ -495,10 +468,25 @@ async function startProo() {
         case 'boton':
         case 'botonon':
         case 'encenderbot':
-          if (!isOwner) return enviar(respuesta.miowner)
-          if (botActivo) return enviar('✅ El bot ya está encendido.')
-          guardarEstadoBot(true)
-          enviar('🤖 El bot ha sido *ACTIVADO* y volverá a responder a los comandos.')
+          configCommands.boton({ isOwner, botActivo, guardarEstadoBot, enviar, respuesta })
+          break
+
+        case 'botoff':
+        case 'apagabot':
+        case 'offbot':
+          configCommands.botoff({ isOwner, botActivo, guardarEstadoBot, enviar, respuesta })
+          break
+
+
+        case 'antiprivado':
+        case 'antipv':
+          configCommands.antiprivado({ isOwner, args, Antipv, enviar, respuesta })
+          break
+
+
+
+        case 'rvisu': case 'revelarvisu': case 'open':
+          configCommands.rvisu({ isOwner, enviar, info, sock, from, respuesta })
           break
 
         case 'botoff':
@@ -560,18 +548,7 @@ async function startProo() {
           break
 
         case 'reiniciar': {
-          console.log("=== DEBUG REINICIAR ===");
-          console.log("Número que ejecuta el comando:", sender);
-          console.log("Número(s) configurados como owner:", global.owner || owner || "No definido");
-          console.log("¿Es owner?:", isOwner);
-
-          if (!isOwner) return enviar(respuesta.miowner);
-
-          enviar('𝚁𝙴𝙸𝙽𝙸𝙲𝙸𝙰𝙽𝙳𝙾, 𝙰𝙶𝚄𝙰𝚁𝙳𝙴 𝚄𝙽 𝙼𝙾𝙼𝙴𝙽𝚃𝙾 ');
-          setTimeout(async () => {
-            console.log("Reiniciando el bot...");
-            process.exit(0);
-          }, 1000);
+          ownerCommands.reiniciar({ enviar, sender, owner })
         }
           break;
 
@@ -582,239 +559,50 @@ async function startProo() {
           if (!isGroup) return
           let timestamp = speed()
           let latensi = speed() - timestamp
-          uptime = process.uptime()
-          botinfo = `
-╔═【 𝑰𝒏𝒇𝒐 𝒅𝒆𝒍 𝑩𝒐𝒕 】═╗
-⏰  𝐇𝐎𝐑𝐀  »  ${time}
-📅  𝐅𝐄𝐂𝐇𝐀 »  ${data}
-🤖  𝐍𝐎𝐌𝐁𝐑𝐄 »  ${Bot}
-🔰  𝐏𝐑𝐄𝐅𝐈𝐉𝐎 »  𝓜𝓾𝓵𝓽𝓲𝓹𝓻𝓮𝓯𝓲𝓳𝓸
-⚡  𝐕𝐄𝐋𝐎𝐂𝐈𝐃𝐀𝐃 »  ${latensi.toFixed(4)} seg
-📲  𝐃𝐈𝐒𝐏𝐎𝐒𝐈𝐓𝐈𝐕𝐎 »  ${deviceType}
-⏳  𝐄𝐍 𝐋𝐈𝐍𝐄𝐀 »  ${runtime(uptime)}
-💾  𝐌𝐄𝐌𝐎𝐑𝐈𝐀 »  ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-👤  𝐔𝐒𝐔𝐀𝐑𝐈𝐎 »  ${pushname}
-╚══❖═══════❖══╝
-`
-          sock.sendMessage(from, { image: { url: JpgBot }, caption: botinfo }, { quoted: info })
+          let uptime = process.uptime()
+          ownerCommands.infobot({
+            time, data, Bot, deviceType, runtime, pushname, JpgBot, sock, from, info,
+            latensi, memoryUsage: process.memoryUsage().heapUsed / 1024 / 1024, uptime
+          })
         }
           break
 
         case 'botcompleto':
         case 'bot':
-          enviar(`💫 ¿𝙌𝙪𝙞𝙚𝙧𝙚𝙨 𝙪𝙣 𝙗𝙤𝙩 𝙘𝙤𝙢𝙥𝙡𝙚𝙩𝙤 𝙘𝙤𝙣 𝙨𝙪𝙥𝙚𝙧 𝙁𝙪𝙣𝙘𝙞𝙤𝙣𝙚𝙨? 🤖
-
-*[💡]  ᴏɴʟɪɴᴇ 24/7*
-*[💡]  sᴏᴘᴏʀᴛᴇ 100% ᴅɪsᴘᴏɴɪʙʟᴇ*
-*[💡]  ᴏʀɢᴀɴɪᴄᴇ sᴜ ɢʀᴜᴘᴏ*
-*[💡]  ᴀᴅᴍɪɴɪsᴛʀᴇ sᴜ ɢʀᴜᴘᴏ*
-*[💡]  ᴘʀᴏᴛᴇᴊᴀ sᴜ ɢʀᴜᴘᴏ*
-*[💡]  ᴠᴇᴜʟᴠᴀ sᴜ ɢʀᴜᴘᴏ ᴍᴀs ᴀᴄᴛɪᴠᴏ*
-
-  𝙋𝙍𝙀𝘾𝙄𝙊𝙎 𝙋𝘼𝙍𝘼 𝙀𝙇 𝘼𝙇𝙌𝙐𝙄𝙇𝙀𝙍 𝘿𝙀𝙇 𝘽𝙊𝙏
-
-*┠💵⃟ꦿ〢* ᴘʟᴀɴ ǫᴜɪɴᴄᴇɴᴀʟ (15 dias): USD$ 1,50
-    
-*┠💵⃟ꦿ〢* ᴘʟᴀɴ ᴍᴇɴsᴜᴀʟ (30 dias): USD$ 2,90 ⭐(ᴍᴀs ᴘᴏᴘᴜʟᴀʀ)
-
-*┠💵⃟ꦿ〢* ᴘʟᴀɴ sᴇᴍᴇsᴛʀᴀʟ (180 dias): USD$ 13,90
-
-*┠💵⃟ꦿ〢* ᴘʟᴀɴ ᴀɴᴜᴀʟ (360 dias): USD$ 28,90
-
-*┠💵⃟ꦿ〢* ʙᴏᴛ ᴘᴇʀᴢᴏɴᴀʟɪᴢᴀᴅᴏ (30 dias): USD$ 5,90 ⭐(ᴘᴏᴘᴜʟᴀʀ)
-
-
-╚═════❖•ೋ° 🌟 °ೋ•❖═════╝
-
-*__________🔒 𝙋𝙍𝙊𝙏𝙀𝘾𝘾𝙄𝙊𝙉𝙀𝙎 🔒__________*
-
-*[🔐] ANTI-LINK*
-*[🔐] ANTI-FAKE*
-*[🔐] ANTI-CONTACTO*
-*[🔐] ANTI-LOCALIZACION*
-*[🔐] ANTI-DOCUMENTO*
-*[🔐] ANTI-VIDEO*
-*[🔐] ANTI-IMAGEN*
-*[🔐] ANTI-AUDIO*
-*[🔐] ANTI-VIEWONCE*
-
-*_________🔧 𝙍𝙀𝘾𝙐𝙍𝙎𝙊𝙎 🔧__________*
-*[🛠️] ᴄʀᴇᴀʀ sᴛɪᴄᴋᴇʀs*
-*[🛠️] ᴅᴇsᴄᴀʀɢᴀʀ ᴍᴜsɪᴄᴀs*
-*[🛠️] ᴅᴇsᴄᴀʀɢᴀʀ ᴠɪᴅᴇᴏs*
-*[🛠️] ᴀʙʀɪʀ ʏ ᴄᴇʀʀᴀʀ ɢʀᴜᴘᴏ ᴄᴏɴ ᴛɪᴇᴍᴘᴏ*
-*[🛠️] ʙᴀɴ ʏ ᴋɪᴄᴋ*
-*[🛠️] ᴊᴜᴇɢᴏs*
-*[🛠️] ᴄᴏᴍᴀɴᴅᴏs +🔞*
-
-
-*_________👑 𝘾𝙊𝙉𝙏𝙍𝘼𝙏𝙀 👑__________*
-[🔥] *Puedes contratar el bot directamente desde nuestra pagina web oficial*👇
-[💬] https://naufrabot.com/`);
+          infoCommands.botcompleto({ enviar })
           break
 
-        case 'personalizarbot': {
-
-          let texto = `🤖 *PERSONALIZAR NAUFRABOT BASE*
-
-Este bot es *100% editable*, puedes modificarlo completamente a tu gusto.
-
-📚 *Pasos para personalizar el bot*
-
-1️⃣ Cambiar nombre del bot
-Edita el nombre en el archivo principal del bot.
-
-2️⃣ Cambiar prefijo
-Puedes cambiar el prefijo de comandos fácilmente.
-
-3️⃣ Cambiar mensajes
-Todos los mensajes del bot son editables.
-
-4️⃣ Cambiar logo o foto
-Puedes poner tu propia imagen o marca.
-
-5️⃣ Agregar o quitar comandos
-El bot es modular, puedes modificar las *case*.
-
-6️⃣ Configurar APIs
-Algunos comandos necesitan API externa.
-
-7️⃣ Personalizar menú
-Puedes editar el menú principal.
-
-🎥 *Tutoriales completos en YouTube*
-
-He creado *más de 10 videos* explicando cómo personalizar el bot paso a paso 👇
-
-📺 YouTube:
-https://youtube.com/playlist?list=PLsjiVxv1dUKw1bKCmvj43AuUDYOm8ghPF&si=NB_u_fSGZx0HhggK
-
-Ahí encontrarás guías para:
-
-✔ Personalizar comandos
-✔ Modificar funciones
-✔ Configurar APIs
-✔ Crear nuevos sistemas
-
-🚀 *NAUFRABOT BASE es totalmente personalizable.*
-
-¡Haz tu propia versión del bot!`
-
-          await sock.sendMessage(from, { text: texto }, { quoted: info })
-
-        }
+        case 'personalizarbot':
+          infoCommands.personalizarbot({ sock, from, info })
           break
 
 
-        case 'comprarapi': {
-
-          let texto = `🌐 *COMPRAR API PARA EL BOT*
-
-Algunos comandos del bot necesitan *API externa* para funcionar correctamente.
-
-Por ejemplo:
-
-📥 Descargas
-🎨 Generar stickers con texto
-🌍 HTTP requests
-📹 Descargas de Facebook
-📸 Descargas de redes sociales
-⚙️ Inteligencia artificial 
-
-Para usar estas funciones necesitas una *API Key*.
-
-🚀 *API oficial de Naufrabot*
-
-Puedes comprar tu API aquí:
-
-🔗 https://api.naufrabot.com
-
-📚 *Pasos para usar la API*
-
-1️⃣ Crear una cuenta en la web  
-2️⃣ Comprar tu API Key  
-3️⃣ Copiar la API Key  
-4️⃣ Pegarla en la configuración del bot  
-5️⃣ Reiniciar el bot  
-
-Después de eso los comandos funcionarán correctamente.
-
-✨ *Ventajas de la API*
-
-✔ Respuestas rápidas  
-✔ Alta estabilidad  
-✔ Muchas funciones disponibles  
-✔ Soporte continuo  
-
-🌐 Web oficial:
-https://api.naufrabot.com
-
-🚀 *Potencia tu bot con la API oficial de Naufrabot.*`
-
-          await sock.sendMessage(from, { text: texto }, { quoted: info })
-
-        }
+        case 'comprarapi':
+          infoCommands.comprarapi({ sock, from, info })
           break
 
 
         case 'grupos':
-          enviar(`🧩 𝙂𝙍𝙐𝙋𝙊 𝙊𝙁𝙄𝘾𝙄𝘼𝙇 𝙋𝘼𝙍𝘼 𝙐𝙎𝘼𝙍 𝙐𝙉 𝘽𝙊𝙏 𝘼𝘾𝙏𝙄𝙑𝙊 24/7 👇
-
-➫https://chat.whatsapp.com/Jd7WKQBsAhkCG4k1SPxK7r?mode=ac_t`);
+          infoCommands.grupos({ enviar })
           break
 
         case 'serdueño':
         case 'sercreador':
         case 'owner':
         case 'serowner':
-          enviar(`*🧩 Mira el siguiente vídeo donde te enseño cómo convertirte en dueño del bot y usar los comandos de owner 👇*
-
-➫https://youtu.be/LugjBfJEoiQ?si=Z-qaGhjNdC-p3fGS`);
+          infoCommands.serdueño({ enviar })
           break
 
         case 'canal':
         case 'canales':
-          enviar(`𝘾𝙖𝙣𝙖𝙡𝙚𝙨 𝙤𝙛𝙞𝙘𝙞𝙖𝙡𝙚𝙨 𝙥𝙖𝙧𝙖 𝙧𝙚𝙘𝙞𝙗𝙞𝙧:
-🌐𝙉𝙤𝙫𝙚𝙙𝙖𝙙𝙚𝙨 
-🌐𝙎𝙤𝙧𝙩𝙚𝙤𝙨
-🌐𝙄𝙣𝙛𝙤𝙧𝙢𝙖𝙘𝙞𝙤𝙣 
-🌐𝘼𝙘𝙩𝙪𝙖𝙡𝙞𝙯𝙖𝙘𝙞𝙤𝙣𝙚𝙨 𝙨𝙤𝙗𝙧𝙚 𝙚𝙡 𝙗𝙤𝙩
-
-*➫ YouTube* 
-https://youtube.com/@naufrazapp_bots?si=Ie89Ben9B1Mn-jOU
-
-*➫ Sitio web*
-https://naufrabot.com/
-
-*➫ Instagram*
-https://www.instagram.com/naufrabot_official?igsh=cXFwemd0b213dWl1
-
-*➫ Tik tok*
-https://www.tiktok.com/@naufra.zapp?_t=8lMjEw7d9SX&_r=1
-
-*➫ WhatsApp*
-https://whatsapp.com/channel/0029Vaz3WoQ6RGJPJQcMXQ14
-`)
+          infoCommands.canal({ enviar })
           break
 
 
 
 
         case 'serbot':
-          try {
-            const moneybot = `𝗣𝗲𝗻𝘀𝗮𝘀𝘁𝗲 𝗾𝘂𝗲 𝘁𝗲 𝗴𝗲𝗻𝗲𝗿𝗮𝗿𝗶𝗮 𝗲𝗹 𝗖𝗼𝗱𝗶𝗴𝗼 𝗤𝗥, ¿𝗩𝗲𝗿𝗱𝗮𝗱? 😂
-
-𝗟𝗮𝗺𝗲𝗻𝘁𝗮𝗯𝗹𝗲𝗺𝗲𝗻𝘁𝗲, *𝗲𝗻 𝗲𝘀𝘁𝗲 𝗯𝗼𝘁 𝗻𝗼 𝗽𝘂𝗲𝗱𝗲𝘀 𝘀𝗲𝗿 𝘀𝘂𝗯 𝗯𝗼𝘁* 𝗽𝗼𝗿𝗾𝘂𝗲 𝗲𝘀𝗼 𝗰𝗼𝗺𝗽𝗿𝗼𝗺𝗲𝘁𝗲 𝗹𝗼𝘀 𝗿𝗲𝗰𝘂𝗲𝗿𝘀𝗼𝘀 𝗱𝗲𝗹 𝘀𝗲𝗿𝘃𝗶𝗱𝗼𝗿 𝘆 𝗹𝗼 𝗵𝗮𝗰𝗲 𝗺𝗮𝘀 𝗹𝗲𝗻𝘁𝗼.  
-𝗦𝗶 𝗿𝗲𝗮𝗹𝗺𝗲𝗻𝘁𝗲 𝗾𝘂𝗲𝗿𝗲𝘀 𝘀𝗲𝗿 𝘀𝘂𝗯 𝗯𝗼𝘁, 𝗽𝘂𝗲𝗱𝗲𝘀 𝗼𝗯𝘁𝗲𝗻𝗲𝗿 𝗺𝗮𝘀 𝗶𝗻𝗳𝗼𝗿𝗺𝗮𝗰𝗶𝗼𝗻 𝗲𝗻 𝗻𝘂𝗲𝘀𝘁𝗿𝗮 𝗽𝗮𝗴𝗶𝗻𝗮 𝘄𝗲𝗯:  
-🔗 https://naufrabot.com/subbots/`;
-
-            // Enviar el mensaje final
-            await enviar(moneybot);
-
-          } catch (e) {
-            console.error(e);
-            enviar("Error al procesar el comando.");
-          }
+          infoCommands.serbot({ enviar })
           break;
 
 
@@ -883,7 +671,7 @@ https://whatsapp.com/channel/0029Vaz3WoQ6RGJPJQcMXQ14
           nu = 0
           for (let mem of groupMembers) {
             nu += 1
-            teks += ` ➫[${nu.toString()}] @${mem.id.split('@')[0]}\n`
+            teks += ` ➫[${nu.toString()}] @${mem.id?.split('@')[0]}\n`
             members_id.push(mem.id)
           }
           mentions(`
@@ -903,7 +691,7 @@ https://whatsapp.com/channel/0029Vaz3WoQ6RGJPJQcMXQ14
 \n`
           for (let m of groupMembers) {
             num += 1
-            teks += `• [${num.toString()}] @${m.id.split('@')[0]}\n`
+            teks += `• [${num.toString()}] @${m.id?.split('@')[0]}\n`
             men.push(m.id)
           }
           mentions(teks, men, true)
@@ -1170,7 +958,7 @@ ${groupName} `
             image: { url: shipImg },
             caption: `💘 *𝐂𝐀𝐋𝐂𝐔𝐋𝐀𝐃𝐎𝐑 𝐃𝐄 𝐀𝐌𝐎𝐑* 💘
 
-@${user1.split('@')[0]} 💖 @${user2.split('@')[0]}
+@${user1?.split('@')[0]} 💖 @${user2?.split('@')[0]}
 
 • *${loveRate}% de Amor Eterno* 🌹`,
             mentions: [user1, user2]
@@ -1222,7 +1010,7 @@ ${groupName} `
         case 'amp3':
         case 'tomp3':
           if (!isReg) return enviar(respuesta.registro)
-          if (!isQuotedVideo) return enviar(`[❗] ${sender.split('@')[0]}, Marque un video `)
+          if (!isQuotedVideo) return enviar(`[❗] ${sender?.split('@')[0]}, Marque un video `)
           enviar('`Creando....`')
           tomp = await getFileBuffer(info.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage, 'video')
           sock.sendMessage(from, { audio: tomp, mimetype: 'audio/mpeg' }, { quoted: info })
@@ -1363,7 +1151,7 @@ ${groupName} `
 
           const Mp = `
 ╔══✦❖【 𝑻𝒖 𝑷𝒆𝒓𝒇𝒊𝒍 】❖✦══╗
-🏷️  𝐍𝐨𝐦𝐛𝐫𝐞      »  @${sender.split('@')[0]}
+🏷️  𝐍𝐨𝐦𝐛𝐫𝐞      »  @${sender?.split('@')[0]}
 ⚔️  𝐑𝐚𝐧𝐠𝐨       »  ${Mlevel}
 👑  𝐑𝐞𝐩𝐮𝐭𝐚𝐜𝐢𝐨́𝐧  »  ${myrep2}
 💰  𝐃𝐢𝐧𝐞𝐫𝐨     »  ₹${saldo} 𝐑𝐮𝐩𝐢𝐚𝐬
@@ -1530,7 +1318,7 @@ ${premioTexto}
             await economy.addRxp(sender, 1000)
             const Mup = ` 
         ★━━━ 𝐒𝐔𝐁𝐈𝐒𝐓𝐄 𝐃𝐄 𝐍𝐈𝐕𝐄𝐋 ━━━★
-✪ @${sender.split('@')[0]}
+✪ @${sender?.split('@')[0]}
 🎉 ¡𝑭𝒆𝒍𝒊𝒄𝒊𝒅𝒂𝒅𝒆𝒔 𝑯𝒂𝒛 𝒅𝒆𝒔𝒃𝒍𝒐𝒒𝒖𝒆𝒂𝒅𝒐 𝒖𝒏 𝒏𝒖𝒆𝒗𝒐 𝒓𝒂𝒏𝒈𝒐! 💪
 `
             sock.sendMessage(from, { text: Mup, mentions: [sender] }, { quoted: info })
@@ -1693,7 +1481,7 @@ ${vit}
           R_ = []
           teks = '*REGISTRADOS* 😼\n'
           for (let R of registro) {
-            teks += `• @${R.id.split('@')[0]}\n`
+            teks += `• @${R.id?.split('@')[0]}\n`
             R_.push(R.id)
           }
           teks += '• ' + registro.length
@@ -1812,7 +1600,7 @@ ${vit}
           const rankingArray = Array.isArray(registro)
             ? registro
             : Object.entries(registro).map(([jid, data]) => ({
-              nombre: data.nombre || jid.split('@')[0],
+              nombre: data.nombre || jid?.split('@')[0],
               dinero: data.dinero || 0,
             }));
 
@@ -1881,7 +1669,7 @@ TOP.   USUARIO.   NIVEL\n`
           }
 
           if (q.startsWith("2")) {
-            const args = q.split(" ");
+            const args = q?.split(" ");
             const nivel = parseInt(args[1]);
             const nuevoNombre = args.slice(2).join(" ");
 
@@ -2189,7 +1977,7 @@ TOP.   USUARIO.   NIVEL\n`
 
             if (disposition && disposition.includes("filename=")) {
               fileName = disposition
-                .split("filename=")[1]
+                ?.split("filename=")[1]
                 .replace(/"/g, "")
                 .trim();
             }
@@ -2441,7 +2229,7 @@ ${data.descripcion}
           const men3 = groupMembers[Math.floor(Math.random() * groupMetadata.participants.length)]
           const men2 = men1.id
           const men4 = men3.id
-          const rmen = `𝙰 @${men4.split('@')[0]} 𝙻𝙴 𝙶𝚄𝚂𝚃𝙰 @${men2.split('@')[0]} 𝚈 𝙳𝙴𝙱𝙴𝚁𝙸𝙰𝙽 𝙲𝙰𝚂𝙰𝚁𝚂𝙴`
+          const rmen = `𝙰 @${men4?.split('@')[0]} 𝙻𝙴 𝙶𝚄𝚂𝚃𝙰 @${men2?.split('@')[0]} 𝚈 𝙳𝙴𝙱𝙴𝚁𝙸𝙰𝙽 𝙲𝙰𝚂𝙰𝚁𝚂𝙴`
           sock.sendMessage(from, { text: rmen, mentions: [men4, men2] }, { quoted: info })
         }
           break
@@ -2483,13 +2271,13 @@ ${data.descripcion}
                 const result = await sock.groupParticipantsUpdate(from, [Kick], "remove")
                 console.log("✅ Resultado expulsión:", result)
 
-                await enviar(`🚫 Se detectó un link prohibido, el usuario @${sender.split("@")[0]} fue eliminado`, { mentions: [sender] })
+                await enviar(`🚫 Se detectó un link prohibido, el usuario @${sender?.split("@")[0]} fue eliminado`, { mentions: [sender] })
 
               } catch (err) {
                 console.log("❌ Error al ejecutar antilink:")
                 console.log("Mensaje:", err.message)
                 console.log("Stack completo:", err)
-                await enviar(`⚠️ No se pudo expulsar a @${sender.split("@")[0]}.\nMotivo: ${err.message}`, { mentions: [sender] })
+                await enviar(`⚠️ No se pudo expulsar a @${sender?.split("@")[0]}.\nMotivo: ${err.message}`, { mentions: [sender] })
               }
             }
           }
