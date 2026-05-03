@@ -88,6 +88,7 @@ const { obtenerMencionado } = require('./lib/whatsapp/utils/mention-utils.js')
 const { getFileBuffer } = require('./lib/whatsapp/utils/download-utils.js')
 const { esAdminFlexible } = require('./lib/whatsapp/permissions.js')
 const { createGroupHandler } = require('./lib/whatsapp/group-handler.js')
+const { createMessageErrorHandler } = require('./lib/whatsapp/error-handler.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
@@ -2520,12 +2521,9 @@ ${data.descripcion}
       }
 
     } catch (e) {
-
-      e = String(e)
-      if (!e.includes("this.isZero") && !e.includes("Could not find MIME for Buffer <null>") && !e.includes("Cannot read property 'conversation' of null") && !e.includes("Cannot read property 'contextInfo' of undefined") && !e.includes("Cannot set property 'mtype' of undefined") && !e.includes("jid is not defined")) {
-        console.log('Error : %s', color(e, 'red'))
-      }
-
+      // Error handler extraído a lib/whatsapp/error-handler.js
+      const handleMessageError = createMessageErrorHandler(color)
+      handleMessageError(e)
     }
 
 
