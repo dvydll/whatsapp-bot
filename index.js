@@ -86,6 +86,7 @@ const { pickRandom, DLT_FL, sleep, isUrl, guardarEstadoBot, getEstadoBot, genera
 const { getGroupAdmins } = require('./lib/whatsapp/utils/group-utils.js')
 const { obtenerMencionado } = require('./lib/whatsapp/utils/mention-utils.js')
 const { getFileBuffer } = require('./lib/whatsapp/utils/download-utils.js')
+const { esAdminFlexible } = require('./lib/whatsapp/permissions.js')
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 
@@ -280,28 +281,8 @@ async function startProo() {
 
 
       const isGroupAdmins = groupAdmins.some(admin => admin.id?.includes(sender));
-      const isBotGroupAdmins = esAdminFlexible(sock, groupAdmins.map(p => p.id));
-
-      function esAdminFlexible(sock, listaDeAdmins = []) {
-        if (!sock?.authState?.creds?.me) return false;
-
-        const botId = sock.authState.creds.me.id;   // ej: 51916525000:26@lid
-        const botLid = sock.authState.creds.me.lid; // ej: 51916525000@lid
-
-        const clean = (jid) => jid?.split(':')[0]; // elimina el ":26" si existe
-
-        return listaDeAdmins.some(adminJid => {
-          const adminBase = clean(adminJid);
-          return (
-            adminJid === botId ||
-            adminJid === botLid ||
-            adminJid === botId.replace(/:\d+/, '') || // compara sin ":xx"
-            adminJid === botLid.replace(/:\d+/, '') ||
-            adminBase === clean(botId) ||
-            adminBase === clean(botLid)
-          );
-        });
-      }
+const isBotGroupAdmins = esAdminFlexible(sock, groupAdmins.map(p => p.id))
+      // esAdminFlexible ahora importado de lib/whatsapp/permissions.js
 
       // isUrl ahora viene de lib/helpers.js
       const deviceType = info.key.id.length > 21 ? 'Android' : info.key.id.substring(0, 2) == '3A' ? 'IPhone' : 'WhatsApp web'
