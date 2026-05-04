@@ -1,6 +1,7 @@
 {
   "name": "whatsapp-bot",
   "version": "1.0.0",
+  "type": "module",
   "description": "WhatsApp Bot con arquitectura moderna",
   "main": "dist/index.js",
   "exports": {
