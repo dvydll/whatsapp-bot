@@ -169,7 +169,7 @@ async function main() {
 	);
 
 	sock.ev.on('messages.upsert', async (m) => {
-		console.debug('[main] messages.upsert event', m);
+		console.debug('[main] messages.upsert event', JSON.stringify(m, null, 2));
 		try {
 			const info = m.messages[0];
 			if (!info.message) return;
@@ -435,7 +435,10 @@ async function main() {
 						await sock.sendMessage(
 							from,
 							{
-								image: { url: JpgBot },
+								// image: { url: JpgBot },
+								video: fs.readFileSync('assets/jujutsu-kaisen-satoru-gojo.mp4'),
+								gifPlayback: true,
+								mimetype: 'video/mp4',
 								caption: menu(timeFt, Bot, sender, groupName, groupMembers),
 								mentions: [sender],
 							},
