@@ -50,8 +50,7 @@ import {
   timeRuleta,
 } from './lib/systems/games/mining.js';
 
-// Menu bot js
-import Menu from './lib/systems/menu.js';
+import { menu } from './lib/systems/menu.js';
 
 // time
 import { getGreeting, getTime, runtime } from './lib/core/time.js';
@@ -432,14 +431,12 @@ async function main() {
 						if (!isGroup) return;
 						if (!isReg) return enviar(respuesta.registro);
 
-						const Mnu = Menu(timeFt, Bot, sender, groupName, groupMembers);
-
 						// Enviar imagen del menú completa
 						await sock.sendMessage(
 							from,
 							{
 								image: { url: JpgBot },
-								caption: Mnu,
+								caption: menu(timeFt, Bot, sender, groupName, groupMembers),
 								mentions: [sender],
 							},
 							{ quoted: info },
@@ -889,7 +886,7 @@ Usa:
 							info.message?.viewOnceMessageV2?.message?.videoMessage ||
 							info.message?.viewOnceMessage?.message?.videoMessage ||
 							RSM?.viewOnceMessage?.message?.videoMessage;
-              let owgi;
+						let owgi;
 						if (boij2) {
 							enviar(`Creando su sticker espere un poco ❤️`);
 							const pack = `
