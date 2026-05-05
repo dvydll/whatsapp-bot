@@ -178,7 +178,7 @@ async function startProo() {
       for (let num of participants) {
 
         if (anu.action == 'add') {
-          const welcomeImg = "https://i.ibb.co/HDf3hw9J/20250702-214923.jpg";
+          const welcomeImg = "https://media1.tenor.com/m/727qo8TxQjcAAAAd/jujutsu-kaisen-gojo-satoru.gif";
           const grup = metadata.subject
           const num = anu.participants[0]
           const mem = metadata.participants.length
@@ -1160,7 +1160,7 @@ Usa:
           var boij2 = RSM?.imageMessage || info.message?.imageMessage || RSM?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessageV2?.message?.imageMessage || info.message?.viewOnceMessage?.message?.imageMessage || RSM?.viewOnceMessage?.message?.imageMessage
           var boij = RSM?.videoMessage || info.message?.videoMessage || RSM?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessageV2?.message?.videoMessage || info.message?.viewOnceMessage?.message?.videoMessage || RSM?.viewOnceMessage?.message?.videoMessage
           if (boij2) {
-            enviar(`Creando su sticker espere un poco ❤️`)
+            enviar(`Creando sticker espere un poco ❤️`)
             var pack = `
 👑 Dueño 👑
  ✅Daya
