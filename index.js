@@ -1,6 +1,4 @@
-import { Boom } from '@hapi/boom';
 import {
-  DisconnectReason,
   fetchLatestBaileysVersion,
   makeCacheableSignalKeyStore,
   default as makeWASocket,
@@ -9,7 +7,6 @@ import {
 import cfonts from 'cfonts';
 import chalk from 'chalk';
 import NodeCache from 'node-cache';
-import { exec } from 'node:child_process';
 import fs from 'node:fs';
 import readline from 'node:readline';
 import speed from 'performance-now';
@@ -74,6 +71,7 @@ import {
 } from './lib/core/config.js';
 import { DLT_FL, sleep } from './lib/utils/helpers.js';
 import { createGroupHandler } from './lib/whatsapp/group-handler.js';
+import { onConnectionUpdate } from './lib/whatsapp/handlers/connection.js';
 import { esAdminFlexible } from './lib/whatsapp/permissions.js';
 import { getFileBuffer } from './lib/whatsapp/utils/download-utils.js';
 import { obtenerMencionado } from './lib/whatsapp/utils/mention-utils.js';
@@ -130,13 +128,13 @@ async function main() {
 
 	// 🟢 Si no hay sesión registrada, generar el código de vinculación de 8 dígitos
 	if (!sock.authState.creds.registered) {
-		let number = await question(
+		const input = await question(
 			chalk.cyan(
 				'📱 Escribe tu número de WhatsApp con código de país (solo números): ',
 			),
 		);
 		rl.close();
-		number = number.replace(/[^0-9]/g, '');
+		const number = input.replace(/[^0-9]/g, '');
 
 		if (!number) {
 			console.error(chalk.red('❌ Número inválido.'));
@@ -160,26 +158,7 @@ async function main() {
 	}
 
 	// 🔄 Monitorear el estado de conexión
-	sock.ev.on('connection.update', async (update) => {
-		const { connection, lastDisconnect } = update;
-
-		if (connection === 'close') {
-			const reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
-			if (reason === DisconnectReason.loggedOut) {
-				console.log(
-					chalk.red(
-						"❌ Sesión cerrada. Borra la carpeta 'session' y vuelve a emparejar.",
-					),
-				);
-			} else {
-				console.log(chalk.yellow('⚠️ Conexión cerrada, reconectando...'));
-				main();
-			}
-		} else if (connection === 'open') {
-			console.log(chalk.greenBright('✅ Conectado exitosamente'));
-			exec('rm -rf tmp && mkdir tmp');
-		}
-	});
+	sock.ev.on('connection.update', onConnectionUpdate(main));
 
 	// Guardar credenciales cuando se actualicen
 	sock.ev.on('creds.update', saveCreds);
@@ -191,6 +170,7 @@ async function main() {
 	);
 
 	sock.ev.on('messages.upsert', async (m) => {
+		console.debug('[main] messages.upsert event', m);
 		try {
 			const info = m.messages[0];
 			if (!info.message) return;
@@ -251,7 +231,7 @@ async function main() {
 			const groupMembers = isGroup ? groupMetadata.participants || [] : [];
 			const groupAdmins = groupMembers.filter((p) => p.admin);
 			const messagesC = pes.slice(0).trim()?.split(/ +/).shift().toLowerCase();
-			const args = body.trim()?.split(/ +/).slice(1);
+			const args = body?.trim()?.split(/ +/).slice(1) ?? [];
 			const q = args.join(' ');
 			const isCmd = prefixo.some((p) => body.startsWith(p));
 
@@ -302,13 +282,13 @@ async function main() {
 						? 'IPhone'
 						: 'WhatsApp web';
 			const options = { timeZone: 'Europe/Madrid', hour12: false };
-			const data = new Date().toLocaleDateString('PE', {
+			const data = new Date().toLocaleDateString('es-ES', {
 				...options,
 				day: '2-digit',
 				month: '2-digit',
 				year: '2-digit',
 			});
-			const hora = new Date().toLocaleTimeString('PE', options);
+			const hora = new Date().toLocaleTimeString('es-ES', options);
 
 			// Constantes if nuevas
 			const isWelcome = isGroup ? welcome.includes(from) : false;
@@ -909,6 +889,7 @@ Usa:
 							info.message?.viewOnceMessageV2?.message?.videoMessage ||
 							info.message?.viewOnceMessage?.message?.videoMessage ||
 							RSM?.viewOnceMessage?.message?.videoMessage;
+              let owgi;
 						if (boij2) {
 							enviar(`Creando su sticker espere un poco ❤️`);
 							const pack = `
