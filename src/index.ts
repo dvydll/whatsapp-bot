@@ -2,7 +2,6 @@
  * Entry Point
  */
 
-import chalk from 'chalk';
 import { requestPairingCode } from './connect.js';
 import { bindEvents } from './events.js';
 import { createSocket } from './instance.js';

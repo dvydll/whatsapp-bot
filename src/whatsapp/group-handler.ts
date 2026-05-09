@@ -3,7 +3,8 @@
  * Maneja bienvenidas, despedidas y cambios de admins
  */
 
-import type { WASocket, proto } from 'baileys';
+import type { BaileysEventMap, WASocket } from 'baileys';
+import fs from 'fs-extra';
 
 interface GroupHandlerConfig {
   welcome?: string[];
@@ -12,13 +13,6 @@ interface GroupHandlerConfig {
 interface GroupMetadata {
   subject: string;
   participants: Array<{ id: string; admin?: string | null }>;
-}
-
-interface GroupHandlerParams {
-  id: string;
-  author: string;
-  action: 'add' | 'remove' | 'promote' | 'demote';
-  participants: string[];
 }
 
 /**
@@ -66,12 +60,13 @@ const handlerFactory = async (sock: WASocket, jid: string) => {
      * Bienvenida - usuario se une al grupo
      */
     add: async (participant: string): Promise<void> => {
-      const welcomeImg = 'https://c.tenor.com/727qo8TxQjcAAAAd/tenor.gif';
+      // const welcomeImg = 'https://c.tenor.com/727qo8TxQjcAAAAd/tenor.gif';
       const group = groupMetadata.subject;
-      const membersCount = groupMetadata.participants.length;
 
       await sock.sendMessage(jid, {
-        image: { url: welcomeImg },
+        // image: { url: welcomeImg },
+        video: fs.readFileSync('assets/jujutsu-kaisen-satoru-gojo.mp4'),
+        gifPlayback: true,
         caption: getWelcomeCaption(group, participant),
         mentions: [participant],
       });
@@ -104,7 +99,7 @@ const createGroupHandler = (sock: WASocket, config: GroupHandlerConfig = {}) => 
    * Handler para eventos de grupo
    * @param ev - Evento de group-participants.update
    */
-  return async ({ id, author, action, participants }: GroupHandlerParams): Promise<void> => {
+  return async ({ id, author, action, participants }: BaileysEventMap['group-participants.update']): Promise<void> => {
     // Debug: ver todos los eventos de grupo
     console.debug(
       '[createGroupHandler] group-participants.update event',

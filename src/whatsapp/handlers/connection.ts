@@ -4,7 +4,7 @@
  */
 
 import { Boom } from '@hapi/boom';
-import { DisconnectReason, type WASocket } from 'baileys';
+import { type BaileysEventMap, DisconnectReason } from 'baileys';
 import { exec } from 'node:child_process';
 
 // Mensajes de conexión
@@ -51,10 +51,7 @@ export const onConnectionUpdate = (onDisconnect?: () => void) =>
    * Handler para connection.update
    * @param ev - Evento de conexión
    */
-  async ({ connection, lastDisconnect }: {
-    connection: string;
-    lastDisconnect?: { error?: Error } | undefined;
-  }): Promise<void> => {
+  async ({ connection, lastDisconnect }: BaileysEventMap['connection.update']): Promise<void> => {
     if (connection === 'open') return onOpenConnection();
     if (connection === 'close' && lastDisconnect) onCloseConnection(lastDisconnect, onDisconnect);
   };

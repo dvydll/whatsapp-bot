@@ -2,15 +2,15 @@
  * Events - Using any for simplicity
  */
 
+import type { WASocket } from 'baileys';
 import { readFileSync } from 'node:fs';
 import { createSocket } from './instance.js';
 import { handleMessage } from './message-handler.js';
 import { createGroupHandler } from './whatsapp/group-handler.js';
 import { onConnectionUpdate } from './whatsapp/handlers/connection.js';
-import type { WASocket } from 'baileys';
 
 interface SockRefs {
-  sock: any;
+  sock: WASocket;
   saveCreds: () => Promise<void>;
 }
 
