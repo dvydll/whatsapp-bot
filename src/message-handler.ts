@@ -2,36 +2,18 @@
  * Message Handler - Simplified TS
  */
 
+import type { BaileysEventMap, WASocket } from 'baileys';
 import fs from 'node:fs';
 import { executeCommand } from './commands/index.js';
 import { getQuotedTypes } from './core/types.js';
 import economy from './systems/economy.js';
-import { getRespuestas } from './utils/responses.js';
 import { expiredClaim } from './systems/games/claim.js';
 import {
   expiredAttp, expiredDayli, expiredEmoji,
   expiredEve, expiredMinar, expiredPescar, expiredRuleta,
 } from './systems/games/mining.js';
-import type { WASocket } from 'baileys';
-
-interface MsgContext {
-  info: any; from: string; type: string; body: string;
-  comando: string; args: string[]; q: string;
-  sender: string; pushname: string; isOwner: boolean;
-  isReg: boolean; isGroup: boolean;
-  groupMembers: any[]; groupAdmins: any[];
-  isGroupAdmins: boolean; isBotGroupAdmins: boolean;
-  sendMention: (txt: string, members: any[]) => void;
-  BotNumber: string; welcome: string[]; bngp: string[];
-  antilink: string[]; Antipv: string[];
-  modoAdminList: string[]; botActivo: boolean;
-  isWelcome: boolean; isBanGp: boolean;
-  isAntiLink: boolean; isAntipv: boolean;
-  isModoAdmin: boolean; coins: number; roleData: any[];
-  isQuotedVideo: boolean; isQuotedSticker: boolean;
-  respuesta: any; sendText: (txt: string, opt?: any) => void;
-  doSleep: (ms: number) => Promise<void>; sock: WASocket;
-}
+import type { MsgContext } from './types/message-context.js';
+import { getRespuestas } from './utils/responses.js';
 
 const removeAccents = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
@@ -67,8 +49,8 @@ export function createMessageContext(msgInfo: any, sock: WASocket): MsgContext |
   const pushname = info.pushName || '';
 
   let welcome: string[] = [], bngp: string[] = [], antilink: string[] = [],
-      Antipv: string[] = [], modoAdminList: string[] = [], 
-      botActivo = true, roleData: any[] = [];
+    Antipv: string[] = [], modoAdminList: string[] = [],
+    botActivo = true, roleData: any[] = [];
   try {
     welcome = JSON.parse(fs.readFileSync('./settings/Grupo/Json/welcome.json', 'utf-8'));
     bngp = JSON.parse(fs.readFileSync('./settings/Grupo/Json/grupo.json', 'utf-8'));
@@ -87,7 +69,7 @@ export function createMessageContext(msgInfo: any, sock: WASocket): MsgContext |
   const lower = body.toLowerCase();
   const prefixes = getCmdPrefix();
   const hasPref = prefixes.some((p) => lower.startsWith(p.toLowerCase()));
-  
+
   let cmd = '', args: string[] = [];
   if (hasPref) {
     const matched = prefixes.find((p) => lower.startsWith(p.toLowerCase()));
@@ -99,7 +81,7 @@ export function createMessageContext(msgInfo: any, sock: WASocket): MsgContext |
 
   const sendText = (txt: string, opt = {}) => sock.sendMessage(from, { text: txt }, { quoted: info, ...opt });
   const sendMention = (txt: string, members: any[]) => sock.sendMessage(from, { text: txt.trim(), mentions: members });
-  const doSleep = (ms: number): Promise<void> => 
+  const doSleep = (ms: number): Promise<void> =>
     new Promise<void>((r) => setTimeout(r, ms));
 
   return {
@@ -120,10 +102,16 @@ export function createMessageContext(msgInfo: any, sock: WASocket): MsgContext |
 }
 
 export function handleMessage(sock: WASocket) {
-  return async (ev: any) => {
+  return async (ev: BaileysEventMap['messages.upsert']) => {
     try {
-      expiredClaim(); expiredMinar(); expiredAttp(); expiredEmoji();
-      expiredEve(); expiredDayli(); expiredPescar(); expiredRuleta();
+      expiredClaim();
+      expiredMinar();
+      expiredAttp();
+      expiredEmoji();
+      expiredEve();
+      expiredDayli();
+      expiredPescar();
+      expiredRuleta();
 
       const ctx = createMessageContext(ev, sock);
       if (!ctx) return;

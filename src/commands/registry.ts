@@ -3,6 +3,9 @@
  * Recibe el comando y lo envía al módulo correspondiente
  */
 
+import type { MsgContext } from "../types/message-context";
+
+
 type CommandHandler = (params: any) => void | Promise<void>;
 
 const commands = new Map<string, CommandHandler>();
@@ -20,7 +23,7 @@ export function registerCommands(names: string[], handler: CommandHandler): void
 }
 
 // Ejecutar comando
-export function executeCommand(command: string, context: any): boolean {
+export function executeCommand(command: string, context: MsgContext): boolean {
   const handler = commands.get(command.toLowerCase());
   if (!handler) return false;
   handler(context);

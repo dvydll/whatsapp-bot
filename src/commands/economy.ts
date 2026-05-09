@@ -2,8 +2,6 @@
  * Comandos de Economía y Perfil - Simplified TS
  */
 
-import fs from 'node:fs';
-
 export const economyCommands: Record<string, any> = {
   reg: {
     aliases: ['reg', 'registrarme', 'registrame', 'rg'],
